@@ -98,7 +98,7 @@ if ( WC()->cart->is_empty() ) return;
 
 <!-- Terms -->
 <div class="agreed_terms_txt">
-  <span class="policy-agreement-obligation">Klikom na gumb <strong>Naruči</strong> pristajem na narudžbu uz obvezu plaćanja.</span><br>
+  <span class="policy-agreement-obligation">Klikom na gumb <strong>Naroči</strong> pristajem na narudžbu uz obvezu plaćanja.</span><br>
   <div class="terms-checkbox-and-links">
     <label class="checkbox">
       <input type="checkbox" class="input-checkbox" name="agree_to_checkout_terms" id="agree_to_terms_checkbox" value="1">

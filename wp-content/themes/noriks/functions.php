@@ -101,7 +101,7 @@ add_action('rest_api_init', function() {
 add_action('init', function () {
 	// Server-side redirect for NON-AJAX adds (highest priority wins)
 	add_filter('woocommerce_add_to_cart_redirect', function ($url) {
-		return home_url('/hr/cart/'); // or wc_get_cart_url()
+		return home_url('/si/cart/'); // or wc_get_cart_url()
 	}, 9999);
 });
  */
@@ -112,12 +112,14 @@ add_action('init', function () {
 $webshop_language = get_field("webshop_language", "options");
 
 if( $webshop_language == null  || $webshop_language == false  || $webshop_language == "" ) {
-  $webshop_language = "EN";
+  $webshop_language = "SI";
 }
 
 /*  include language specific files */
 if ($webshop_language == "EN") {
   include(get_template_directory() . '/functions/lang/en.php');
+} else if ($webshop_language == "SI") {
+  include(get_template_directory() . '/functions/lang/si.php');
 } else if ($webshop_language == "HR") {
   include(get_template_directory() . '/functions/lang/hr.php');
 }

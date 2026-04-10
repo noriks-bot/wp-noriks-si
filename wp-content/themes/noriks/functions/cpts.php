@@ -83,12 +83,12 @@ function noriks_render_landigs_meta_box($post) {
     $fields = array(
         '_landigs_target_product_id'  => '',
         '_landigs_target_product_url' => '',
-        '_landigs_primary_label'      => 'Boja',
-        '_landigs_primary_options'    => "Crna|#000000\nBijela|#f5f5f5\nSiva|#9ca3af\nTamnoplava|#243647\nSmeđa|#7c5a3c\nMaslinasta|#607d33",
-        '_landigs_secondary_label'    => 'Veličina',
+        '_landigs_primary_label'      => 'Barva',
+        '_landigs_primary_options'    => "Črna|#000000\nBela|#f5f5f5\nSiva|#9ca3af\nTemno modra|#243647\nRjava|#7c5a3c\nOlivna|#607d33",
+        '_landigs_secondary_label'    => 'Velikost',
         '_landigs_secondary_options'  => "S\nM\nL\nXL\nXXL\n3XL\n4XL",
         '_landigs_hide_secondary'     => '0',
-        '_landigs_offer_options'      => "1|1 majica|odličan ulazni paket 17.96€|PRIHRANITE 49%\n2|2 majice|najbolji omjer cijene i količine 44.28€|PRIHRANITE 59%\n3|3 majice|najveća ušteda po komadu 69.26€|PRIHRANITE 62%\n5|5 majica|najveći paket za maksimalnu uštedu 135.38€|PRIHRANITE 73%",
+        '_landigs_offer_options'      => "1|1 majica|odličen začetni paket 17.96€|PRIHRANITE 49%\n2|2 majici|najboljše razmerje med ceno in količino 44.28€|PRIHRANITE 59%\n3|3 majice|največji prihranek na kos 69.26€|PRIHRANITE 62%\n5|5 majic|največji paket za maksimalni prihranek 135.38€|PRIHRANITE 73%",
     );
 
     echo '<table class="form-table"><tbody>';
@@ -183,13 +183,13 @@ function noriks_ensure_default_step_landing() {
     }
 
     update_post_meta($post_id, '_landigs_target_product_id', 3421);
-    update_post_meta($post_id, '_landigs_target_product_url', home_url('/hr/product/noriks-majica/'));
-    update_post_meta($post_id, '_landigs_primary_label', 'Boja');
-    update_post_meta($post_id, '_landigs_primary_options', "Crna|#000000\nBijela|#f5f5f5\nSiva|#9ca3af\nTamnoplava|#243647\nSmeđa|#7c5a3c\nMaslinasta|#607d33");
-    update_post_meta($post_id, '_landigs_secondary_label', 'Veličina');
+    update_post_meta($post_id, '_landigs_target_product_url', home_url('/si/product/noriks-majica/'));
+    update_post_meta($post_id, '_landigs_primary_label', 'Barva');
+    update_post_meta($post_id, '_landigs_primary_options', "Črna|#000000\nBela|#f5f5f5\nSiva|#9ca3af\nTemno modra|#243647\nRjava|#7c5a3c\nOlivna|#607d33");
+    update_post_meta($post_id, '_landigs_secondary_label', 'Velikost');
     update_post_meta($post_id, '_landigs_secondary_options', "S\nM\nL\nXL\nXXL\n3XL\n4XL");
     update_post_meta($post_id, '_landigs_hide_secondary', '0');
-    update_post_meta($post_id, '_landigs_offer_options', "1|1 majica|odličan ulazni paket 17.96€|PRIHRANITE 49%\n2|2 majice|najbolji omjer cijene i količine 44.28€|PRIHRANITE 59%\n3|3 majice|najveća ušteda po komadu 69.26€|PRIHRANITE 62%\n5|5 majica|najveći paket za maksimalnu uštedu 135.38€|PRIHRANITE 73%");
+    update_post_meta($post_id, '_landigs_offer_options', "1|1 majica|odličen začetni paket 17.96€|PRIHRANITE 49%\n2|2 majici|najboljše razmerje med ceno in količino 44.28€|PRIHRANITE 59%\n3|3 majice|največji prihranek na kos 69.26€|PRIHRANITE 62%\n5|5 majic|največji paket za maksimalni prihranek 135.38€|PRIHRANITE 73%");
     flush_rewrite_rules(false);
 }
 
