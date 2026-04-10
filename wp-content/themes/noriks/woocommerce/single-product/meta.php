@@ -74,7 +74,7 @@ global $product;
           <div class="feature">
           
   <img src="<?php echo get_template_directory_uri(); ?>/img/cod_icon_.png" alt="Customer Support Icon" class="feature__icon info-icon">
-          <p class="feature__text">Plaćanje i pouzećem</p>
+          <p class="feature__text">Plačilo tudi po povzetju</p>
         </div>
         
         

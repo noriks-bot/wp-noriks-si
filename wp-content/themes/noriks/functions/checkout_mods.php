@@ -576,7 +576,7 @@ add_action('woocommerce_review_order_before_submit', function(){
         </button>
         <div id="noriks-coupon-expanded" style="display:none;gap:8px;align-items:center;">
             <input type="text" id="noriks_coupon_code" placeholder="Kupon kod" style="flex:1;padding:10px 14px;border:1px solid #ccc;border-radius:6px;font-size:14px;" />
-            <button type="button" style="padding:10px 20px;background:#000;color:#fff;border:none;border-radius:6px;font-size:14px;font-weight:600;cursor:pointer;white-space:nowrap;" onclick="noriksApplyCoupon()">Primijeni</button>
+            <button type="button" style="padding:10px 20px;background:#000;color:#fff;border:none;border-radius:6px;font-size:14px;font-weight:600;cursor:pointer;white-space:nowrap;" onclick="noriksApplyCoupon()">Uporabi</button>
             <button type="button" style="padding:8px 10px;background:none;border:1px solid #ddd;border-radius:6px;font-size:14px;color:#999;cursor:pointer;line-height:1;" onclick="this.parentElement.style.display='none';document.getElementById('noriks-coupon-btn').style.display='inline-flex';">✕</button>
         </div>
         <div id="noriks-coupon-msg" style="display:none;margin-top:8px;padding:6px 10px;border-radius:4px;font-size:12px;"></div>
@@ -598,20 +598,20 @@ add_action('woocommerce_review_order_before_submit', function(){
                 msg.innerHTML=html.replace(/<[^>]*>/g,'')||'Kupon kod nije valjan.';
             }else{
                 msg.style.background='#e8fde8';msg.style.color='#080';
-                msg.innerHTML='✅ Kupon primijenjen!';
+                msg.innerHTML='✅ Kupon je bil uporabljen!';
                 document.getElementById('noriks_coupon_code').value='';
                 if(window.jQuery)jQuery('body').trigger('update_checkout');
             }
-            btn.textContent='Primijeni';btn.disabled=false;
+            btn.textContent='Uporabi';btn.disabled=false;
         }).catch(function(){
             msg.style.display='block';msg.style.background='#fde8e8';msg.style.color='#c00';
-            msg.textContent='Greška. Pokušajte ponovo.';btn.textContent='Primijeni';btn.disabled=false;
+            msg.textContent='Napaka. Poskusite znova.';btn.textContent='Uporabi';btn.disabled=false;
         });
     }
     </script>
     <?php
     endif;
-    echo '<h3 class="place-order-title" style="display:block;margin:15px 0 10px;">Sažetak narudžbe</h3>';
+    echo '<h3 class="place-order-title" style="display:block;margin:15px 0 10px;">Povzetek naročila</h3>';
     echo '<div class="vigo-checkout-total order-total shop_table" style="margin-bottom:20px;">';
     woocommerce_order_review();
     echo '</div>';

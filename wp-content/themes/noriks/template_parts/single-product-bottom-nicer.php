@@ -38,7 +38,7 @@ ZAŠTO LJUDI BIRAJU STARTER PAKET?
 
       <div style="margin-left: 20px;" class="why-point">
         <p  style="    font-style: italic;
-    line-height: 1.2;" ><strong>“Nakon prvog nošenja sam odmah naručio još.” 
+    line-height: 1.2;" ><strong>“Po prvem nošenju sem takoj naročil še.” 
 
 
 
@@ -56,7 +56,7 @@ ZAŠTO LJUDI BIRAJU STARTER PAKET?
 
 
 </strong><span style="font-weight:normal;">Ante - Pula</span></p>
-        <p class="description">Majica i bokserice su mekane, lagane i ugodne na koži. Starter paket je najčešći razlog zašto NORIKS brzo postane dio svakodnevne garderobe.
+        <p class="description">Majica in boksarice so mehke, lahke in prijetne na koži. Začetni paket je najpogostejši razlog, da NORIKS hitro postane del vsakodnevne garderobe.
 
 
 
@@ -152,7 +152,7 @@ NAJLAKŠI I NAJSIGURNIJI POČETAK
 
 </strong></p>
         <p class="description">Zato što ti omogućuje da upoznaš kvalitetu bez velikog ulaganja.
-Umjesto da kupuješ više komada unaprijed, uzmeš jednu majicu i jedne bokserice — taman dovoljno da vidiš kako stoje, kako se nose i kako se osjeća materijal.
+Namesto da vnaprej kupiš več kosov, vzameš eno majico in ene boksarice — ravno dovolj, da vidiš, kako stojijo, kako se nosijo in kakšen je občutek materiala.
 
 </p>
       </div>
@@ -341,7 +341,7 @@ if (  has_term( array( 'majice', 'orto-majice' ), 'product_cat', get_the_id() ) 
       <div style="margin-left: 20px;" class="why-point">
         <p><strong>Osjeti razliku već pri prvom nošenju
 </strong></p>
-        <p class="description">Materijal je mekan, lagan i prozračan na koži. Nakon prvog nošenja jasno je zašto ova majica brzo postaje ona koju najčešće biraš.
+        <p class="description">Material je mehak, lahek in zračen na koži. Po prvem nošenju je jasno, zakaj ta majica hitro postane tista, po kateri najpogosteje posežeš.
 </p>
       </div>
     </div>
@@ -1966,5 +1966,3 @@ $faq_list3 = get_field('faq_list_3', 'option');
   });
 </script>
 		
-
-
