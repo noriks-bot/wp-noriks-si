@@ -28,9 +28,9 @@ foreach ( $order->get_items() as $item ) {
     // Majica: category has "majic" OR name has "majic"
     $is_majica = ( strpos($cat_str, 'majic') !== false || strpos($name, 'majic') !== false );
     // Boksarice: category has "boxer/bokser/orto" OR SKU has "box" OR name has "bokser/airflow"
-    $is_boks = ( strpos($cat_str, 'boxer') !== false || strpos($cat_str, 'bokser') !== false || strpos($cat_str, 'orto') !== false || strpos($sku, 'box') !== false || strpos($name, 'bokser') !== false || strpos($name, 'airflow') !== false );
+    $is_boks = ( strpos($cat_str, 'boxer') !== false || strpos($cat_str, 'boksaric') !== false || strpos($cat_str, 'orto') !== false || strpos($sku, 'box') !== false || strpos($name, 'boksaric') !== false || strpos($name, 'airflow') !== false );
     // Komplet
-    $is_komplet = ( strpos($name, 'komplet') !== false || strpos($cat_str, 'komplet') !== false );
+    $is_komplet = ( strpos($name, 'paket') !== false || strpos($cat_str, 'paket') !== false );
     if ( $is_boks ) $has_boksarice = true;
     if ( $is_majica || $is_komplet ) $has_only_boksarice = false;
 }

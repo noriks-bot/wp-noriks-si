@@ -1,0 +1,23 @@
+<?php
+$auto_reviews_en = array(
+    array("name" => "Luka M.", "text" => "Boksarice ohranijo obliko tudi po številnih pranjih."),
+    array("name" => "Jan P.", "text" => "Mehko blago, nič ne praska in ne pritiska."),
+    array("name" => "David S.", "text" => "Zelo udobne za cel dan, jih skoraj ne čutim."),
+    array("name" => "Tim R.", "text" => "Elastika drži čvrsto, a ne reže."),
+    array("name" => "Luka D.", "text" => "Dihljive in lahke, popolne za vsakdan in trening."),
+    array("name" => "Leon K.", "text" => "Ostanejo v obliki tudi po več pranjih."),
+    array("name" => "Patrik C.", "text" => "Prijetne na koži in brez motečih šivov."),
+    array("name" => "Marko V.", "text" => "Tudi po dolgem dnevu vse ostane na svojem mestu."),
+    array("name" => "Robin L.", "text" => "Takoj se čuti kakovost, ko jih vzameš v roke."),
+    array("name" => "Nik G.", "text" => "Brez raztegovanja, brez zdrsov, preprosto udobne."),
+    array("name" => "Seba B.", "text" => "Odličen kroj, lepo prilegajo brez stiskanja."),
+    array("name" => "Florjan J.", "text" => "Nogavice se ne zavihajo navzgor, velik plus."),
+    array("name" => "Matej S.", "text" => "Blago dobro diha in ostane prijetno suho."),
+    array("name" => "Denis K.", "text" => "Zelo čisto obdelane in delujejo vzdržljive."),
+    array("name" => "Kevin H.", "text" => "Razmerje cena-kakovost je res odlično."),
+    array("name" => "Tomaž N.", "text" => "Dobro sedijo, tudi če si med dvema velikostima."),
+    array("name" => "Andrej M.", "text" => "Idealne za delo in šport, skoraj ne nosim več drugih."),
+    array("name" => "Lenart B.", "text" => "Zelo udobne, tudi pri dolgem sedenju v pisarni."),
+    array("name" => "Simon Z.", "text" => "Brez draženja, tudi v vročih dneh."),
+    array("name" => "Blaž F.", "text" => "Enkrat preizkušene in takoj naročil še več parov."),
+);

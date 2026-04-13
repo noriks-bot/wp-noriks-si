@@ -1,0 +1,23 @@
+<?php
+$auto_reviews_en = array(
+    array("name" => "Luka M.", "text" => "Barva ostane intenzivna tudi po številnih pranjih."),
+    array("name" => "Tomaž H.", "text" => "Noriks majica me je pozitivno presenetila. Blago je mehko, lepo sede in je udobna cel dan."),
+    array("name" => "David K.", "text" => "Izgleda kakovostno in se tudi tako počuti."),
+    array("name" => "Martin S.", "text" => "Kroj je moderen, brez stiskanja."),
+    array("name" => "Jan R.", "text" => "Točno takšen basic sem dolgo iskal."),
+    array("name" => "Luka T.", "text" => "Lahka, udobna in vseeno neprosojne."),
+    array("name" => "Kevin B.", "text" => "Primerna tako za pisarno kot prosti čas."),
+    array("name" => "Marko P.", "text" => "Tudi po večkratnem pranju ohrani obliko."),
+    array("name" => "Simon W.", "text" => "Blago ne praska in deluje res kakovostno."),
+    array("name" => "Janez D.", "text" => "Prijetna na koži in zelo dobro kombinljiva."),
+    array("name" => "Nik F.", "text" => "Odlična za nošenje in izgleda veliko dražja."),
+    array("name" => "David L.", "text" => "Cel dan ostane udobna in ne zdrsi."),
+    array("name" => "Leon G.", "text" => "Zelo dobro razmerje med ceno in kakovostjo."),
+    array("name" => "Patrik E.", "text" => "Minimalistična, čisto obdelana in primerna za vsak dan."),
+    array("name" => "Seba V.", "text" => "Hitro se posuši in je idealna za potovanja."),
+    array("name" => "Robin A.", "text" => "Dobra dolžina, tudi za višje moške."),
+    array("name" => "Tim N.", "text" => "Tudi po dolgem dnevu ostane sveža in udobna."),
+    array("name" => "Blaž J.", "text" => "Kroj je res uspel, ne pretesna in ne preširoka."),
+    array("name" => "Florjan U.", "text" => "Takoj postala ena mojih najbolj nošenih majic."),
+    array("name" => "Matej Z.", "text" => "Preprosta, udobna in točno prava za vsak dan."),
+);
