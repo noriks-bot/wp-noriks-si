@@ -454,7 +454,7 @@ border: 1px solid #ccc;
     
 
     
-    30 dana jamstva na zamjenu veličine
+    30-dnevna garancija za zamenjavo velikosti
 
          
    
@@ -510,7 +510,7 @@ border: 1px solid #ccc;
     
 
     
-     30 dana jamstva na zamjenu veličine
+     30-dnevna garancija za zamenjavo velikosti
 
          
    
