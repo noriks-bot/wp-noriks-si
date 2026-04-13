@@ -466,7 +466,7 @@ get_header();
                       <strong>3) Slabo zračenje:</strong> Toplo in vlažno okolje poveča možnost draženja, neprijetnosti in glivičnih težav.
                     </p>
                     <p>
-                      <em>Bokserice NORIKS s ventilacijom i ultra mekim modal-om pomažu da koža ostane hladna, suha i zaštićena.</em>
+                      <em>Boksarice NORIKS z ventilacijo in ultra mehkim modalom poskrbijo, da koža ostane hladna, suha in zaščitena.</em>
                     </p>
                   </div>
                   <a href="https://noriks.com/si/product-category/bokserice/" class="button button--primary"> Preveri razpoložljivost </a>
@@ -838,7 +838,7 @@ Individualni rezultati mogu se razlikovati. </em>
                 </h2>
               </div>
               <div style="margin-top: 15px;" class="rich-text__buttons">
-                <a href="https://noriks.com/si/product-category/bokserice/" class="button button--primary">Naroči zdaj i zaštiti svoje zdravlje</a>
+                <a href="https://noriks.com/si/product-category/bokserice/" class="button button--primary">Naroči zdaj in zaščiti svoje zdravje</a>
               </div>
               <div class="rich-text__text rte">
                 <p>Več kot 2.225.000 moških je že prešlo na NORIKS. Ne čakaj, da se pojavijo draženje, neprijetnosti ali neprijetni vonji.</p>
