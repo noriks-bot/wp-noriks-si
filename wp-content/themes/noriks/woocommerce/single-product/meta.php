@@ -200,7 +200,7 @@ $is_singles_boxers = has_term( '1-kos-boksarice', 'product_cat', $current_produc
 
 $is_boxers = has_term( array( 'boksarice','orto-bokserice', 'boksarice-sestavi-paket' ), 'product_cat', $current_product_id ) && ! has_term( array( 'black-friday', 'majice-in-boksarice-paketi' ), 'product_cat', $current_product_id );
 
-$is_carape = has_term( array( 'carape', 'zimske-carape' ), 'product_cat', $current_product_id );
+$is_carape = has_term( array( 'nogavice', 'zimske-nogavice' ), 'product_cat', $current_product_id );
 
 $is_mixed_bundle = has_term( array( 'black-friday', 'majice-in-boksarice-paketi', 'orto-starter', 'orto-majica-bokserica' ), 'product_cat', $current_product_id );
 
