@@ -80,7 +80,7 @@ global $product;
         
         <div class="feature">
       <img src="https://noriks.com/si/wp-content/uploads/2025/07/footer_icon1-1.png" alt="Shirt Icon" class="feature__icon info-icon">
-          <p class="feature__text">Isprobajte 30 dana, bez rizika</p>
+          <p class="feature__text">Preizkusite 30 dni, brez tveganja</p>
         </div>
         
         
@@ -461,7 +461,7 @@ $is_mixed_bundle = has_term( array( 'black-friday', 'majice-in-boksarice-paketi'
      <!-- 2 - slika tablica velicina -->
      <div class="accordion-item">
       <div class="accordion-header" onclick="toggleAccordion(this)">
-        <h3>Tablica veličina</h3>
+        <h3>Tabela velikosti</h3>
         <div class="toggle">+</div>
       </div>
       <div class="accordion-content">
@@ -529,8 +529,8 @@ $is_mixed_bundle = has_term( array( 'black-friday', 'majice-in-boksarice-paketi'
       </div>
       <div class="accordion-content">
        <p></p>
-       Toliko vjerujemo da će ti se NORIKS svidjeti da imaš <b data-stringify-type="bold">30 dana</b> za povrat ili besplatnu zamjenu.
-Bez papirologije, bez stresa – riješimo u par klikova. </p>
+       Tako smo prepričani, da boste NORIKS obožali, da imate <b data-stringify-type="bold">30 dni</b> za vračilo ali brezplačno zamenjavo.
+Brez papirologije, brez stresa – rešimo vse v par klikih. </p>
 
 <p>
     
