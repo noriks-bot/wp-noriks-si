@@ -455,24 +455,24 @@ add_filter( 'woocommerce_checkout_fields', function( $fields ) {
     // Labels, placeholders, required
     $fields['billing']['billing_first_name']['label'] = 'Ime';
     $fields['billing']['billing_first_name']['placeholder'] = 'Ime';
-    $fields['billing']['billing_last_name']['label'] = 'Prezime';
-    $fields['billing']['billing_last_name']['placeholder'] = 'Prezime';
+    $fields['billing']['billing_last_name']['label'] = 'Priimek';
+    $fields['billing']['billing_last_name']['placeholder'] = 'Priimek';
     $fields['billing']['billing_address_1']['label'] = 'Ulica';
     $fields['billing']['billing_address_1']['placeholder'] = 'Ulica';
-    $fields['billing']['billing_address_2']['label'] = 'Kućni broj';
-    $fields['billing']['billing_address_2']['placeholder'] = 'Kućni broj';
+    $fields['billing']['billing_address_2']['label'] = 'Hišna številka';
+    $fields['billing']['billing_address_2']['placeholder'] = 'Hišna številka';
     $fields['billing']['billing_address_2']['required'] = true;
-    $fields['billing']['billing_postcode']['label'] = 'Poštanski broj';
-    $fields['billing']['billing_postcode']['placeholder'] = 'Poštanski broj';
-    $fields['billing']['billing_city']['label'] = 'Grad';
-    $fields['billing']['billing_city']['placeholder'] = 'Odaberite grad';
+    $fields['billing']['billing_postcode']['label'] = 'Poštna številka';
+    $fields['billing']['billing_postcode']['placeholder'] = 'Poštna številka';
+    $fields['billing']['billing_city']['label'] = 'Mesto';
+    $fields['billing']['billing_city']['placeholder'] = 'Izberite mesto';
     $fields['billing']['billing_phone']['label'] = 'Telefon';
     $fields['billing']['billing_phone']['placeholder'] = 'Telefonska številka';
     $fields['billing']['billing_phone']['required'] = true;
     /* Description injected via JS to survive update_checkout AJAX re-renders */
     // $fields['billing']['billing_phone']['description'] = '...';
-    $fields['billing']['billing_email']['label'] = 'E-mail adresa';
-    $fields['billing']['billing_email']['placeholder'] = 'E-mail adresa';
+    $fields['billing']['billing_email']['label'] = 'E-poštni naslov';
+    $fields['billing']['billing_email']['placeholder'] = 'E-poštni naslov';
     /* Description injected via JS to survive update_checkout AJAX re-renders */
     // $fields['billing']['billing_email']['description'] = 'Za potvrdu narudžbe i praćenje pošiljke';
     $fields['billing']['billing_email']['required'] = true;
