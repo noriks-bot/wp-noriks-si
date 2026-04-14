@@ -267,7 +267,7 @@ Najboljša vrednost v paketu.
            
           </div>
           <p class="collection-card__desc">
-Probaj NORIKS po boljoj cijeni.
+Preizkusi NORIKS po boljši vstopni ceni.
 
           </p>
         </div>
@@ -675,7 +675,7 @@ a:hover {
                       if ( has_term('black-friday', 'product_cat', $current_product_id ) ):
                         $topseler_text = "Black Friday ";
                       else:
-                        $topseler_text = get_field("singlepp_priceper_before","options") . " " . $tmp_price . " " . "€ po boksericama";
+                        $topseler_text = get_field("singlepp_priceper_before","options") . " " . $tmp_price . " " . "€ na boksarico";
                       endif;
                     else:
                       $topseler_text = get_field("singlepp_priceper_before","options") . " " . $tmp_price . " " . get_field("singlepp_priceper_after","options");
@@ -873,5 +873,6 @@ a:hover {
 	</div><!-- #primary -->
 <?php
 get_footer();
+
 
 
