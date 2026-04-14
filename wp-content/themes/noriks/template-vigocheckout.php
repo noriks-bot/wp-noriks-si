@@ -222,12 +222,12 @@ wp.i18n.setLocaleData( { 'text direction\u0004ltr': [ 'ltr' ] } );
                     <svg viewBox="0 0 19 14" fill="#3DBD00"><path fill-rule="evenodd" clip-rule="evenodd" d="M18.5725 3.40179L8.14482 13.5874C7.5815 14.1375 6.66839 14.1375 6.1056 13.5874L0.422493 8.03956C-0.140831 7.48994 -0.140831 6.59748 0.422493 6.04707L1.44121 5.05126C2.00471 4.50094 2.91854 4.50094 3.48132 5.05126L7.12254 8.60835L15.5145 0.412609C16.078 -0.137536 16.9909 -0.137536 17.5537 0.412609L18.5733 1.40842C19.1424 1.95795 19.1424 2.8505 18.5725 3.40179Z" /></svg>                                        <div class="outer-wrapper">
                         <div class="inner-wrapper-dates">
                         <strong
-                            class="hs-custom-date">srijeda, 18.3. - četvrtak, 19.3.</strong>
+                            class="hs-custom-date">sreda, 18.3. - četrtek, 19.3.</strong>
                         </div>
                         <div class="inner-wrapper-img">
                                                         <span class="shipping_method_delivery_price tag tag--red">
                                 <span class="woocommerce-Price-amount amount"><bdi>2,99<span class="woocommerce-Price-currencySymbol">&euro;</span></bdi></span>                            </span>
-                                                        <span class="delivery_img"><img decoding="async" class="hrvatska_posta standard" src="https://images.vigo-shop.com/general/curriers/home_small_paket24@2x.png"/></span>
+                                                        <span class="delivery_img"><img decoding="async" class="gls standard" src="<?php echo esc_url( WC()->plugin_url() . '/assets/images/shipping_providers/gls.png' ); ?>"/></span>
                         </div>
                     </div>
                 </label>
@@ -238,7 +238,7 @@ wp.i18n.setLocaleData( { 'text direction\u0004ltr': [ 'ltr' ] } );
         <div class="delivery-from-eu-warehouse">
         <img decoding="async" class="delivery-from-eu-warehouse__icon"
             src="https://images.vigo-shop.com/general/flags/eu-warehouse.svg"><span
-            class="delivery-from-eu-warehouse__text">Skladište u EU</span>
+            class="delivery-from-eu-warehouse__text">Skladišče v EU</span>
     </div>
     </div>
 <div class="sup_outher_wrapper">
@@ -353,8 +353,8 @@ wp.i18n.setLocaleData( { 'text direction\u0004ltr': [ 'ltr' ] } );
 
 
                 <div id="hs-vat-tax-checkout-prompt">
-            <span class="tax-and-vat-checkout-claims">Nema dodatnih troškova za carinu</span>
-            <span class="tax-and-vat-checkout-claims">PDV je uključen u cijenu</span>
+            <span class="tax-and-vat-checkout-claims">Ni dodatnih stroškov za carino</span>
+            <span class="tax-and-vat-checkout-claims">DDV je vključen v ceno</span>
         </div>
         <div id="pdf">
     <div class="pdf-title-container">
@@ -410,7 +410,7 @@ wp.i18n.setLocaleData( { 'text direction\u0004ltr': [ 'ltr' ] } );
     </div>
     <p class="pdf-more-info">
         <img decoding="async" src="https://images.vigo-shop.com/general/checkout/pdf_info_icon.svg">
-        <u>Više informacija o e-knjizi</u>
+        <u>Več informacij o e-knjigi</u>
     </p>
     <p class="pdf-more-info-description">
         Izberite našo e-knjigo in dobite dostop do trikov, ki spreminjajo življenje, nasvetov za varčevanje in vrhunskih ugodnosti. Prihranite tudi pri pošiljanju. Izberite e-knjigo za pametnejšo, lažjo in dostopnejšo prihodnost!</p>
@@ -441,7 +441,7 @@ wp.i18n.setLocaleData( { 'text direction\u0004ltr': [ 'ltr' ] } );
             <div class="c--darkgray review-section-container review-addons shipping_order_review">
                 <div class="review-addons-title">
                     <div>
-                        Paket24 Hrvatske pošte                    </div>
+                        GLS                    </div>
                 </div>
 
                                     <div class="review-addons-price review-sale-price"> <span class="woocommerce-Price-amount amount"><bdi>2,99<span class="woocommerce-Price-currencySymbol">&euro;</span></bdi></span>                    </div>
@@ -477,7 +477,7 @@ wp.i18n.setLocaleData( { 'text direction\u0004ltr': [ 'ltr' ] } );
        <img decoding="async" src="https://images.vigo-shop.com/general/guarantee_money_back/satisfaction_icon_hr.png">
     </div>
     <div class="flex__item--autosize f--m checkout-warranty__text">
-        <strong>Kupujte bez brige </strong><br>
+        <strong>Nakupujte brez skrbi </strong><br>
         Vračilo denarja mogoče v roku 90 dni    </div>
 </div>
 
@@ -986,7 +986,7 @@ wp.i18n.setLocaleData( { 'text direction\u0004ltr': [ 'ltr' ] } );
         <div class="partial_inner_section">
             <img src="https://images.vigo-shop.com/general/banner_icons/delivery_icon.svg" alt="">
             <div class="text_wrapper">
-                Dostavlja: Paket24 Hrvatske pošte            </div>
+                Dostavlja: GLS            </div>
         </div>
 
                     <div class="partial_inner_section">
