@@ -315,15 +315,15 @@ add_action( 'wp_footer', function() {
     <script id="noriks-checkout-validation">
     jQuery(function($){
       var messages = {
-        required: '\u2715 Obavezna informacija',
-        billing_address_2: '\u2715 Ukoliko nemate kućni broj upišite BB',
+        required: '\u2715 Obvezen podatek',
+        billing_address_2: '\u2715 Če nimate hišne številke, vpišite BB',
       };
       var submitted = false; /* only validate after first submit attempt */
       /* Set submitted=true when WC native button is clicked */
       $('form.checkout').on('checkout_place_order', function(){ submitted = true; });
       $(document).on('click', '#place_order', function(){
         submitted = true;
-        $(this).css('opacity','0.6').text('Obrada...');
+        $(this).css('opacity','0.6').text('Obdelava...');
         $('form.checkout').css({'opacity':'0.4','pointer-events':'none','transition':'opacity 0.3s'});
       });
       $(document.body).on('checkout_error', function(){
@@ -372,13 +372,13 @@ add_action( 'wp_footer', function() {
 
         /* Email format */
         if (isEmail && val && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val)) {
-          showError($row, '\u2715 Unesite ispravnu e-mail adresu');
+          showError($row, '\u2715 Vnesite veljaven e-poštni naslov');
           return false;
         }
 
         /* Phone format (at least 6 digits) */
         if (isPhone && val && val.replace(/\D/g,'').length < 6) {
-          showError($row, '\u2715 Unesite ispravan broj telefona');
+          showError($row, '\u2715 Vnesite veljavno telefonsko številko');
           return false;
         }
 
@@ -476,7 +476,7 @@ add_filter( 'woocommerce_checkout_fields', function( $fields ) {
     /* Description injected via JS to survive update_checkout AJAX re-renders */
     // $fields['billing']['billing_email']['description'] = 'Za potvrdu narudžbe i praćenje pošiljke';
     $fields['billing']['billing_email']['required'] = true;
-    $fields['billing']['billing_country']['default'] = 'HR';
+    $fields['billing']['billing_country']['default'] = 'SI';
     unset( $fields['billing']['billing_company'] );
 
     // Vigoshop CSS classes

@@ -106,7 +106,7 @@ global $product;
 <div class="shipping-box">
   <h2 id="shipping-window" class="shipping-title"></h2>
   <p class="shipping-sub">
-    Naročite u sljedećih <span id="midnight-countdown" class="countdown"></span>
+    Naročite v naslednjih <span id="midnight-countdown" class="countdown"></span>
   </p>
 </div>
 
@@ -159,7 +159,7 @@ global $product;
     }
 
     const windowEl = document.getElementById('shipping-window');
-    windowEl.textContent = `Dostava od ${weekdays[first.getDay()]} ${formatDayMonth(first)} do ${weekdays[second.getDay()]}, ${formatDayMonth(second)}`;
+    windowEl.textContent = `Dostava od ${weekdays[first.getDay()]} ${formatDayMonth(first)} do ${weekdays[second.getDay()]} ${formatDayMonth(second)}`;
 
     // Countdown to midnight
     const cdEl = document.getElementById('midnight-countdown');
