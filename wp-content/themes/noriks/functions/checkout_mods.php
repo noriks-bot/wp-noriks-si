@@ -598,7 +598,7 @@ add_action('woocommerce_review_order_before_submit', function(){
                 msg.innerHTML=html.replace(/<[^>]*>/g,'')||'Koda ni veljavna';
             }else{
                 msg.style.background='#e8fde8';msg.style.color='#080';
-                msg.innerHTML='✅ Kupon doan';
+                msg.innerHTML='✅ Kupon uporabljen!';
                 document.getElementById('noriks_coupon_code').value='';
                 if(window.jQuery)jQuery('body').trigger('update_checkout');
             }
@@ -650,6 +650,6 @@ add_filter('woocommerce_checkout_posted_data', function($data){
  */
 add_action('woocommerce_checkout_process', function(){
     if ( empty( $_POST['billing_address_2'] ) ) {
-        wc_add_notice( 'Molimo unesite kućni broj.', 'error' );
+        wc_add_notice( 'Prosimo, vnesite hišno številko.', 'error' );
     }
 });
