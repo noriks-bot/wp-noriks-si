@@ -55,7 +55,7 @@ function gck_get_bundle_offers( $product_id = null ) : array {
         if ( $sale <= 0 ) continue;
 
         $saving_amount = $regular - $sale;
-        $saving_text   = "Ukupna ušteda " . number_format($saving_amount, 2, '.', '') . "€";
+        $saving_text   = "Skupni prihranek " . number_format($saving_amount, 2, '.', '') . "€";
 
         $p1  = trim((string)($row['p1'] ?? ''));
         $p2  = trim((string)($row['p2'] ?? ''));
@@ -134,8 +134,8 @@ function gck_split_attrs_color_size( array $custom_attrs ) : array {
 
         $hay = strtolower( $key . ' ' . $label );
 
-        $is_color = ( strpos($hay, 'boja') !== false || strpos($hay, 'color') !== false || strpos($hay, 'colour') !== false );
-        $is_size  = ( strpos($hay, 'vel')  !== false || strpos($hay, 'veli') !== false || strpos($hay, 'size') !== false );
+        $is_color = ( strpos($hay, 'boja') !== false || strpos($hay, 'barva') !== false || strpos($hay, 'culoare') !== false || strpos($hay, 'color') !== false || strpos($hay, 'colour') !== false || strpos($hay, 'farbe') !== false || strpos($hay, 'цвят') !== false );
+        $is_size  = ( strpos($hay, 'vel')  !== false || strpos($hay, 'veli') !== false || strpos($hay, 'size') !== false || strpos($hay, 'mărime') !== false || strpos($hay, 'größe') !== false || strpos($hay, 'grosse') !== false || strpos($hay, 'groesse') !== false || strpos($hay, 'marime') !== false || strpos($hay, 'размер') !== false );
 
         $values = $attr->get_options();
         if ( ! is_array($values) ) $values = [];
@@ -281,6 +281,51 @@ function gck_pair_color_size_groups( array $colors, array $sizes ) : array {
 // ============================================================
 // RENDER UI
 // ============================================================
+
+// ============================================================
+// COLOR MAP (all locales)
+// ============================================================
+
+function gck_get_color_hex( $color_name ) {
+    static $map = null;
+    if ( $map === null ) {
+        $map = [
+            // HR
+            'crna' => '#000', 'bijela' => '#fff', 'bela' => '#fff', 'white' => '#fff',
+            'plava' => '#203240', 'modra' => '#203240', 'blue' => '#203240',
+            'siva' => '#706d78', 'gray' => '#706d78', 'gri' => '#706d78',
+            'zelena' => '#294d3b', 'green' => '#294d3b', 'verde' => '#294d3b',
+            'crvena' => '#ba212f', 'red' => '#ba212f',
+            'bez' => '#e4e0cf', 'bej' => '#e4e0cf',
+            'smeda' => '#9f6f4e', 'brown' => '#9f6f4e',
+            'tamnoplava' => '#2a3262',
+            'black' => '#000',
+            // SI
+            'črna' => '#000', 'rdeca' => '#ba212f', 'rdeča' => '#ba212f',
+            'temnomodra' => '#2a3262', 'rjava' => '#9f6f4e',
+            'bež' => '#e4e0cf',
+            // RO
+            'negru' => '#000', 'alb' => '#fff',
+            'bleumarin' => '#2a3262', 'maro' => '#9f6f4e',
+            'rosu' => '#ba212f', 'roșu' => '#ba212f',
+            'albastru' => '#203240',
+            // DE
+            'schwarz' => '#000', 'weiß' => '#fff', 'weiss' => '#fff',
+            'grau' => '#706d78', 'grün' => '#294d3b', 'gruen' => '#294d3b',
+            'rot' => '#ba212f', 'blau' => '#203240',
+            'dunkelblau' => '#2a3262', 'braun' => '#9f6f4e',
+            'beige' => '#e4e0cf',
+            // BG
+            'черна' => '#000', 'бяла' => '#fff',
+            'сива' => '#706d78', 'зелена' => '#294d3b',
+            'синя' => '#203240', 'червена' => '#ba212f',
+            'бежова' => '#e4e0cf', 'кафява' => '#9f6f4e',
+            'тъмносиня' => '#2a3262',
+        ];
+    }
+    $key = mb_strtolower( trim( $color_name ) );
+    return $map[ $key ] ?? null;
+}
 
 add_action( 'woocommerce_before_add_to_cart_button', 'gck_render_bundle_selector', 5 );
 
@@ -601,15 +646,15 @@ function gck_render_bundle_selector() {
     <div class="gck-benefits-box">
         <ul class="gck-benefits-list">
             <?php if ( !has_term( array( 'orto-bokserice', 'orto-bokserice2', 'starter-paketi' ), 'product_cat', $product_id ) ) : ?>
-                <li><span class="gck-check">✔</span> <strong>Savršeno pristajanje</strong></li>
+                <li><span class="gck-check">✔</span> <strong>Popolno prileganje</strong></li>
             <?php endif; ?>
 
-            <li><strong>✔ Vrhunski materiali precizan kroj</strong></li>
-            <li><strong>✔ Udobnost bez kompromisa</strong></li>
+            <li><strong>✔ Vrhunski materiali in natančen kroj</strong></li>
+            <li><strong>✔ Udobje brez kompromisov</strong></li>
 
             <?php if ( has_term( array( 'orto-starter' ), 'product_cat', $product_id ) ) : ?>
-                <li style="color: #c00;"><strong>✔ Starter paket dostupan samo jednom po osobi</strong></li>
-                <li style="color: #c00;"><strong>✔ Limitirano na 1.000 paketa </strong></li>
+                <li style="color: #c00;"><strong>✔ Začetni paket na voljo samo enkrat na osebo</strong></li>
+                <li style="color: #c00;"><strong>✔ Omejeno na 1.000 paketov</strong></li>
             <?php endif; ?>
         </ul>
 
@@ -618,7 +663,7 @@ function gck_render_bundle_selector() {
                 <path d="M11.4124 2.58464L2.08525 11.9118C1.86558 12.1315 1.86558 12.4876 2.08525 12.7073L5.78977 16.4118C6.00944 16.6315 6.3656 16.6315 6.58527 16.4118L15.9124 7.08466C16.1321 6.86499 16.1321 6.50883 15.9124 6.28916L12.2079 2.58464C11.9883 2.36497 11.6321 2.36497 11.4124 2.58464Z" stroke="#111213" stroke-width="0.84375"></path>
                 <path d="M9.28125 4.71875L11.5312 6.96875M6.75 7.25L9 9.5M4.21875 9.78125L6.46875 12.0312" stroke="#111213" stroke-width="0.84375"></path>
             </svg>
-            Tablica veličina
+            Tabela velikosti
         </a>
     </div>
 
@@ -628,7 +673,7 @@ function gck_render_bundle_selector() {
             
             <div class="gck-divider">
            <!-- <span>Više komada, veća ušteda!</span>-->
-           <span>Uzmite svoj ekskluzivni<br/> starter paket</span>
+           <span>Izberite svoj ekskluzivni<br/> začetni paket</span>
         </div>
         
         
@@ -639,7 +684,7 @@ function gck_render_bundle_selector() {
         <div class="dev-banner" data-total="1000" data-sold="354">
             <div class="dev-banner__text">
                 <span class="dev-banner__icon">📦</span>
-                <span>Ograničena količina <b class="sold">0</b> / <b class="total">0</b> (Još <b class="remain">0</b> komada)</span>
+                <span>Omejena količina <b class="sold">0</b> / <b class="total">0</b> (Še <b class="remain">0</b> kosov)</span>
             </div>
             <div class="dev-banner__bar" aria-label="Sales progress">
                 <div class="dev-banner__fill"></div>
@@ -708,11 +753,11 @@ function gck_render_bundle_selector() {
 
                 <?php if ( ! $show_group_titles ) : ?>
                     <?php if ( $loop_index == 1 ) : ?>
-                        <div class="gck-popular-badge">Najpopularnije 🔥</div>
+                        <div class="gck-popular-badge">Najbolj priljubljeno 🔥</div>
                     <?php endif; ?>
 
                     <?php if ( $loop_index == 3 ) : ?>
-                        <div class="gck-popular-badge-2">Najbolja cena 🔥</div>
+                        <div class="gck-popular-badge-2">Najboljša cena 🔥</div>
                     <?php endif; ?>
                 <?php endif; ?>
 
@@ -737,7 +782,7 @@ function gck_render_bundle_selector() {
     && !has_term( array( 'starter-paketi' ), 'product_cat', $product_id ) 
     
     )  :  ?>
-                — <span class="bundle-option-title"><?php echo number_format( (float) $data['per'], 2 ); ?>€ / kom</span>
+                — <span class="bundle-option-title"><?php echo number_format( (float) $data['per'], 2 ); ?>€ / kos</span>
                 
                 
                 <?php endif; ?>
@@ -747,14 +792,14 @@ function gck_render_bundle_selector() {
 
                 <!--
                 <div class="bundle-total-line">
-                    <span style="font-weight:normal;">Ukupno:</span>
+                    <span style="font-weight:normal;">Skupaj:</span>
                     <span class="line-total"><?php echo number_format( (float) $data['total'], 2 ); ?>€</span>
                 </div>
 
 -->
 
 <div class="bundle-total-line">
-    <span style="font-weight:normal;">Ukupno:</span>
+    <span style="font-weight:normal;">Skupaj:</span>
 
     <?php if ( ! empty($data['regular']) && (float)$data['regular'] > (float)$data['total'] ) : ?>
         <span class="gck-regular-price">
@@ -818,9 +863,18 @@ function gck_render_bundle_selector() {
                                              data-name="pairs[<?php echo esc_attr( $offer_id ); ?>][<?php echo $i; ?>][<?php echo esc_attr( $target_color_field_key ); ?>]">
 
                                             <?php foreach ( $color_values as $val ) :
-                                                $slug = sanitize_title( $val ); ?>
+                                                $slug = sanitize_title( $val );
+                                                $hex = gck_get_color_hex( $val );
+                                                $inline = '';
+                                                if ( $hex ) {
+                                                    $inline = 'background:' . esc_attr($hex) . ';';
+                                                    if ( strtolower(trim($hex)) === '#fff' || strtolower(trim($hex)) === '#ffffff' ) {
+                                                        $inline .= 'border:1px solid #ccc;';
+                                                    }
+                                                }
+                                            ?>
                                                 <div class="swatch" data-value="<?php echo esc_attr( $val ); ?>" title="<?php echo esc_attr( $val ); ?>">
-                                                    <span class="swatch-circle color-<?php echo esc_attr( $slug ); ?>"></span>
+                                                    <span class="swatch-circle color-<?php echo esc_attr( $slug ); ?>"<?php if ($inline) echo ' style="' . $inline . '"'; ?>></span>
                                                 </div>
                                             <?php endforeach; ?>
 
@@ -850,7 +904,7 @@ function gck_render_bundle_selector() {
                         </div>
                     <?php endfor; ?>
 
-                    <small style="display: block; line-height: 1;"><?php esc_html_e( 'Nudimo 30 dana za povrat novca ili besplatnu zamjenu proizvoda – bezbrižna kupovina!
+                    <small style="display: block; line-height: 1;"><?php esc_html_e( 'Ponujamo 30 dni za vračilo denarja ali brezplačno zamenjavo izdelka – brezskrbno nakupovanje!
 ', 'gift-card-kompetentnost' ); ?></small>
                 </div>
             </label>
@@ -977,7 +1031,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
         if (!valid) {
             e.preventDefault();
-            alert('Prosimo, izberite boju/barvu i veličinu za svaki set.');
+            alert('Prosimo, izberite barvo in velikost za vsak komplet.');
         }
     });
 
