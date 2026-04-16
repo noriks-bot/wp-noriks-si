@@ -203,7 +203,7 @@ get_header(); ?>
     </a>
 
     <!-- Card 2 -->
-    <a class="collection-card" href="/si/product-category/bokserice/">
+    <a class="collection-card" href="/si/product-category/boksarice/">
       <div class="collection-card__media">
         <img
           src="<?php echo get_template_directory_uri(); ?>/img/noriks-boksarice.jpeg"
@@ -251,7 +251,7 @@ Najboljša vrednost v paketu.
     </a>
     
     <!-- Card 3 -->
-    <a class="collection-card" href="/si/product-category/starter-paketi/">
+    <a class="collection-card" href="/si/product-category/zacetni-paketi/">
       <div class="collection-card__media">
         <img
           src="<?php echo get_template_directory_uri(); ?>/img/starter-paket_.jpeg"
@@ -262,7 +262,7 @@ Najboljša vrednost v paketu.
       <div class="collection-card__body">
         <div class="collection-card__text">
           <div class="collection-card__topline">
-            <h3 class="collection-card__name">Starter pack</h3>
+            <h3 class="collection-card__name">Starter paket</h3>
            
            
           </div>

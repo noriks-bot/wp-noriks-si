@@ -290,6 +290,10 @@ function gck_render_bundle_selector() {
 
     if ( ! is_product() || ! $product || ! gck_is_orto_bundle_enabled( $product->get_id() ) ) return;
 
+
+
+
+
     $product_id = $product->get_id();
 
     $offers = gck_get_bundle_offers( $product_id );

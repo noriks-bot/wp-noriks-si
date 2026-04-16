@@ -42,7 +42,7 @@ if ( ! empty( $order->get_billing_first_name() ) ) {
 <?php if ( $email_improvements_enabled ) : ?>
 
 
-	<p style="color:black;">Tvoje naročilo je uspešno prejeto – hvala, ker si izbral NORIKS!
+	<p style="color:black;">Tvoje naročilo je  prejeto – hvala, ker si izbral NORIKS!
 	<br/>	<br/>
 	Zdaj pripravljamo tvoj NORIKS izdelek in kmalu bo na poti.
     <br/><br/>

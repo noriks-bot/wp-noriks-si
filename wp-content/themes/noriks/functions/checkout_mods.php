@@ -465,7 +465,7 @@ add_filter( 'woocommerce_checkout_fields', function( $fields ) {
     $fields['billing']['billing_postcode']['label'] = 'Poštna številka';
     $fields['billing']['billing_postcode']['placeholder'] = 'Poštna številka';
     $fields['billing']['billing_city']['label'] = 'Mesto';
-    $fields['billing']['billing_city']['placeholder'] = 'Izberite mesto';
+    $fields['billing']['billing_city']['placeholder'] = 'Mesto';
     $fields['billing']['billing_phone']['label'] = 'Telefon';
     $fields['billing']['billing_phone']['placeholder'] = 'Telefonska številka';
     $fields['billing']['billing_phone']['required'] = true;
@@ -572,10 +572,10 @@ add_action('woocommerce_review_order_before_submit', function(){
     ?>
     <div class="noriks-coupon-wrap" style="margin:12px 0 16px;">
         <button type="button" id="noriks-coupon-btn" style="display:inline-flex;align-items:center;gap:5px;padding:10px 12px;background:#fff;border:1px solid #ddd;border-radius:4px;font-size:13px;color:#333;cursor:pointer;font-weight:500;line-height:1;" onclick="this.style.display='none';document.getElementById('noriks-coupon-expanded').style.display='flex';">
-            <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%23666' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z'%3E%3C/path%3E%3Cline x1='7' y1='7' x2='7.01' y2='7'%3E%3C/line%3E%3C/svg%3E" style="width:14px;height:14px;vertical-align:middle;" /><span style="vertical-align:middle;">Unesi kupon kod</span>
+            <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%23666' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z'%3E%3C/path%3E%3Cline x1='7' y1='7' x2='7.01' y2='7'%3E%3C/line%3E%3C/svg%3E" style="width:14px;height:14px;vertical-align:middle;" /><span style="vertical-align:middle;">Vnesite kodo kupona</span>
         </button>
         <div id="noriks-coupon-expanded" style="display:none;gap:8px;align-items:center;">
-            <input type="text" id="noriks_coupon_code" placeholder="Kupon kod" style="flex:1;padding:10px 14px;border:1px solid #ccc;border-radius:6px;font-size:14px;" />
+            <input type="text" id="noriks_coupon_code" placeholder="Koda kupona" style="flex:1;padding:10px 14px;border:1px solid #ccc;border-radius:6px;font-size:14px;" />
             <button type="button" style="padding:10px 20px;background:#000;color:#fff;border:none;border-radius:6px;font-size:14px;font-weight:600;cursor:pointer;white-space:nowrap;" onclick="noriksApplyCoupon()">Uporabi</button>
             <button type="button" style="padding:8px 10px;background:none;border:1px solid #ddd;border-radius:6px;font-size:14px;color:#999;cursor:pointer;line-height:1;" onclick="this.parentElement.style.display='none';document.getElementById('noriks-coupon-btn').style.display='inline-flex';">✕</button>
         </div>
@@ -595,10 +595,10 @@ add_action('woocommerce_review_order_before_submit', function(){
             msg.style.display='block';
             if(html.indexOf('error')!==-1){
                 msg.style.background='#fde8e8';msg.style.color='#c00';
-                msg.innerHTML=html.replace(/<[^>]*>/g,'')||'Kupon kod nije valjan.';
+                msg.innerHTML=html.replace(/<[^>]*>/g,'')||'Koda ni veljavna';
             }else{
                 msg.style.background='#e8fde8';msg.style.color='#080';
-                msg.innerHTML='✅ Kupon je bil uporabljen!';
+                msg.innerHTML='✅ Kupon doan';
                 document.getElementById('noriks_coupon_code').value='';
                 if(window.jQuery)jQuery('body').trigger('update_checkout');
             }

@@ -198,7 +198,7 @@ global $product;
 
 $is_singles_boxers = has_term( '1-kos-boksarice', 'product_cat', $current_product_id );
 
-$is_boxers = has_term( array( 'boksarice','orto-bokserice', 'boksarice-sestavi-paket' ), 'product_cat', $current_product_id ) && ! has_term( array( 'black-friday', 'majice-in-boksarice-paketi' ), 'product_cat', $current_product_id );
+$is_boxers = has_term( array( 'boksarice', 'boksarice','orto-bokserice', 'boksarice-sestavi-paket' ), 'product_cat', $current_product_id ) && ! has_term( array( 'black-friday', 'majice-in-boksarice-paketi' ), 'product_cat', $current_product_id );
 
 $is_carape = has_term( array( 'nogavice', 'zimske-nogavice' ), 'product_cat', $current_product_id );
 
@@ -439,7 +439,7 @@ $is_mixed_bundle = has_term( array( 'black-friday', 'majice-in-boksarice-paketi'
         
         
         
-                Naše premium majice izrađene su od vrhunske mješavine 60% prstenasto predenog pamuka i 40% poliestera, što osigurava izuzetno mekanu tkaninu otpornu na gužvanje.  <br><br>NORIKS bokserice izrađene su od vrhunske mješavine 95% modala i 5% elastana, što osigurava izuzetno mekanu i elastičnu tkaninu koja se savršeno prilagođava tijelu. Elastičan pojas dizajniran je za optimalno pristajanje, pružajući udobnost bez stezanja i savršen izgled ispod odjeć   <br>
+                Naše vrhunske majice s kratkimi rokavi so narejene iz vrhunske mešanice 60 % obročasto predenega bombaža in 40 % poliestra, kar zagotavlja izjemno mehko in proti gubam odporno tkanino. <br><br>Boksarice NORIKS so narejene iz vrhunske mešanice 95 % modala in 5 % elastana, kar zagotavlja izjemno mehko in elastično tkanino, ki se popolnoma prilagodi telesu. Elastičen pas je zasnovan za optimalno prileganje, ki zagotavlja udobje brez zožitve in popoln videz pod oblačili. <br>
         
         <?php else: ?>
         
@@ -469,7 +469,7 @@ $is_mixed_bundle = has_term( array( 'black-friday', 'majice-in-boksarice-paketi'
            <?php if( $is_boxers ): ?>
        
         
-          <img src="/si/wp-content/uploads/2025/12/boxers_size.jpg">
+          <img src="https://noriks.com/si/wp-content/uploads/2026/04/bokserice_si.jpg">
           
           
           
@@ -477,17 +477,17 @@ $is_mixed_bundle = has_term( array( 'black-friday', 'majice-in-boksarice-paketi'
         <?php elseif(  $is_carape ): ?>
         
         
-                  <img src="/si/wp-content/uploads/2025/11/Nogavice_tabela_velikosti.jpg">
+                  <img src="https://noriks.com/si/wp-content/uploads/2026/04/nogavice_si.jpg">
                   
     <?php elseif(  $is_mixed_bundle ): ?>
     
-     <img src="https://noriks.com/si/wp-content/uploads/2026/04/hr_majice.jpeg">
-<img src="/si/wp-content/uploads/2025/12/boxers_size.jpg">
+     <img src="https://noriks.com/si/wp-content/uploads/2026/04/tablica_si.jpg">
+<img src="https://noriks.com/si/wp-content/uploads/2026/04/bokserice_si.jpg">
         
           <?php else: ?>
       
       
-       <img src="https://noriks.com/si/wp-content/uploads/2026/04/hr_majice.jpeg">
+       <img src="https://noriks.com/si/wp-content/uploads/2026/04/tablica_si.jpg">
         
             
         <?php endif; ?>
@@ -510,7 +510,7 @@ $is_mixed_bundle = has_term( array( 'black-friday', 'majice-in-boksarice-paketi'
         
         
         
-                         Perite boje s bojama.  Program za nježno pranje na hladnoj vodi.  Sušite ravno položeno ili u sušilici na niskoj temperaturi.  Ne izbjeljivati              
+                      Barve perite skupaj z barvami. Nežno perite v hladni vodi. Sušite na ravni površini ali v sušilnem stroju pri nizki temperaturi. Ne belite.            
         
         
           <?php else: ?>
@@ -544,7 +544,7 @@ Brez papirologije, brez stresa – rešimo vse v par klikih. </p>
     info@noriks.com
   </a>
 </p>
-<p>Samo nam napiši mail da želiš zamjenu i <b data-stringify-type="bold">odmah ćemo sve srediti.</b></p>
+<p>Samo pošljite nam e-pošto, v kateri navedete, da želite zamenjavo, in <b data-stringify-type="bold">za to bomo takoj poskrbeli.</b></p>
        
        
       </div>
