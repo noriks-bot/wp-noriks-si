@@ -33,7 +33,14 @@ defined( 'ABSPATH' ) || exit;
       <div class="c--darkgray review-section-container review-addons shipping_order_review">
         <div class="review-addons-title"><div>Dostava</div></div>
         <div class="review-addons-price review-sale-price" id="noriks-shipping-price">
-          <?php echo WC()->cart->get_cart_shipping_total(); ?>
+          <?php
+            $ship = (float) WC()->cart->get_shipping_total();
+            if ( $ship > 0 ) {
+              echo wc_price( $ship );
+            } else {
+              echo '<span class="shipping-free-badge">Brezplačno</span>';
+            }
+          ?>
         </div>
       </div>
 
