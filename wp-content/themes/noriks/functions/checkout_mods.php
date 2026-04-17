@@ -319,45 +319,42 @@ add_action( 'wp_footer', function() {
         billing_address_2: '\u2715 Če nimate hišne številke, vpišite BB',
       };
       var submitted = false; /* only validate after first submit attempt */
-      /* Set submitted=true when WC native button is clicked */
-      $('form.checkout').on('checkout_place_order', function(){ submitted = true; });
-      $(document).on('click', '#place_order', function(){
+
+      /* Intercept WC checkout submit — block if our validation fails */
+      $('form.checkout').on('checkout_place_order', function(){
         submitted = true;
-        $(this).css('opacity','0.6').text('Obdelava...');
-        $('form.checkout').css({'opacity':'0.4','pointer-events':'none','transition':'opacity 0.3s'});
-      });
-      $(document.body).on('checkout_error', function(){
-        $('#place_order').css('opacity','1').text('Naroči');
-        $('form.checkout').css({'opacity':'1','pointer-events':''});
-        /* Map WC server-side errors to our red-border field styling */
-        submitted = true;
-        var wcErrors = $('.woocommerce-error li').map(function(){ return $(this).text().toLowerCase(); }).get().join(' ');
-        var fieldMap = {
-          'billing_first_name': ['ime'],
-          'billing_last_name': ['priimek'],
-          'billing_address_1': ['ulica', 'naslov'],
-          'billing_address_2': ['hi\u0161n', 'house'],
-          'billing_postcode': ['po\u0161tn', 'postcode', 'zip'],
-          'billing_city': ['mesto', 'city', 'kraj'],
-          'billing_phone': ['telefon', 'phone'],
-          'billing_email': ['e-po\u0161t', 'email', 'e-mail']
-        };
-        $.each(fieldMap, function(fieldId, keywords){
-          for (var i = 0; i < keywords.length; i++) {
-            if (wcErrors.indexOf(keywords[i]) !== -1) {
-              var input = $('#' + fieldId + '_field').find('input, select').first();
-              if (input.length && !input.val()?.trim()) showError($('#' + fieldId + '_field'), messages.required);
-              break;
-            }
+        var allValid = true;
+        $('.woocommerce-checkout .form-row.validate-required, .woocommerce-checkout .form-row.validate-email, .woocommerce-checkout .form-row.validate-phone, .woocommerce-checkout .form-row.validate-postcode').each(function(){
+          var input = $(this).find('input, select').first();
+          if (input.length && !validateField(input[0], true)) {
+            allValid = false;
           }
         });
-        /* Also re-validate all required fields */
-        $('.woocommerce-checkout .form-row.validate-required').each(function(){
+        if (!allValid) {
+          /* Scroll to first error */
+          var firstErr = $('.form-row.noriks-invalid').first();
+          if (firstErr.length) {
+            $('html, body').animate({ scrollTop: firstErr.offset().top - 100 }, 300);
+          }
+          return false; /* block WC AJAX submit */
+        }
+        /* Validation passed — show loading state */
+        $('#place_order').css('opacity','0.6').text('Obdelava...');
+        $('form.checkout').css({'opacity':'0.4','pointer-events':'none','transition':'opacity 0.3s'});
+        return true;
+      });
+
+      /* Handle WC server-side errors (payment fail, etc) */
+      $(document.body).on('checkout_error', function(){
+        $('#place_order').css('opacity','1').text('Naro\u010di');
+        $('form.checkout').css({'opacity':'1','pointer-events':''});
+        submitted = true;
+        /* Re-validate all fields to show red borders */
+        $('.woocommerce-checkout .form-row.validate-required, .woocommerce-checkout .form-row.validate-email, .woocommerce-checkout .form-row.validate-phone, .woocommerce-checkout .form-row.validate-postcode').each(function(){
           var input = $(this).find('input, select').first();
           if (input.length) validateField(input[0], true);
         });
       });
-
       function showError($row, msg) {
         $row.removeClass('noriks-valid woocommerce-validated').addClass('noriks-invalid woocommerce-invalid');
         if (!$row.find('.noriks-field-error').length) {
