@@ -30,8 +30,26 @@ defined( 'ABSPATH' ) || exit;
       <?php endforeach; ?>
 
       <!-- Shipping -->
+      <?php
+        $shipping_label = 'Dostava';
+        $shipping_packages = WC()->shipping()->get_packages();
+        if ( ! empty( $shipping_packages ) ) {
+          foreach ( $shipping_packages as $pkg ) {
+            if ( ! empty( $pkg['rates'] ) ) {
+              $chosen = WC()->session->get('chosen_shipping_methods');
+              $chosen_id = isset($chosen[0]) ? $chosen[0] : '';
+              foreach ( $pkg['rates'] as $rate ) {
+                if ( $rate->get_id() === $chosen_id || empty($chosen_id) ) {
+                  $shipping_label = $rate->get_label();
+                  break 2;
+                }
+              }
+            }
+          }
+        }
+      ?>
       <div class="c--darkgray review-section-container review-addons shipping_order_review">
-        <div class="review-addons-title"><div>GLS</div></div>
+        <div class="review-addons-title"><div><?php echo esc_html($shipping_label); ?></div></div>
         <div class="review-addons-price review-sale-price" id="noriks-shipping-price"><span style="display:inline-block;padding:3px 10px;border-radius:5px;background:#9ce79c;color:#228b22;font-size:14px;font-weight:500;">Brezplačno</span></div>
       </div>
 
