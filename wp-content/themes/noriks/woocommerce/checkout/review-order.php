@@ -30,7 +30,13 @@ defined( 'ABSPATH' ) || exit;
       <?php endforeach; ?>
 
       <!-- Shipping -->
-      <?php $shipping_cost = defined('NORIKS_SHIPPING_COST') ? NORIKS_SHIPPING_COST : 2.99; ?>
+      <?php
+        $shipping_cost = (float) WC()->cart->get_shipping_total() + (float) WC()->cart->get_shipping_tax();
+        if ( $shipping_cost == 0 ) {
+          $shipping_cost = (float) WC()->cart->get_total('edit') - (float) WC()->cart->get_subtotal() - (float) WC()->cart->get_fee_total() + (float) WC()->cart->get_discount_total();
+          if ( $shipping_cost < 0 ) $shipping_cost = 0;
+        }
+      ?>
       <div class="c--darkgray review-section-container review-addons shipping_order_review">
         <div class="review-addons-title"><div>Dostava</div></div>
         <div class="review-addons-price review-sale-price" id="noriks-shipping-price">

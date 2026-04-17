@@ -5,9 +5,6 @@
  */
 if ( ! defined( 'ABSPATH' ) ) exit;
 
-/* Shipping cost used in form-checkout.php and review-order.php */
-if ( ! defined( 'NORIKS_SHIPPING_COST' ) ) define( 'NORIKS_SHIPPING_COST', 2.99 );
-
 /**
  * Dequeue ALL WP/WC/theme styles on checkout, load vigoshop CDN CSS
  */
