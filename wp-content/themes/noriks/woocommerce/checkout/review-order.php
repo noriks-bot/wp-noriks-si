@@ -30,21 +30,10 @@ defined( 'ABSPATH' ) || exit;
       <?php endforeach; ?>
 
       <!-- Shipping -->
-      <?php
-        $shipping_cost = (float) WC()->cart->get_shipping_total() + (float) WC()->cart->get_shipping_tax();
-        if ( $shipping_cost == 0 ) {
-          $shipping_cost = (float) WC()->cart->get_total('edit') - (float) WC()->cart->get_subtotal() - (float) WC()->cart->get_fee_total() + (float) WC()->cart->get_discount_total();
-          if ( $shipping_cost < 0 ) $shipping_cost = 0;
-        }
-      ?>
       <div class="c--darkgray review-section-container review-addons shipping_order_review">
         <div class="review-addons-title"><div>Dostava</div></div>
         <div class="review-addons-price review-sale-price" id="noriks-shipping-price">
-          <?php if ( $shipping_cost > 0 ) : ?>
-            <?php echo wc_price( $shipping_cost ); ?>
-          <?php else : ?>
-            <span class="shipping-free-badge">Brezplačno</span>
-          <?php endif; ?>
+          <?php echo WC()->cart->get_cart_shipping_total(); ?>
         </div>
       </div>
 
