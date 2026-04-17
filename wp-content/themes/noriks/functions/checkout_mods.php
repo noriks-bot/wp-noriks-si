@@ -329,6 +329,33 @@ add_action( 'wp_footer', function() {
       $(document.body).on('checkout_error', function(){
         $('#place_order').css('opacity','1').text('Naroči');
         $('form.checkout').css({'opacity':'1','pointer-events':''});
+        /* Map WC server-side errors to our red-border field styling */
+        submitted = true;
+        var wcErrors = $('.woocommerce-error li').map(function(){ return $(this).text().toLowerCase(); }).get().join(' ');
+        var fieldMap = {
+          'billing_first_name': ['ime'],
+          'billing_last_name': ['priimek'],
+          'billing_address_1': ['ulica', 'naslov'],
+          'billing_address_2': ['hi\u0161n', 'house'],
+          'billing_postcode': ['po\u0161tn', 'postcode', 'zip'],
+          'billing_city': ['mesto', 'city', 'kraj'],
+          'billing_phone': ['telefon', 'phone'],
+          'billing_email': ['e-po\u0161t', 'email', 'e-mail']
+        };
+        $.each(fieldMap, function(fieldId, keywords){
+          for (var i = 0; i < keywords.length; i++) {
+            if (wcErrors.indexOf(keywords[i]) !== -1) {
+              var input = $('#' + fieldId + '_field').find('input, select').first();
+              if (input.length && !input.val()?.trim()) showError($('#' + fieldId + '_field'), messages.required);
+              break;
+            }
+          }
+        });
+        /* Also re-validate all required fields */
+        $('.woocommerce-checkout .form-row.validate-required').each(function(){
+          var input = $(this).find('input, select').first();
+          if (input.length) validateField(input[0], true);
+        });
       });
 
       function showError($row, msg) {
@@ -357,6 +384,7 @@ add_action( 'wp_footer', function() {
         var isRequired = $row.hasClass('validate-required');
         var isEmail = $row.hasClass('validate-email');
         var isPhone = $row.hasClass('validate-phone');
+        var isPostcode = $row.hasClass('validate-postcode');
 
         /* Only validate after first submit click */
         if (!submitted && !force) return true;
@@ -379,6 +407,12 @@ add_action( 'wp_footer', function() {
         /* Phone format (at least 6 digits) */
         if (isPhone && val && val.replace(/\D/g,'').length < 6) {
           showError($row, '\u2715 Vnesite veljavno telefonsko številko');
+          return false;
+        }
+
+        /* Postcode format — SI = exactly 4 digits */
+        if (isPostcode && val && !/^\d{4}$/.test(val)) {
+          showError($row, '\u2715 Poštna številka mora imeti 4 številke');
           return false;
         }
 
