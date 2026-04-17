@@ -57,7 +57,7 @@ defined( 'ABSPATH' ) || exit;
           <?php if ( $shipping_cost > 0 ) : ?>
             <?php echo wc_price( $shipping_cost ); ?>
           <?php else : ?>
-            <span style="display:inline-block;padding:3px 10px;border-radius:5px;background:#9ce79c;color:#228b22;font-size:14px;font-weight:500;">Brezplačno</span>
+            <span class="shipping-free-badge">Brezplačno</span>
           <?php endif; ?>
         </div>
       </div>
