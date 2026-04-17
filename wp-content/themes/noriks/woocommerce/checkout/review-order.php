@@ -30,32 +30,9 @@ defined( 'ABSPATH' ) || exit;
       <?php endforeach; ?>
 
       <!-- Shipping -->
-      <?php
-        $shipping_label = 'Dostava';
-        $shipping_cost  = 0;
-        $chosen_methods = WC()->session->get('chosen_shipping_methods', array());
-        $chosen_id = isset($chosen_methods[0]) ? $chosen_methods[0] : '';
-        foreach ( WC()->shipping()->get_packages() as $pkg ) {
-          if ( empty( $pkg['rates'] ) ) continue;
-          foreach ( $pkg['rates'] as $rate ) {
-            if ( $rate->get_id() === $chosen_id || empty($chosen_id) ) {
-              $shipping_label = $rate->get_label();
-              $cost = (float) $rate->get_cost();
-              $taxes = $rate->get_taxes();
-              $tax = is_array($taxes) ? array_sum($taxes) : 0;
-              $shipping_cost = $cost + $tax;
-              break 2;
-            }
-          }
-        }
-        /* Fallback: use cart shipping total if rate gave us 0 but cart says otherwise */
-        if ( $shipping_cost == 0 ) {
-          $cart_ship = (float) WC()->cart->get_shipping_total() + (float) WC()->cart->get_shipping_tax();
-          if ( $cart_ship > 0 ) $shipping_cost = $cart_ship;
-        }
-      ?>
+      <?php $shipping_cost = defined('NORIKS_SHIPPING_COST') ? NORIKS_SHIPPING_COST : 2.99; ?>
       <div class="c--darkgray review-section-container review-addons shipping_order_review">
-        <div class="review-addons-title"><div><?php echo esc_html($shipping_label); ?></div></div>
+        <div class="review-addons-title"><div>Dostava</div></div>
         <div class="review-addons-price review-sale-price" id="noriks-shipping-price">
           <?php if ( $shipping_cost > 0 ) : ?>
             <?php echo wc_price( $shipping_cost ); ?>
