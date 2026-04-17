@@ -32,9 +32,7 @@ defined( 'ABSPATH' ) || exit;
       <!-- Shipping -->
       <?php
         $shipping_label = 'Dostava';
-        $shipping_total = WC()->cart->get_shipping_total();
-        $shipping_tax   = WC()->cart->get_shipping_tax();
-        $shipping_cost  = (float) $shipping_total + (float) $shipping_tax;
+        $shipping_cost  = 0;
         $shipping_packages = WC()->shipping()->get_packages();
         if ( ! empty( $shipping_packages ) ) {
           foreach ( $shipping_packages as $pkg ) {
@@ -44,6 +42,7 @@ defined( 'ABSPATH' ) || exit;
               foreach ( $pkg['rates'] as $rate ) {
                 if ( $rate->get_id() === $chosen_id || empty($chosen_id) ) {
                   $shipping_label = $rate->get_label();
+                  $shipping_cost  = (float) $rate->get_cost() + (float) $rate->get_shipping_tax();
                   break 2;
                 }
               }
