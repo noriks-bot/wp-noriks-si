@@ -11,8 +11,7 @@ if (  has_term( array( 'starter-paketi','orto-starter' ), 'product_cat', get_the
     <!-- Left Video -->
     <div class="why-col">
       <div class="video-wrapper">
-          <img style="" src="<?php echo get_template_directory_uri(); ?>/img/starter-1.png
-">
+          <img style="" src="https://noriks.com/si/wp-content/uploads/2026/04/si.jpg">
       </div>
     </div>
 
@@ -75,8 +74,7 @@ ZAŠTO LJUDI BIRAJU STARTER PAKET?
     <!-- Left Video -->
     <div class="why-col">
       <div class="video-wrapper">
-           <img style="" src="<?php echo get_template_directory_uri(); ?>/img/starter-2.png
-">
+           <img style="" src="https://noriks.com/si/wp-content/uploads/2026/04/si2.jpg">
       </div>
     </div>
 
@@ -135,8 +133,7 @@ KOMBINACIJA KOJA SE NOSI SVAKI DAN
     <!-- Left Video -->
     <div class="why-col">
       <div class="video-wrapper">
-          <img style="" src="<?php echo get_template_directory_uri(); ?>/img/starter-3.png
-">
+          <img style="" src="https://noriks.com/si/wp-content/uploads/2026/04/si3.jpg">
       </div>
     </div>
 
@@ -362,7 +359,7 @@ if (  has_term( array( 'majice', 'orto-majice' ), 'product_cat', get_the_id() ) 
 
 <!-- here we include new file BOXERIRICE-->
 
-<?php if ( has_term( array( 'bokserice', 'bokserice-sastavi-paket',  'orto-bokserice' ), 'product_cat', get_the_ID() )  && !has_term( 'black-friday', 'product_cat', get_the_ID() ) ): ?>
+<?php if ( has_term( array( 'boksarice', 'bokserice-sastavi-paket',  'orto-bokserice' ), 'product_cat', get_the_ID() )  && !has_term( 'black-friday', 'product_cat', get_the_ID() ) ): ?>
 
 
 
@@ -409,13 +406,13 @@ endif;
     <!-- Right Content -->
     <div class="why-col why-content">
       <h2 style="color: #222; text-align:left; margin-left: 20px; font-family: 'Barlow', sans-serif; color:#222223;">
-        Fleksibilan rez za snažnije noge
+       Prilagodljiv kroj za močnejše noge
       </h2>
 
       <div style="margin-left: 20px;" class="why-point">
-        <p><strong>Cjelodnevna udobnost
+        <p><strong>Celodnevno udobje
 </strong></p>
-        <p class="description">Posebno dizajnirano za muškarce s debljim bedrima. Elastični i rastezljivi materijal pruža maksimalnu udobnost bez zatezanja ili neugodnog pojasa. Donje rublje ostaje na mjestu i ne podiže se, pa se možete slobodno kretati cijeli dan.</p>
+        <p class="description">Posebej zasnovano za moške z debelejšimi stegni. Elastičen in raztegljiv material zagotavlja maksimalno udobje brez zategnjenosti ali neudobnega pasu. Spodnje perilo ostane na mestu in se ne dviga, tako da se lahko prosto gibljete ves dan.</p>
       </div>
 
     
@@ -445,13 +442,12 @@ endif;
     <!-- Right Content -->
     <div class="why-col why-content">
       <h2 style="color: #222; text-align:left; margin-left: 20px; font-family: 'Barlow', sans-serif; color:#222223;">
-       Manje trošenja i oštećenja
+       Manj obrabe in poškodb
       </h2>
 
       <div style="margin-left: 20px;" class="why-point">
-        <p><strong>Super izdržljivo 💪
-</strong></p>
-        <p class="description">Zaboravite na stalnu kupovinu poderanog donjeg rublja. NORIKS šortsevi su napravljeni od jačeg materijala – traju duže i štede vam put u trgovinu.
+        <p><strong>Super vzdržljivo 💪
+</strong></p><p class="description">Pozabite na nenehno kupovanje raztrganega spodnjega perila. Kratke hlače NORIKS so narejene iz močnejšega materiala – dlje zdržijo in vam prihranijo obisk trgovine.
 </p>
       </div>
 
@@ -460,9 +456,9 @@ endif;
         
         <p class="description">
         
-        ✅ Manje poderanja  <br/>
-        ✅ Manje znojenja  <br/>
-        ✅ Udobnost tijekom cijelog dana <br/>
+        ✅ Manj trganja <br/>
+✅ Manj potenja <br/>
+✅ Celodnevno udobje <br/>
                 
         </p>
       </div>
@@ -494,13 +490,13 @@ endif;
     <!-- Right Content -->
     <div class="why-col why-content">
       <h2 style="color: #222; text-align:left; margin-left: 20px; font-family: 'Barlow', sans-serif; color:#222223;">
-       Dovoljno prostora za sve
+      Dovolj prostora za vse
       </h2>
 
       <div style="margin-left: 20px;" class="why-point">
-        <p><strong>Dečki, dopustite svom međunožju da slobodno diše!
+        <p><strong>Fantje, pustite svojemu mednožju prosto dihati!
 </strong></p>
-        <p class="description">NORIKS donje rublje pruža podršku tijekom cijelog dana, a da pritom ne gubi oblik. Nebeski mekan Modal materijal rasteže se i savršeno pristaje na pravim mjestima. Prostor za vaše “gadžete” je prostraniji i fleksibilniji, pa se ne osjećate skučenima.</p>
+        <p class="description">Spodnje perilo NORIKS nudi oporo ves dan, ne da bi izgubilo obliko. Nebeško mehak material Modal se razteza in se popolnoma prilega na pravih mestih. Prostor za vaše »pripomočke« je bolj prostoren in prilagodljiv, zato se ne boste počutili utesnjeno.</p>
       </div>
 
    
@@ -560,14 +556,14 @@ endif;
 $products = array();
 
 // If current product is in category 'bokserice' → load all products from that category
-if ( has_term( array( 'bokserice', 'orto-bokserice', 'bokserice-sastavi-paket' ), 'product_cat', get_the_ID() ) ) {
+if ( has_term( array( 'boksarice', 'orto-bokserice', 'bokserice-sastavi-paket' ), 'product_cat', get_the_ID() ) ) {
 
     // Get all products from category 'bokserice'
     $wc_products = wc_get_products( array(
         'limit'    => 8,
         'orderby'  => 'menu_order',
         'order'    => 'ASC',
-        'category' => array( 'bokserice' )
+        'category' => array( 'boksarice' )
     ) );
 
     if ( ! empty( $wc_products ) ) {
@@ -859,7 +855,7 @@ a:hover {
 
                 if ($shirt_count != 1):
                   if ($alt_output == false):
-                    $is_boxers = has_term( array( 'bokserice', 'orto-bokserice' , 'bokserice-sastavi-paket' ), 'product_cat', $current_product_id );
+                    $is_boxers = has_term( array( 'boksarice', 'orto-bokserice' , 'bokserice-sastavi-paket' ), 'product_cat', $current_product_id );
 
                     if ($is_boxers):
                       $topseler_text = get_field("singlepp_priceper_before","options") . " " . $tmp_price . " " . "€ po boksericama";
@@ -1446,7 +1442,7 @@ $auto_reviews_ship = assign_unique_avatars_first_n($auto_reviews_ship, $avatar_p
     <div class="reviews-tabs" style="display:flex;gap:18px;border-bottom:1px solid #cbc8c8;margin-bottom:18px;">
       <button type="button" class="reviews-tab is-active" data-tab="product"
         style="appearance:none;background:#00000008;border:1px solid #cbc8c8;border-bottom:0;padding:8px 14px;border-radius:0;font-weight:700;">
-        <?php echo esc_html__('Recenzije proizvoda', 'your-textdomain'); ?> (692)
+        <?php echo esc_html__('Recenzije produkta', 'your-textdomain'); ?> (692)
       </button>
       <button type="button" class="reviews-tab" data-tab="shipping"
         style="appearance:none;background:transparent;border:1px solid transparent;border-bottom:0;padding:8px 14px;border-radius:0;font-weight:700;">
