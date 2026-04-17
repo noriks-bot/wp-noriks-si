@@ -44,16 +44,7 @@ if ( WC()->cart->is_empty() ) return;
                     <strong class="hs-custom-date" id="js-delivery-dates"></strong>
                   </div>
                   <div class="inner-wrapper-img">
-                    <span class="shipping_method_delivery_price tag tag--red">
-                      <?php
-                        $ship = (float) WC()->cart->get_shipping_total();
-                        if ( $ship > 0 ) {
-                          echo wc_price( $ship );
-                        } else {
-                          echo 'Brezplačno';
-                        }
-                      ?>
-                    </span>
+                    <span class="shipping_method_delivery_price tag tag--red"></span>
                     <span class="delivery_img"><img decoding="async" class="gls standard" src="https://images.vigo-shop.com/general/curriers/gls.png"/></span>
                   </div>
                 </div>
