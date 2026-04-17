@@ -319,42 +319,18 @@ add_action( 'wp_footer', function() {
         billing_address_2: '\u2715 Če nimate hišne številke, vpišite BB',
       };
       var submitted = false; /* only validate after first submit attempt */
-
-      /* Intercept WC checkout submit — block if our validation fails */
-      $('form.checkout').on('checkout_place_order', function(){
+      /* Set submitted=true when WC native button is clicked */
+      $('form.checkout').on('checkout_place_order', function(){ submitted = true; });
+      $(document).on('click', '#place_order', function(){
         submitted = true;
-        var allValid = true;
-        $('.woocommerce-checkout .form-row.validate-required, .woocommerce-checkout .form-row.validate-email, .woocommerce-checkout .form-row.validate-phone, .woocommerce-checkout .form-row.validate-postcode').each(function(){
-          var input = $(this).find('input, select').first();
-          if (input.length && !validateField(input[0], true)) {
-            allValid = false;
-          }
-        });
-        if (!allValid) {
-          /* Scroll to first error */
-          var firstErr = $('.form-row.noriks-invalid').first();
-          if (firstErr.length) {
-            $('html, body').animate({ scrollTop: firstErr.offset().top - 100 }, 300);
-          }
-          return false; /* block WC AJAX submit */
-        }
-        /* Validation passed — show loading state */
-        $('#place_order').css('opacity','0.6').text('Obdelava...');
+        $(this).css('opacity','0.6').text('Obdelava...');
         $('form.checkout').css({'opacity':'0.4','pointer-events':'none','transition':'opacity 0.3s'});
-        return true;
+      });
+      $(document.body).on('checkout_error', function(){
+        $('#place_order').css('opacity','1').text('Naroči');
+        $('form.checkout').css({'opacity':'1','pointer-events':''});
       });
 
-      /* Handle WC server-side errors (payment fail, etc) */
-      $(document.body).on('checkout_error', function(){
-        $('#place_order').css('opacity','1').text('Naro\u010di');
-        $('form.checkout').css({'opacity':'1','pointer-events':''});
-        submitted = true;
-        /* Re-validate all fields to show red borders */
-        $('.woocommerce-checkout .form-row.validate-required, .woocommerce-checkout .form-row.validate-email, .woocommerce-checkout .form-row.validate-phone, .woocommerce-checkout .form-row.validate-postcode').each(function(){
-          var input = $(this).find('input, select').first();
-          if (input.length) validateField(input[0], true);
-        });
-      });
       function showError($row, msg) {
         $row.removeClass('noriks-valid woocommerce-validated').addClass('noriks-invalid woocommerce-invalid');
         if (!$row.find('.noriks-field-error').length) {
@@ -381,7 +357,6 @@ add_action( 'wp_footer', function() {
         var isRequired = $row.hasClass('validate-required');
         var isEmail = $row.hasClass('validate-email');
         var isPhone = $row.hasClass('validate-phone');
-        var isPostcode = $row.hasClass('validate-postcode');
 
         /* Only validate after first submit click */
         if (!submitted && !force) return true;
@@ -404,12 +379,6 @@ add_action( 'wp_footer', function() {
         /* Phone format (at least 6 digits) */
         if (isPhone && val && val.replace(/\D/g,'').length < 6) {
           showError($row, '\u2715 Vnesite veljavno telefonsko številko');
-          return false;
-        }
-
-        /* Postcode format — SI = exactly 4 digits */
-        if (isPostcode && val && !/^\d{4}$/.test(val)) {
-          showError($row, '\u2715 Poštna številka mora imeti 4 številke');
           return false;
         }
 
@@ -507,7 +476,7 @@ add_filter( 'woocommerce_checkout_fields', function( $fields ) {
     /* Description injected via JS to survive update_checkout AJAX re-renders */
     // $fields['billing']['billing_email']['description'] = 'Za potvrdu narudžbe i praćenje pošiljke';
     $fields['billing']['billing_email']['required'] = true;
-    $fields['billing']['billing_country']['default'] = 'SI';
+    $fields['billing']['billing_country']['default'] = 'HR';
     unset( $fields['billing']['billing_company'] );
 
     // Vigoshop CSS classes
@@ -622,11 +591,15 @@ add_action('woocommerce_review_order_before_submit', function(){
             method:'POST',
             body:new URLSearchParams({coupon_code:code,security:'<?php echo wp_create_nonce("apply-coupon"); ?>'}),
             headers:{'Content-Type':'application/x-www-form-urlencoded'}
-        }).then(function(r){return r.text();}).then(function(html){
+        }).then(function(r){
+            var ok=r.ok;return r.text().then(function(html){return{ok:ok,html:html};});
+        }).then(function(res){
             msg.style.display='block';
-            if(html.indexOf('error')!==-1){
+            var isError=!res.ok||res.html.indexOf('error')!==-1||res.html.indexOf('ne postoji')!==-1||res.html.indexOf('nije valjan')!==-1||res.html.indexOf('removed')!==-1;
+            if(isError){
                 msg.style.background='#fde8e8';msg.style.color='#c00';
-                msg.innerHTML=html.replace(/<[^>]*>/g,'')||'Koda ni veljavna';
+                var txt=res.html.replace(/<[^>]*>/g,'').trim();
+                msg.innerHTML='❌ '+(txt||'Koda ni veljavna.');
             }else{
                 msg.style.background='#e8fde8';msg.style.color='#080';
                 msg.innerHTML='✅ Kupon uporabljen!';
@@ -677,7 +650,7 @@ add_filter('woocommerce_checkout_posted_data', function($data){
 });
 
 /**
- * Validate billing_address_2 (kućni broj) is required
+ * Validate billing_address_2 (hišna številka) is required
  */
 add_action('woocommerce_checkout_process', function(){
     if ( empty( $_POST['billing_address_2'] ) ) {
