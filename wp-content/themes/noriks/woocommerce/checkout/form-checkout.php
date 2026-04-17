@@ -45,7 +45,7 @@ if ( WC()->cart->is_empty() ) return;
                   </div>
                   <div class="inner-wrapper-img">
                     <span class="shipping_method_delivery_price tag tag--red">
-                      <span class="woocommerce-Price-amount amount"><bdi>2,99<span class="woocommerce-Price-currencySymbol">&euro;</span></bdi></span>
+                      <?php echo WC()->cart->get_cart_shipping_total(); ?>
                     </span>
                     <span class="delivery_img"><img decoding="async" class="gls standard" src="https://images.vigo-shop.com/general/curriers/gls.png"/></span>
                   </div>
