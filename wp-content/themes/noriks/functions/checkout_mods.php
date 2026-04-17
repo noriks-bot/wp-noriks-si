@@ -429,6 +429,12 @@ add_action( 'wp_footer', function() {
           return false;
         }
 
+        /* Postcode — SI: exactly 4 digits */
+        if ($row.hasClass('validate-postcode') && val && !/^\d{4}$/.test(val)) {
+          showError($row, '\u2715 Poštna številka mora imeti 4 številke');
+          return false;
+        }
+
         /* Valid */
         if (val) showValid($row);
         return true;
