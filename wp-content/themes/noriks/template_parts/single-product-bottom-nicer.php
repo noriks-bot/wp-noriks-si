@@ -436,7 +436,7 @@ endif;
 
     <!-- Left Video -->
     <div class="why-col">
-       <img src="/si/wp-content/uploads/2025/12/recreate_this_picture_to_look_more_real_same_text_on_it_zidddz68sbcgp6wmizbl.jpg">
+       <img src="https://noriks.com/si/wp-content/uploads/2026/04/detajl-prednosti-SI-8.jpg">
     </div>
 
     <!-- Right Content -->
