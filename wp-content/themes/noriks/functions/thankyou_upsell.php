@@ -35,23 +35,24 @@ function noriks_add_primary_hold_to_statuses( $statuses ) {
 
 // ─── 2. COD orders → primary-hold (instead of processing) ───────────────
 
-add_action( 'woocommerce_thankyou', 'noriks_set_cod_primary_hold', 1 );
-function noriks_set_cod_primary_hold( $order_id ) {
+// CORE FIX: Intercept COD payment status BEFORE WC sets it.
+// This prevents the processing email from firing before the upsell window.
+// WC_Gateway_COD::process_payment() uses this filter to decide the order status.
+add_filter( 'woocommerce_cod_process_payment_order_status', 'noriks_cod_status_primary_hold', 10, 2 );
+function noriks_cod_status_primary_hold( $status, $order ) {
+    return 'primary-hold';
+}
+
+// Schedule the 5-min timer on thankyou page load (order is already in primary-hold)
+add_action( 'woocommerce_thankyou', 'noriks_schedule_primary_hold_timer', 1 );
+function noriks_schedule_primary_hold_timer( $order_id ) {
     if ( ! $order_id ) return;
     $order = wc_get_order( $order_id );
     if ( ! $order ) return;
 
-    // Only COD orders
+    // Only COD orders in primary-hold
     if ( $order->get_payment_method() !== 'cod' ) return;
-
-    // Only if currently on-hold or processing (fresh order)
-    $status = $order->get_status();
-    if ( ! in_array( $status, array( 'on-hold', 'processing', 'pending' ) ) ) return;
-
-    // Don't re-apply if already in primary-hold
-    if ( $status === 'primary-hold' ) return;
-
-    $order->update_status( 'primary-hold', 'Upsell window: 5 min hold for post-purchase offers.' );
+    if ( $order->get_status() !== 'primary-hold' ) return;
 
     // Schedule auto-transition to processing after 5 minutes.
     // Use Action Scheduler when available because it is more reliable than plain WP-Cron.
