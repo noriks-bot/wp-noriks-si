@@ -7,8 +7,76 @@
  * - Non-COD orders: no upsell, normal flow (processing/completed)
  * - 50% off SALE price, server-side calculated
  * - Metadata: _noriks_upsell = "thank you upsell"
+ * - Emails (new order + customer processing) are DELAYED until primary-hold → processing
+ *   so they contain the final order value (with any upsell items)
  */
 if ( ! defined( 'ABSPATH' ) ) exit;
+
+
+// ─── 0. SUPPRESS emails for COD orders during upsell window ─────────────
+// Emails will be sent AFTER primary-hold → processing transition
+// so they include the correct total (with any upsell items added).
+
+// Suppress "New Order" admin email for COD orders that haven't finished upsell window
+add_filter( 'woocommerce_email_enabled_new_order', 'noriks_suppress_cod_email_during_upsell', 10, 2 );
+function noriks_suppress_cod_email_during_upsell( $enabled, $order ) {
+    if ( ! $order || ! is_a( $order, 'WC_Order' ) ) return $enabled;
+    if ( $order->get_payment_method() !== 'cod' ) return $enabled;
+    // If order hasn't been through primary-hold → processing yet, suppress
+    if ( ! $order->get_meta( '_noriks_upsell_emails_sent' ) ) {
+        return false;
+    }
+    return $enabled;
+}
+
+// Suppress "Customer Processing Order" email for COD during upsell window
+add_filter( 'woocommerce_email_enabled_customer_processing_order', 'noriks_suppress_cod_customer_email_during_upsell', 10, 2 );
+function noriks_suppress_cod_customer_email_during_upsell( $enabled, $order ) {
+    if ( ! $order || ! is_a( $order, 'WC_Order' ) ) return $enabled;
+    if ( $order->get_payment_method() !== 'cod' ) return $enabled;
+    if ( ! $order->get_meta( '_noriks_upsell_emails_sent' ) ) {
+        return false;
+    }
+    return $enabled;
+}
+
+// Suppress "Customer On-Hold Order" email for COD during upsell window
+add_filter( 'woocommerce_email_enabled_customer_on_hold_order', 'noriks_suppress_cod_onhold_email_during_upsell', 10, 2 );
+function noriks_suppress_cod_onhold_email_during_upsell( $enabled, $order ) {
+    if ( ! $order || ! is_a( $order, 'WC_Order' ) ) return $enabled;
+    if ( $order->get_payment_method() !== 'cod' ) return $enabled;
+    if ( ! $order->get_meta( '_noriks_upsell_emails_sent' ) ) {
+        return false;
+    }
+    return $enabled;
+}
+
+/**
+ * Send delayed emails after upsell window closes.
+ * Called when order transitions from primary-hold → processing.
+ */
+function noriks_send_delayed_order_emails( $order_id ) {
+    $order = wc_get_order( $order_id );
+    if ( ! $order ) return;
+
+    // Mark emails as allowed now
+    $order->update_meta_data( '_noriks_upsell_emails_sent', 'yes' );
+    $order->save();
+
+    // Manually trigger the emails with final order data
+    $mailer = WC()->mailer();
+    $emails = $mailer->get_emails();
+
+    // Send "New Order" to admin
+    if ( isset( $emails['WC_Email_New_Order'] ) ) {
+        $emails['WC_Email_New_Order']->trigger( $order_id, $order );
+    }
+
+    // Send "Customer Processing Order" to customer
+    if ( isset( $emails['WC_Email_Customer_Processing_Order'] ) ) {
+        $emails['WC_Email_Customer_Processing_Order']->trigger( $order_id, $order );
+    }
+}
 
 
 // ─── 1. Register custom order status "primary-hold" ─────────────────────
@@ -69,49 +137,35 @@ function noriks_transition_to_processing( $order_id ) {
     if ( $order->get_status() !== 'primary-hold' ) return;
 
     $order->update_status( 'processing', 'Upsell window expired — auto-transitioned to processing.' );
+
+    // NOW send delayed emails with final order value (including any upsells)
+    noriks_send_delayed_order_emails( $order_id );
 }
 
 
-// ─── FAILSAFE: sweep stuck primary-hold orders on every page load ────────
-// wp_cron depends on page visits — this catches any orders that slipped through
+// ─── FAILSAFE: sweep stuck primary-hold orders (admin-only, lightweight) ─
+// Runs only on admin order list page — not on every frontend page load.
+// wp_cron scheduled event (above) is the primary mechanism.
 
-add_action( 'init', 'noriks_failsafe_primary_hold_sweep' );
-function noriks_failsafe_primary_hold_sweep() {
-    // Only run once per minute (transient lock)
-    if ( get_transient( 'noriks_ph_sweep_lock' ) ) return;
-    set_transient( 'noriks_ph_sweep_lock', 1, 60 );
+add_action( 'woocommerce_order_list_table_prepare_items_query_args', 'noriks_failsafe_on_admin_orders' );
+
+function noriks_failsafe_on_admin_orders( $args ) {
+    // Only run once per 2 minutes (transient lock)
+    if ( get_transient( 'noriks_ph_sweep_lock' ) ) return $args;
+    set_transient( 'noriks_ph_sweep_lock', 1, 120 );
 
     $orders = wc_get_orders( array(
-        'status'     => 'primary-hold',
-        'limit'      => 20,
+        'status'       => 'primary-hold',
+        'limit'        => 20,
         'date_created' => '<' . ( time() - 300 ), // older than 5 min
     ));
 
     foreach ( $orders as $order ) {
         $order->update_status( 'processing', 'Failsafe: primary-hold exceeded 5 min — auto-moved to processing.' );
+        noriks_send_delayed_order_emails( $order->get_id() );
     }
-}
 
-
-// ─── FAILSAFE 2: WooCommerce order list hook (catches admin visits) ──────
-
-add_action( 'woocommerce_order_list_table_prepare_items_query_args', 'noriks_failsafe_on_admin_orders' );
-add_action( 'woocommerce_before_order_object_save', 'noriks_failsafe_on_order_save' );
-
-function noriks_failsafe_on_admin_orders( $args ) {
-    noriks_failsafe_primary_hold_sweep();
     return $args;
-}
-
-function noriks_failsafe_on_order_save( $order ) {
-    // When any order is saved, also check for stuck primary-holds
-    if ( $order->get_status() === 'primary-hold' ) {
-        $created = $order->get_date_created();
-        if ( $created && ( time() - $created->getTimestamp() ) > 300 ) {
-            $order->set_status( 'processing' );
-            $order->add_order_note( 'Failsafe: primary-hold auto-resolved on save.' );
-        }
-    }
 }
 
 
@@ -129,6 +183,10 @@ function noriks_release_primary_hold() {
     if ( $order->get_status() !== 'primary-hold' ) wp_send_json_success( 'Already released' );
 
     $order->update_status( 'processing', 'Released from primary-hold (timer expired on client).' );
+
+    // Send delayed emails now (with final order value)
+    noriks_send_delayed_order_emails( $order_id );
+
     wp_send_json_success( 'Released to processing' );
 }
 
