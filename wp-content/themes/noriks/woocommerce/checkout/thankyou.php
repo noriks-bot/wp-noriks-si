@@ -53,7 +53,7 @@ if ( $upsell_is_majice ) {
 } else {
     $upsell_product_id = 2781; // Crne Boksarice
     $upsell_name       = 'Crne Boksarice';
-    $upsell_qty_prices = array( 1 => 7.99, 3 => 19.99, 5 => 29.99 );
+    $upsell_qty_prices = array( 1 => 4.99, 3 => 14.97, 5 => 24.95 );
     $upsell_qty_names  = array( 1 => '1x Crne Boksarice', 3 => '3x Crne Boksarice', 5 => '5x Crnih Bokseric' );
     $upsell_qty_images = array(
         1 => 'https://noriks.com/si/wp-content/uploads/2025/11/crne-boksarice-produktna.jpg',
