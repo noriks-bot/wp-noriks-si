@@ -4,7 +4,7 @@ Contributors:      google
 Requires at least: 5.2
 Tested up to:      7.0
 Requires PHP:      7.4
-Stable tag:        1.176.0
+Stable tag:        1.178.0
 License:           Apache License 2.0
 License URI:       https://www.apache.org/licenses/LICENSE-2.0
 Tags:              google, search-console, analytics, adsense, pagespeed-insights
@@ -112,23 +112,27 @@ Please create a new topic on our [WordPress.org support forum](https://wordpress
 
 == Changelog ==
 
-= 1.176.0 =
+= 1.178.0 =
 
 **Enhanced**
 
-* Remove the "New" badge from the Audience groups widget. See [#12290](https://github.com/google/site-kit-wp/issues/12290).
-* Ensure the Email reporting panel is open after completing GA4 module setup if the setup was started with the Email reporting panel open. See [#12257](https://github.com/google/site-kit-wp/issues/12257).
-* Avoid a delay when showing the Welcome modal's dashboard tour and its tooltip. See [#12252](https://github.com/google/site-kit-wp/issues/12252).
-* Fix tooltip visibility for the Search Console-only dashboard tour on shorter desktop screens. See [#12241](https://github.com/google/site-kit-wp/issues/12241).
-* Add error notices when email CRON tasks encounter errors. See [#12133](https://github.com/google/site-kit-wp/issues/12133).
-* Add GA event tracking for user interaction with the Analytics setup CTA. See [#12031](https://github.com/google/site-kit-wp/issues/12031).
-* Add a "Start setup" link for Site Kit in the WordPress plugin screen. See [#8679](https://github.com/google/site-kit-wp/issues/8679).
+* Improve copy in enhanced conversions notifications for Ads. See [#12535](https://github.com/google/site-kit-wp/issues/12535).
+* Improve copy in enhanced conversions notifications for Analytics. See [#12534](https://github.com/google/site-kit-wp/issues/12534).
+* Add the `pdfGeneration` feature flag for the upcoming feature. See [#12506](https://github.com/google/site-kit-wp/issues/12506).
+* Fix the browser back button on the Key Metrics setup screen, which does not navigate back to the Analytics setup screen. See [#12503](https://github.com/google/site-kit-wp/issues/12503).
+* Update the dashboard's Welcome modal for mobile viewports. See [#12462](https://github.com/google/site-kit-wp/issues/12462).
+* Add the new Site Goals section. See [#12423](https://github.com/google/site-kit-wp/issues/12423).
+* Improve enhanced conversion tracking for Easy Digital Downloads to include additional details. See [#11743](https://github.com/google/site-kit-wp/issues/11743).
+* Update "Customize settings" link after Sign in with Google setup. See [#11666](https://github.com/google/site-kit-wp/issues/11666).
+* Remove Ads Conversion ID entirely from Analytics module. See [#11303](https://github.com/google/site-kit-wp/issues/11303).
+
+**Changed**
+
+* Upgrade WordPress packages and TypeScript versions. See [#12058](https://github.com/google/site-kit-wp/issues/12058).
 
 **Fixed**
 
-* Fix scrolling issues in sidesheet panels. See [#12360](https://github.com/google/site-kit-wp/issues/12360).
-* Fix layout bug when email reports have multiple notices. See [#12279](https://github.com/google/site-kit-wp/issues/12279).
-* Show a Search Console-specific error message in Email reporting when a permissions issue is encountered. See [#12276](https://github.com/google/site-kit-wp/issues/12276).
-* Fix timezone bugs with scheduled emails. See [#12102](https://github.com/google/site-kit-wp/issues/12102).
+* Prevent overlay notifications from appearing when the dashboard tour is active. See [#12478](https://github.com/google/site-kit-wp/issues/12478).
+* Fix Welcome Modal reappearing after dismissing and resubmitting Key Metrics answers. Props anishesg. See [#12477](https://github.com/google/site-kit-wp/issues/12477).
 
 [See changelog for all versions](https://raw.githubusercontent.com/google/site-kit-wp/main/changelog.txt).
