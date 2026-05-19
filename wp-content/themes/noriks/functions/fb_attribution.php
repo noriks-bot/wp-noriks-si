@@ -287,3 +287,143 @@ function noriks_build_fb_campaign( $other_fields ) {
 		'referrer'    => $get( 'noriks_referrer' ),
 	];
 }
+
+/**
+ * (D) Direct checkout hook — ko stranka sama plača (brez Call Center),
+ *     poberemo noriks_* iz $_POST in jih shranimo v Woo order meta.
+ *
+ *     Hook: woocommerce_checkout_create_order (klican PRED save, dostop do WC_Order)
+ *
+ * @param WC_Order $order Order instance.
+ * @param array    $data  Checkout data.
+ * @return void
+ */
+add_action( 'woocommerce_checkout_create_order', function ( $order, $data ) {
+	if ( ! is_object( $order ) ) {
+		return;
+	}
+	$allowed = noriks_fb_allowed_keys();
+	$collected = [];
+	foreach ( $allowed as $key ) {
+		if ( isset( $_POST[ $key ] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing
+			$value = wp_unslash( $_POST[ $key ] ); // phpcs:ignore WordPress.Security.NonceVerification.Missing
+			if ( is_string( $value ) && $value !== '' ) {
+				$value = substr( $value, 0, 500 );
+				$collected[ $key ] = sanitize_text_field( $value );
+			}
+		}
+	}
+	if ( empty( $collected ) ) {
+		return;
+	}
+	noriks_apply_fb_meta_to_order( $order, $collected );
+}, 10, 2 );
+
+/**
+ * (E) Fallback hook — če order nima podatkov iz $_POST (npr. ustvarjen
+ *     preko CallBoss REST API ali drugje), poskusi povleči iz povezane
+ *     CartFlows abandoned cart vrste preko _abandoned_cart_id meta.
+ *
+ *     Hook: woocommerce_new_order (po insert v DB)
+ *
+ * @param int      $order_id Order ID.
+ * @param WC_Order $order    Order object (may be null in older WC).
+ * @return void
+ */
+add_action( 'woocommerce_new_order', function ( $order_id, $order = null ) {
+	if ( ! $order_id ) {
+		return;
+	}
+	if ( ! $order ) {
+		$order = wc_get_order( $order_id );
+	}
+	if ( ! $order || ! is_object( $order ) ) {
+		return;
+	}
+	// Skip if we already have _fb_campaign_id (e.g. via hook D or CC direct meta)
+	if ( $order->get_meta( '_fb_campaign_id' ) ) {
+		return;
+	}
+	$cart_id = $order->get_meta( '_abandoned_cart_id' );
+	if ( ! $cart_id ) {
+		return;
+	}
+
+	global $wpdb;
+	$table = $wpdb->prefix . 'cartflows_ca_cart_abandonment';
+	// Defensive: only run if table exists
+	$exists = $wpdb->get_var( $wpdb->prepare( 'SHOW TABLES LIKE %s', $table ) );
+	if ( ! $exists ) {
+		return;
+	}
+	$row = $wpdb->get_var( $wpdb->prepare( "SELECT other_fields FROM {$table} WHERE id = %d LIMIT 1", intval( $cart_id ) ) );
+	if ( ! $row ) {
+		return;
+	}
+	$other_fields = maybe_unserialize( $row );
+	if ( ! is_array( $other_fields ) ) {
+		return;
+	}
+	$allowed = noriks_fb_allowed_keys();
+	$collected = [];
+	foreach ( $allowed as $key ) {
+		if ( isset( $other_fields[ $key ] ) && is_string( $other_fields[ $key ] ) && $other_fields[ $key ] !== '' ) {
+			$collected[ $key ] = $other_fields[ $key ];
+		}
+	}
+	if ( empty( $collected ) ) {
+		return;
+	}
+	noriks_apply_fb_meta_to_order( $order, $collected );
+}, 20, 2 );
+
+/**
+ * Helper: pridobi noriks_* polja in jih shrani v Woo order kot _fb_* meta.
+ *
+ * @param WC_Order $order     Order object.
+ * @param array    $collected Map noriks_key => sanitized value.
+ * @return void
+ */
+function noriks_apply_fb_meta_to_order( $order, $collected ) {
+	if ( ! $order || ! is_object( $order ) ) {
+		return;
+	}
+
+	$campaign_id = $collected['noriks_campaign_id']
+		?? $collected['noriks_utm_campaign']
+		?? $collected['noriks_utm_id']
+		?? null;
+	$ad_id    = $collected['noriks_ad_id']    ?? $collected['noriks_utm_content'] ?? null;
+	$adset_id = $collected['noriks_adset_id'] ?? $collected['noriks_utm_term']    ?? null;
+
+	$pairs = [
+		'_fb_campaign_id' => $campaign_id,
+		'_fb_ad_id'       => $ad_id,
+		'_fb_adset_id'    => $adset_id,
+		'_fb_fbclid'      => $collected['noriks_fbclid']      ?? null,
+		'_fb_fbc'         => $collected['noriks_fbc']         ?? null,
+		'_fb_fbp'         => $collected['noriks_fbp']         ?? null,
+		'_fb_utm_source'  => $collected['noriks_utm_source']  ?? null,
+		'_fb_utm_medium'  => $collected['noriks_utm_medium']  ?? null,
+		'_fb_landing_url' => $collected['noriks_landing_url'] ?? null,
+		'_fb_referrer'    => $collected['noriks_referrer']    ?? null,
+	];
+
+	$wrote_any = false;
+	foreach ( $pairs as $meta_key => $value ) {
+		if ( $value === null || $value === '' ) {
+			continue;
+		}
+		$order->update_meta_data( $meta_key, $value );
+		$wrote_any = true;
+	}
+
+	if ( $wrote_any ) {
+		// Force save in case caller does not save itself (e.g. woocommerce_new_order at insert time)
+		try {
+			$order->save();
+		} catch ( Exception $e ) {
+			// ignore - hook D path will save via checkout flow anyway
+		}
+	}
+}
