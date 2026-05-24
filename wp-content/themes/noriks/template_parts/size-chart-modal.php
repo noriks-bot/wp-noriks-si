@@ -66,6 +66,28 @@
   flex: 1 1 auto;
 }
 
+/* MOBILE: always-visible scrollbars (X on table, Y on modal body) */
+@media (max-width: 768px) {
+  /* Vertical scrollbar on modal body — always visible */
+  .size-chart-body {
+    overflow-y: scroll;         /* force visible scrollbar */
+    scrollbar-width: thin;
+    scrollbar-color: rgba(0,0,0,0.45) rgba(0,0,0,0.08);
+  }
+  .size-chart-body::-webkit-scrollbar { width: 8px; }
+  .size-chart-body::-webkit-scrollbar-track {
+    background: rgba(0,0,0,0.08);
+    border-radius: 4px;
+  }
+  .size-chart-body::-webkit-scrollbar-thumb {
+    background: rgba(0,0,0,0.45);
+    border-radius: 4px;
+  }
+  .size-chart-body::-webkit-scrollbar-thumb:hover {
+    background: rgba(0,0,0,0.6);
+  }
+}
+
 /* Single-column content wrapper (only image) */
 .size-chart-left {
   display: flex;              /* center the image inside */
@@ -222,7 +244,40 @@
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
             color: #111;
           }
-          .noriks-sc-table-wrap { width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+          .noriks-sc-table-wrap {
+            width: 100%;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+          }
+          /* MOBILE: force horizontal scrollbar to be always visible */
+          @media (max-width: 768px) {
+            .noriks-sc-table-wrap {
+              overflow-x: scroll;             /* not auto -> bar always shown */
+              padding-bottom: 4px;
+              scrollbar-width: thin;
+              scrollbar-color: rgba(0,0,0,0.45) rgba(0,0,0,0.08);
+              /* subtle gradient hint that more is to the right */
+              background:
+                linear-gradient(90deg, #fff 30%, rgba(255,255,255,0)) left center / 20px 100% no-repeat,
+                linear-gradient(90deg, rgba(255,255,255,0), #fff 70%) right center / 20px 100% no-repeat,
+                linear-gradient(90deg, rgba(0,0,0,0.10), rgba(0,0,0,0)) left center / 14px 100% no-repeat,
+                linear-gradient(90deg, rgba(0,0,0,0), rgba(0,0,0,0.10)) right center / 14px 100% no-repeat;
+              background-attachment: local, local, scroll, scroll;
+            }
+            .noriks-sc-table-wrap::-webkit-scrollbar {
+              height: 8px;
+              -webkit-appearance: none;
+              background: rgba(0,0,0,0.08);
+            }
+            .noriks-sc-table-wrap::-webkit-scrollbar-track {
+              background: rgba(0,0,0,0.08);
+              border-radius: 4px;
+            }
+            .noriks-sc-table-wrap::-webkit-scrollbar-thumb {
+              background: rgba(0,0,0,0.45);
+              border-radius: 4px;
+            }
+          }
           table.noriks-sc {
             border-collapse: collapse;
             width: 100%;
