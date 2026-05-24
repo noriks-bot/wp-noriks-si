@@ -32,7 +32,7 @@
   transform: translate(-50%, -50%);
   width: 95%;
   max-width: 1100px;
-  max-height: 88vh;
+  max-height: min(720px, 78vh);
   background: #fff;
   border-radius: 3px;
   box-shadow: 0 10px 40px rgba(0,0,0,0.35);
@@ -126,7 +126,7 @@
   #custom-size-chart-modal {
     width: 100%;
     max-width: 100%;
-    max-height: 92vh;
+    max-height: 82vh;
     border-radius: 0;
     top: 50%; left: 50%;
     transform: translate(-50%, -50%);
@@ -431,7 +431,7 @@
           @media (max-width: 600px) {
             .noriks-sc-steps-grid { grid-template-columns: 1fr; }
             table.noriks-sc { font-size: 9.6px; min-width: 760px; }
-            .noriks-size-chart-wrap { padding: 14px 10px 18px; }
+            .noriks-size-chart-wrap { padding: 48px 10px 56px; }
             .noriks-sc-steps h3 { font-size: 13px; }
             .noriks-sc-step { font-size: 10.4px; }
             .noriks-sc-step .noriks-sc-num { flex: 0 0 18px; width: 18px; height: 18px; font-size: 10px; }
