@@ -14,22 +14,56 @@
 .body-type-option.selected { border: 2px solid #f39c13; background-color: #fff3d6; }
 .slike-mobile-only { display: flex; }
 
+/* --- Modal backdrop (dark overlay behind modal) --- */
+#custom-size-chart-backdrop {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.55);
+  z-index: 9999998;
+}
+#custom-size-chart-backdrop.show { display: block; }
+
 /* --- Modal base --- */
-/* Height is AUTO on ALL screens now (desktop same as mobile). */
 #custom-size-chart-modal {
   display: none;              /* hidden by default; shown via .show */
   position: fixed;
   top: 50%; left: 50%;
   transform: translate(-50%, -50%);
-  width: 90%;
-  max-width: 800px;
-  height: auto;               /* << auto height */
+  width: 95%;
+  max-width: 1100px;
+  max-height: 88vh;
   background: #fff;
-  border-radius: 3px;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.25);
+  border-radius: 6px;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.35);
   z-index: 9999999;
-  overflow: visible;          /* no forced scrollbars */
-  font-family: sans-serif;
+  overflow: hidden;
+  flex-direction: column;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+#custom-size-chart-modal.show { display: flex; }
+
+/* Title bar */
+.size-chart-titlebar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 22px;
+  border-bottom: 1px solid #eee;
+  flex: 0 0 auto;
+}
+.size-chart-titlebar h2 {
+  margin: 0;
+  font-size: 19px;
+  font-weight: 700;
+  color: #111;
+}
+
+/* Inner scroll container so modal stays bounded by max-height */
+.size-chart-body {
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  flex: 1 1 auto;
 }
 
 /* Single-column content wrapper (only image) */
@@ -50,10 +84,7 @@
   margin: 0;                  /* ensure no offsets */
 }
 
-/* When opened */
-#custom-size-chart-modal.show { display: block; }
-
-/* --- Mobile tweaks (kept minimal) --- */
+/* --- Mobile tweaks --- */
 @media (max-width: 768px) {
   .info-box-desktop { display: none !important; }
   .second-one, .third-one { display: inline-block; width: 49%; }
@@ -62,30 +93,35 @@
   .size-chart-field { margin-top: 10px; text-align: left; }
   .size-chart-field label { text-align: left; }
 
-  /* Modal stays auto-height on mobile too; nothing else needed */
+  #custom-size-chart-modal {
+    width: 100%;
+    max-width: 100%;
+    max-height: 92vh;
+    border-radius: 0;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+  }
+  .size-chart-titlebar { padding: 12px 14px; }
+  .size-chart-titlebar h2 { font-size: 16px; }
 
-  /* --- Larger size-chart image with horizontal scroll on mobile --- */
-  /* Push content below the absolute X-close button so it doesn't overlap */
-  #custom-size-chart-modal { padding-top: 45px; padding-bottom: 10px; }
-
+  /* Image-based charts (boxers/socks/etc) — keep horizontal scroll */
   .size-chart-left {
     overflow-x: auto;
     overflow-y: hidden;
-    -webkit-overflow-scrolling: touch; /* iOS momentum */
-    justify-content: flex-start;       /* scroll starts at the left edge */
+    -webkit-overflow-scrolling: touch;
+    justify-content: flex-start;
     scrollbar-width: thin;
-    padding-bottom: 6px;                /* room for native scrollbar */
+    padding-bottom: 6px;
   }
   .size-chart-left img {
-    width: auto !important;             /* override base 100% width */
+    width: auto !important;
     max-width: none !important;
-    min-width: 720px;                   /* large enough for text to be readable */
+    min-width: 720px;
     height: auto !important;
-    margin-top: 0 !important;           /* override inline 70px margins */
+    margin-top: 0 !important;
     margin-bottom: 0 !important;
-    object-fit: initial;                /* let natural size dictate dimensions */
+    object-fit: initial;
   }
-  /* Soft hint that the image is horizontally scrollable */
   .size-chart-left::-webkit-scrollbar { height: 6px; }
   .size-chart-left::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.25); border-radius: 3px; }
 }
@@ -116,11 +152,17 @@
 <?php endif; ?>
 
 <!-- Modal HTML -->
-<div id="custom-size-chart-modal" aria-modal="true" role="dialog">
-  <span id="close-size-chart-x" style="position: absolute;
-    top: 5px; right: 5px; font-size: 24px; font-weight: bold; cursor: pointer;
-    background: black; border-radius: 1px; width: 40px; height: 40px; text-align: center; color: white;">&times;</span>
+<div id="custom-size-chart-backdrop"></div>
+<div id="custom-size-chart-modal" aria-modal="true" role="dialog" aria-labelledby="custom-size-chart-title">
+  <div class="size-chart-titlebar">
+    <h2 id="custom-size-chart-title">Tabela velikosti</h2>
+    <span id="close-size-chart-x" style="font-size: 26px; font-weight: bold; cursor: pointer;
+      background: #000; border-radius: 2px; width: 34px; height: 34px;
+      display: inline-flex; align-items: center; justify-content: center;
+      color: white; line-height: 1;">&times;</span>
+  </div>
 
+  <div class="size-chart-body">
   <div  style="<?php if ( has_term( array( 'orto-starter', 'orto-majica-bokserica' ), 'product_cat', get_the_ID() ) ): ?>  display: block; <?php endif; ?>"
         class="size-chart-left">
       
@@ -184,14 +226,17 @@
           table.noriks-sc {
             border-collapse: collapse;
             width: 100%;
-            min-width: 720px;
-            font-size: 13px;
+            min-width: 760px;
+            font-size: 15px;
             table-layout: fixed;
+          }
+          @media (min-width: 769px) {
+            table.noriks-sc { font-size: 16px; }
           }
           table.noriks-sc th, table.noriks-sc td {
             border: 2px solid #fff;
             text-align: center;
-            padding: 9px 4px;
+            padding: 14px 6px;
             background: #ececec;
             font-weight: 600;
             color: #111;
@@ -474,32 +519,38 @@
       </div>
 
       <?php endif; ?>
-      
-      
-      
+
+
+
   </div>
+  </div><!-- /.size-chart-body -->
 </div>
 
 <script>
 document.addEventListener("DOMContentLoaded", function () {
   const modal = document.getElementById("custom-size-chart-modal");
+  const backdrop = document.getElementById("custom-size-chart-backdrop");
   const openBtn = document.getElementById("open-size-chart");
   const closeX = document.getElementById("close-size-chart-x");
 
-  // Open using a class so CSS controls display across breakpoints
-  openBtn?.addEventListener("click", function (e) {
-    e.preventDefault();
+  function openModal(e) {
+    if (e) e.preventDefault();
     modal.classList.add("show");
-  });
-
-  // Close
-  closeX?.addEventListener("click", function () {
+    if (backdrop) backdrop.classList.add("show");
+    document.body.style.overflow = "hidden";
+  }
+  function closeModal() {
     modal.classList.remove("show");
-  });
+    if (backdrop) backdrop.classList.remove("show");
+    document.body.style.overflow = "";
+  }
 
-  // Optional: close on ESC
+  openBtn?.addEventListener("click", openModal);
+  closeX?.addEventListener("click", closeModal);
+  backdrop?.addEventListener("click", closeModal);
+
   document.addEventListener("keydown", function (e) {
-    if (e.key === "Escape") modal.classList.remove("show");
+    if (e.key === "Escape") closeModal();
   });
 });
 </script>
