@@ -264,6 +264,36 @@
             background: #d9d9d9;
             color: #000;
             font-weight: 700;
+            transition: background-color 0.15s ease, transform 0.15s ease;
+          }
+          /* Desktop hover: highlight hovered cell + its row and column via JS-added classes */
+          @media (hover: hover) and (min-width: 769px) {
+            table.noriks-sc td:hover,
+            table.noriks-sc th:hover {
+              cursor: default;
+            }
+            table.noriks-sc td.noriks-sc-size:hover {
+              background: #f39c13 !important;
+              color: #fff !important;
+              transform: scale(1.04);
+              box-shadow: 0 2px 8px rgba(0,0,0,0.18);
+              position: relative;
+              z-index: 2;
+            }
+            table.noriks-sc tr.noriks-sc-row-hl td,
+            table.noriks-sc tr.noriks-sc-row-hl th {
+              background: #fff3d6;
+            }
+            table.noriks-sc tr.noriks-sc-row-hl td.noriks-sc-size {
+              background: #ffe2a8;
+            }
+            table.noriks-sc td.noriks-sc-col-hl,
+            table.noriks-sc th.noriks-sc-col-hl {
+              background: #fff3d6;
+            }
+            table.noriks-sc td.noriks-sc-col-hl.noriks-sc-size {
+              background: #ffe2a8;
+            }
           }
           .noriks-sc-steps {
             margin-top: 22px;
@@ -552,5 +582,34 @@ document.addEventListener("DOMContentLoaded", function () {
   document.addEventListener("keydown", function (e) {
     if (e.key === "Escape") closeModal();
   });
+
+  // Desktop hover: highlight whole row + column of hovered size cell
+  const scTable = document.querySelector("table.noriks-sc");
+  if (scTable && window.matchMedia("(hover: hover) and (min-width: 769px)").matches) {
+    scTable.addEventListener("mouseover", function (e) {
+      const cell = e.target.closest("td.noriks-sc-size");
+      if (!cell) return;
+      const row = cell.parentElement;
+      const idx = Array.from(row.children).indexOf(cell);
+      // highlight row
+      row.classList.add("noriks-sc-row-hl");
+      // highlight column: same index in all rows (incl. thead)
+      const allRows = scTable.querySelectorAll("tr");
+      allRows.forEach(function (r) {
+        const c = r.children[idx];
+        if (c) c.classList.add("noriks-sc-col-hl");
+      });
+    });
+    scTable.addEventListener("mouseout", function (e) {
+      const cell = e.target.closest("td.noriks-sc-size");
+      if (!cell) return;
+      scTable.querySelectorAll(".noriks-sc-row-hl").forEach(function (el) {
+        el.classList.remove("noriks-sc-row-hl");
+      });
+      scTable.querySelectorAll(".noriks-sc-col-hl").forEach(function (el) {
+        el.classList.remove("noriks-sc-col-hl");
+      });
+    });
+  }
 });
 </script>
