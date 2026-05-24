@@ -226,20 +226,29 @@
           table.noriks-sc {
             border-collapse: collapse;
             width: 100%;
-            min-width: 760px;
-            font-size: 15px;
+            font-size: 14px;
             table-layout: fixed;
           }
+          /* Mobile: keep horizontal scroll with readable min-width */
+          @media (max-width: 768px) {
+            table.noriks-sc { min-width: 720px; font-size: 13px; }
+          }
+          /* Desktop: fit fully within modal, no horizontal scroll */
           @media (min-width: 769px) {
-            table.noriks-sc { font-size: 16px; }
+            table.noriks-sc { min-width: 0; font-size: 14px; }
           }
           table.noriks-sc th, table.noriks-sc td {
             border: 2px solid #fff;
             text-align: center;
-            padding: 14px 6px;
+            padding: 9px 2px;
             background: #ececec;
             font-weight: 600;
             color: #111;
+            white-space: nowrap;
+            word-break: keep-all;
+          }
+          @media (min-width: 769px) {
+            table.noriks-sc th, table.noriks-sc td { padding: 10px 3px; }
           }
           table.noriks-sc thead th {
             background: #b8b8b8;
