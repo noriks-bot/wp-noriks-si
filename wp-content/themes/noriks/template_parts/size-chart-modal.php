@@ -124,15 +124,16 @@
   .size-chart-field label { text-align: left; }
 
   #custom-size-chart-modal {
-    width: 100%;
-    max-width: 100%;
-    max-height: 82vh;
-    border-radius: 0;
+    width: 92%;
+    max-width: 92%;
+    max-height: 80vh;          /* breathing room top+bottom */
+    border-radius: 6px;
     top: 50%; left: 50%;
     transform: translate(-50%, -50%);
   }
-  .size-chart-titlebar { padding: 12px 14px; }
-  .size-chart-titlebar h2 { font-size: 13px; }
+  .size-chart-titlebar { padding: 18px 16px; }
+  .size-chart-titlebar h2 { font-size: 15px; }
+  .size-chart-body { padding-top: 8px; padding-bottom: 26px; }
 
   /* Image-based charts (boxers/socks/etc) — keep horizontal scroll */
   .size-chart-left {
