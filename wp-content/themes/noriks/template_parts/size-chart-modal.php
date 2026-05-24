@@ -66,25 +66,33 @@
   flex: 1 1 auto;
 }
 
-/* MOBILE: always-visible scrollbars (X on table, Y on modal body) */
+/* MOBILE: VERY visible Y scrollbar on modal body — forced always-on, fat + orange */
 @media (max-width: 768px) {
-  /* Vertical scrollbar on modal body — always visible */
   .size-chart-body {
-    overflow-y: scroll;         /* force visible scrollbar */
-    scrollbar-width: thin;
-    scrollbar-color: rgba(0,0,0,0.45) rgba(0,0,0,0.08);
+    overflow-y: scroll !important;
+    scrollbar-width: auto;
+    scrollbar-color: #f39c13 rgba(0,0,0,0.10);
+    scrollbar-gutter: stable;
   }
-  .size-chart-body::-webkit-scrollbar { width: 8px; }
+  .size-chart-body::-webkit-scrollbar {
+    width: 12px !important;
+    -webkit-appearance: none;
+    background: rgba(0,0,0,0.10);
+  }
   .size-chart-body::-webkit-scrollbar-track {
-    background: rgba(0,0,0,0.08);
-    border-radius: 4px;
+    background: rgba(0,0,0,0.10);
+    border-radius: 6px;
+    border: 1px solid rgba(0,0,0,0.15);
   }
   .size-chart-body::-webkit-scrollbar-thumb {
-    background: rgba(0,0,0,0.45);
-    border-radius: 4px;
+    background: #f39c13;
+    border-radius: 6px;
+    border: 2px solid rgba(0,0,0,0.10);
+    min-height: 40px;
   }
+  .size-chart-body::-webkit-scrollbar-thumb:active,
   .size-chart-body::-webkit-scrollbar-thumb:hover {
-    background: rgba(0,0,0,0.6);
+    background: #d97f00;
   }
 }
 
@@ -249,33 +257,39 @@
             overflow-x: auto;
             -webkit-overflow-scrolling: touch;
           }
-          /* MOBILE: force horizontal scrollbar to be always visible */
+          /* MOBILE: force horizontal scrollbar to be ALWAYS visible, fat + orange */
           @media (max-width: 768px) {
             .noriks-sc-table-wrap {
-              overflow-x: scroll;             /* not auto -> bar always shown */
-              padding-bottom: 4px;
-              scrollbar-width: thin;
-              scrollbar-color: rgba(0,0,0,0.45) rgba(0,0,0,0.08);
-              /* subtle gradient hint that more is to the right */
+              overflow-x: scroll !important;
+              padding-bottom: 10px;
+              scrollbar-width: auto;
+              scrollbar-color: #f39c13 rgba(0,0,0,0.10);
               background:
-                linear-gradient(90deg, #fff 30%, rgba(255,255,255,0)) left center / 20px 100% no-repeat,
-                linear-gradient(90deg, rgba(255,255,255,0), #fff 70%) right center / 20px 100% no-repeat,
-                linear-gradient(90deg, rgba(0,0,0,0.10), rgba(0,0,0,0)) left center / 14px 100% no-repeat,
-                linear-gradient(90deg, rgba(0,0,0,0), rgba(0,0,0,0.10)) right center / 14px 100% no-repeat;
+                linear-gradient(90deg, #fff 30%, rgba(255,255,255,0)) left center / 24px 100% no-repeat,
+                linear-gradient(90deg, rgba(255,255,255,0), #fff 70%) right center / 24px 100% no-repeat,
+                linear-gradient(90deg, rgba(0,0,0,0.12), rgba(0,0,0,0)) left center / 18px 100% no-repeat,
+                linear-gradient(90deg, rgba(0,0,0,0), rgba(0,0,0,0.12)) right center / 18px 100% no-repeat;
               background-attachment: local, local, scroll, scroll;
             }
             .noriks-sc-table-wrap::-webkit-scrollbar {
-              height: 8px;
+              height: 12px !important;
               -webkit-appearance: none;
-              background: rgba(0,0,0,0.08);
+              background: rgba(0,0,0,0.10);
             }
             .noriks-sc-table-wrap::-webkit-scrollbar-track {
-              background: rgba(0,0,0,0.08);
-              border-radius: 4px;
+              background: rgba(0,0,0,0.10);
+              border-radius: 6px;
+              border: 1px solid rgba(0,0,0,0.15);
             }
             .noriks-sc-table-wrap::-webkit-scrollbar-thumb {
-              background: rgba(0,0,0,0.45);
-              border-radius: 4px;
+              background: #f39c13;
+              border-radius: 6px;
+              border: 2px solid rgba(0,0,0,0.10);
+              min-width: 50px;
+            }
+            .noriks-sc-table-wrap::-webkit-scrollbar-thumb:active,
+            .noriks-sc-table-wrap::-webkit-scrollbar-thumb:hover {
+              background: #d97f00;
             }
           }
           table.noriks-sc {
