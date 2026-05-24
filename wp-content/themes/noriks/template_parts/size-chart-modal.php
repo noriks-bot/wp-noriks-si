@@ -169,15 +169,310 @@
       
       
       <?php else: ?>
-      
-      
-       <img
-    
-    style="margin-top: 70px;margin-bottom: 70px;"
-    
-      src="https://noriks.com/si/wp-content/uploads/2026/04/tablica_si.jpg"
-      alt="Size Guide">
-      
+
+      <!-- MAJICE: HTML size chart (visina x teza matrika) -->
+      <div class="noriks-size-chart-wrap">
+        <style>
+          .noriks-size-chart-wrap {
+            width: 100%;
+            padding: 20px 18px 24px;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            color: #111;
+          }
+          .noriks-sc-table-wrap { width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+          table.noriks-sc {
+            border-collapse: collapse;
+            width: 100%;
+            min-width: 720px;
+            font-size: 13px;
+            table-layout: fixed;
+          }
+          table.noriks-sc th, table.noriks-sc td {
+            border: 2px solid #fff;
+            text-align: center;
+            padding: 9px 4px;
+            background: #ececec;
+            font-weight: 600;
+            color: #111;
+          }
+          table.noriks-sc thead th {
+            background: #b8b8b8;
+            color: #000;
+            font-weight: 700;
+          }
+          table.noriks-sc thead th.noriks-sc-empty { background: #b8b8b8; }
+          table.noriks-sc tbody th {
+            background: #b8b8b8;
+            font-weight: 700;
+          }
+          table.noriks-sc tbody th.noriks-sc-vis-label {
+            writing-mode: vertical-rl;
+            transform: rotate(180deg);
+            background: #b8b8b8;
+            color: #000;
+            width: 32px;
+            letter-spacing: 1px;
+          }
+          table.noriks-sc td.noriks-sc-empty { background: #ececec; color: transparent; }
+          table.noriks-sc td.noriks-sc-size {
+            background: #d9d9d9;
+            color: #000;
+            font-weight: 700;
+          }
+          .noriks-sc-steps {
+            margin-top: 22px;
+          }
+          .noriks-sc-steps h3 {
+            margin: 0 0 12px;
+            font-size: 16px;
+            font-weight: 800;
+            color: #111;
+          }
+          .noriks-sc-steps-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 14px;
+          }
+          .noriks-sc-step {
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+            font-size: 13px;
+            line-height: 1.4;
+            color: #222;
+          }
+          .noriks-sc-step .noriks-sc-num {
+            flex: 0 0 22px;
+            width: 22px; height: 22px;
+            border-radius: 50%;
+            background: #111;
+            color: #fff;
+            font-size: 12px;
+            font-weight: 700;
+            display: flex; align-items: center; justify-content: center;
+          }
+          .noriks-sc-pro {
+            margin-top: 16px;
+            border: 1.5px solid #f39c13;
+            border-radius: 4px;
+            padding: 10px 12px;
+            background: #fff8ec;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 13px;
+            line-height: 1.4;
+          }
+          .noriks-sc-pro-tag {
+            background: #f39c13;
+            color: #fff;
+            font-weight: 800;
+            font-size: 11px;
+            padding: 5px 9px;
+            border-radius: 2px;
+            letter-spacing: 0.5px;
+            flex: 0 0 auto;
+            white-space: nowrap;
+          }
+          .noriks-sc-guarantee {
+            margin-top: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13px;
+            color: #222;
+          }
+          .noriks-sc-check {
+            width: 20px; height: 20px;
+            border-radius: 50%;
+            background: #2ecc40;
+            color: #fff;
+            font-weight: 800;
+            font-size: 13px;
+            display: flex; align-items: center; justify-content: center;
+            flex: 0 0 auto;
+          }
+          @media (max-width: 600px) {
+            .noriks-sc-steps-grid { grid-template-columns: 1fr; }
+            table.noriks-sc { font-size: 12px; }
+            .noriks-size-chart-wrap { padding: 14px 10px 18px; }
+          }
+        </style>
+
+        <div class="noriks-sc-table-wrap">
+          <table class="noriks-sc">
+            <thead>
+              <tr>
+                <th class="noriks-sc-empty" rowspan="2" style="width:42px;"></th>
+                <th class="noriks-sc-empty" style="width:80px;">Velikost</th>
+                <th colspan="9">Teža (kg)</th>
+              </tr>
+              <tr>
+                <th>59-68 kg</th>
+                <th>69-77 kg</th>
+                <th>78-84 kg</th>
+                <th>84-95 kg</th>
+                <th>96-102 kg</th>
+                <th>103-113 kg</th>
+                <th>114-129 kg</th>
+                <th>130-136 kg</th>
+                <th>137-150 kg</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <th class="noriks-sc-vis-label" rowspan="10">Višina (cm)</th>
+                <th>168 cm</th>
+                <td class="noriks-sc-size">S</td>
+                <td class="noriks-sc-empty"></td><td class="noriks-sc-empty"></td><td class="noriks-sc-empty"></td><td class="noriks-sc-empty"></td><td class="noriks-sc-empty"></td><td class="noriks-sc-empty"></td><td class="noriks-sc-empty"></td><td class="noriks-sc-empty"></td>
+              </tr>
+              <tr>
+                <th>170 cm</th>
+                <td class="noriks-sc-size">S</td>
+                <td class="noriks-sc-empty"></td><td class="noriks-sc-empty"></td><td class="noriks-sc-empty"></td><td class="noriks-sc-empty"></td><td class="noriks-sc-empty"></td><td class="noriks-sc-empty"></td><td class="noriks-sc-empty"></td><td class="noriks-sc-empty"></td>
+              </tr>
+              <tr>
+                <th>173 cm</th>
+                <td class="noriks-sc-size">S</td>
+                <td class="noriks-sc-size">M</td>
+                <td class="noriks-sc-size">M</td>
+                <td class="noriks-sc-size">L</td>
+                <td class="noriks-sc-size">XL</td>
+                <td class="noriks-sc-size">XL</td>
+                <td class="noriks-sc-size">2XL</td>
+                <td class="noriks-sc-size">3XL</td>
+                <td class="noriks-sc-size">3XL</td>
+              </tr>
+              <tr>
+                <th>175 cm</th>
+                <td class="noriks-sc-size">S</td>
+                <td class="noriks-sc-size">M</td>
+                <td class="noriks-sc-size">M</td>
+                <td class="noriks-sc-size">L</td>
+                <td class="noriks-sc-size">XL</td>
+                <td class="noriks-sc-size">XL</td>
+                <td class="noriks-sc-size">2XL</td>
+                <td class="noriks-sc-size">3XL</td>
+                <td class="noriks-sc-size">3XL</td>
+              </tr>
+              <tr>
+                <th>178 cm</th>
+                <td class="noriks-sc-size">S</td>
+                <td class="noriks-sc-size">M</td>
+                <td class="noriks-sc-size">M</td>
+                <td class="noriks-sc-size">L</td>
+                <td class="noriks-sc-size">XL</td>
+                <td class="noriks-sc-size">XL</td>
+                <td class="noriks-sc-size">2XL</td>
+                <td class="noriks-sc-size">3XL</td>
+                <td class="noriks-sc-size">3XL</td>
+              </tr>
+              <tr>
+                <th>180 cm</th>
+                <td class="noriks-sc-size">S</td>
+                <td class="noriks-sc-size">M</td>
+                <td class="noriks-sc-size">M</td>
+                <td class="noriks-sc-size">L</td>
+                <td class="noriks-sc-size">XL</td>
+                <td class="noriks-sc-size">XL</td>
+                <td class="noriks-sc-size">2XL</td>
+                <td class="noriks-sc-size">3XL</td>
+                <td class="noriks-sc-size">3XL</td>
+              </tr>
+              <tr>
+                <th>183 cm</th>
+                <td class="noriks-sc-size">S</td>
+                <td class="noriks-sc-size">M</td>
+                <td class="noriks-sc-size">M</td>
+                <td class="noriks-sc-size">L</td>
+                <td class="noriks-sc-size">XL</td>
+                <td class="noriks-sc-size">XL</td>
+                <td class="noriks-sc-size">2XL</td>
+                <td class="noriks-sc-size">3XL</td>
+                <td class="noriks-sc-size">3XL</td>
+              </tr>
+              <tr>
+                <th>185 cm</th>
+                <td class="noriks-sc-empty"></td>
+                <td class="noriks-sc-size">M</td>
+                <td class="noriks-sc-size">M</td>
+                <td class="noriks-sc-size">L</td>
+                <td class="noriks-sc-size">XL</td>
+                <td class="noriks-sc-size">XL</td>
+                <td class="noriks-sc-size">2XL</td>
+                <td class="noriks-sc-size">3XL</td>
+                <td class="noriks-sc-size">3XL</td>
+              </tr>
+              <tr>
+                <th>188 cm</th>
+                <td class="noriks-sc-empty"></td>
+                <td class="noriks-sc-size">M</td>
+                <td class="noriks-sc-size">M</td>
+                <td class="noriks-sc-size">L</td>
+                <td class="noriks-sc-size">XL</td>
+                <td class="noriks-sc-size">XL</td>
+                <td class="noriks-sc-size">2XL</td>
+                <td class="noriks-sc-size">3XL</td>
+                <td class="noriks-sc-size">3XL</td>
+              </tr>
+              <tr>
+                <th>191 cm</th>
+                <td class="noriks-sc-empty"></td>
+                <td class="noriks-sc-empty"></td>
+                <td class="noriks-sc-size">M</td>
+                <td class="noriks-sc-size">L</td>
+                <td class="noriks-sc-size">XL</td>
+                <td class="noriks-sc-size">XL</td>
+                <td class="noriks-sc-size">2XL</td>
+                <td class="noriks-sc-size">3XL</td>
+                <td class="noriks-sc-size">3XL</td>
+              </tr>
+              <tr>
+                <th>193 cm</th>
+                <td class="noriks-sc-empty"></td>
+                <td class="noriks-sc-empty"></td>
+                <td class="noriks-sc-size">M</td>
+                <td class="noriks-sc-size">L</td>
+                <td class="noriks-sc-size">XL</td>
+                <td class="noriks-sc-size">XL</td>
+                <td class="noriks-sc-size">2XL</td>
+                <td class="noriks-sc-size">3XL</td>
+                <td class="noriks-sc-size">3XL</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="noriks-sc-steps">
+          <h3>Kako poiskati svojo velikost</h3>
+          <div class="noriks-sc-steps-grid">
+            <div class="noriks-sc-step">
+              <span class="noriks-sc-num">1</span>
+              <span>Poišči svojo <strong>višino</strong> v levem stolpcu.</span>
+            </div>
+            <div class="noriks-sc-step">
+              <span class="noriks-sc-num">2</span>
+              <span>Poišči svojo <strong>težo</strong> v zgornji vrstici.</span>
+            </div>
+            <div class="noriks-sc-step">
+              <span class="noriks-sc-num">3</span>
+              <span>Polje, kjer se sekata &mdash; to je tvoja velikost.</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="noriks-sc-pro">
+          <span class="noriks-sc-pro-tag">PRO NASVET</span>
+          <span>Če si med dvema velikostima in želiš <strong>bolj sproščen kroj</strong>, vzemi večjo. Za <strong>bolj prilegajoč videz</strong> vzemi manjšo.</span>
+        </div>
+
+        <div class="noriks-sc-guarantee">
+          <span class="noriks-sc-check">&#10003;</span>
+          <span>Nisi prepričan? Brezplačna zamenjava velikosti v 90 dneh.</span>
+        </div>
+      </div>
+
       <?php endif; ?>
       
       
