@@ -124,7 +124,7 @@
     transform: translate(-50%, -50%);
   }
   .size-chart-titlebar { padding: 12px 14px; }
-  .size-chart-titlebar h2 { font-size: 16px; }
+  .size-chart-titlebar h2 { font-size: 13px; }
 
   /* Image-based charts (boxers/socks/etc) — keep horizontal scroll */
   .size-chart-left {
@@ -286,7 +286,7 @@
           }
           /* Mobile: keep horizontal scroll with readable min-width */
           @media (max-width: 768px) {
-            table.noriks-sc { min-width: 720px; font-size: 13px; }
+            table.noriks-sc { min-width: 780px; font-size: 10.4px; }
           }
           /* Desktop: fit fully within modal, no horizontal scroll */
           @media (min-width: 769px) {
@@ -416,8 +416,15 @@
           }
           @media (max-width: 600px) {
             .noriks-sc-steps-grid { grid-template-columns: 1fr; }
-            table.noriks-sc { font-size: 12px; }
+            table.noriks-sc { font-size: 9.6px; min-width: 760px; }
             .noriks-size-chart-wrap { padding: 14px 10px 18px; }
+            .noriks-sc-steps h3 { font-size: 13px; }
+            .noriks-sc-step { font-size: 10.4px; }
+            .noriks-sc-step .noriks-sc-num { flex: 0 0 18px; width: 18px; height: 18px; font-size: 10px; }
+            .noriks-sc-pro { font-size: 10.4px; padding: 8px 10px; }
+            .noriks-sc-pro-tag { font-size: 9px; padding: 4px 7px; }
+            .noriks-sc-guarantee { font-size: 10.4px; }
+            .noriks-sc-check { width: 16px; height: 16px; font-size: 10.4px; }
           }
         </style>
 
@@ -443,7 +450,7 @@
             </thead>
             <tbody>
               <tr>
-                <th class="noriks-sc-vis-label" rowspan="10">Višina (cm)</th>
+                <th class="noriks-sc-vis-label" rowspan="11">Višina (cm)</th>
                 <th>168 cm</th>
                 <td class="noriks-sc-size">S</td>
                 <td class="noriks-sc-empty"></td><td class="noriks-sc-empty"></td><td class="noriks-sc-empty"></td><td class="noriks-sc-empty"></td><td class="noriks-sc-empty"></td><td class="noriks-sc-empty"></td><td class="noriks-sc-empty"></td><td class="noriks-sc-empty"></td>
