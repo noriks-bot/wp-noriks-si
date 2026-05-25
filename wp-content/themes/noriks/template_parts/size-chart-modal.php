@@ -248,7 +248,7 @@
         <style>
           .noriks-size-chart-wrap {
             width: 100%;
-            padding: 4px 8px 14px;
+            padding: 0;
             box-sizing: border-box;
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
             color: #111;
@@ -367,34 +367,6 @@
           table.noriks-sc thead tr:first-child > th:first-child { z-index: 9; }
           table.noriks-sc thead tr:first-child > th:nth-child(2),
           table.noriks-sc thead tr:nth-child(2) > th:first-child { z-index: 8; }
-          /* === Sticky first two columns so Velikost stays visible while horizontal scrolling === */
-          table.noriks-sc thead tr:first-child th.noriks-sc-empty:first-child,
-          table.noriks-sc tbody th.noriks-sc-vis-label {
-            position: sticky;
-            left: 0;
-            z-index: 3;
-            background: #b8b8b8;
-          }
-          table.noriks-sc thead tr:first-child th:nth-child(2),
-          table.noriks-sc thead tr:nth-child(2) th:first-child,
-          table.noriks-sc tbody tr:first-child > th:nth-of-type(2),
-          table.noriks-sc tbody tr:not(:first-child) > th:first-child {
-            position: sticky;
-            left: 32px;
-            z-index: 2;
-            background: #b8b8b8;
-            box-shadow: 3px 0 5px -2px rgba(0,0,0,0.20);
-          }
-          /* Vertical sticky thead so kg headers stay visible during vertical scroll */
-          table.noriks-sc thead th {
-            position: sticky;
-            top: 0;
-            z-index: 4;
-          }
-          /* Top-left intersections need highest z-index to overlap other sticky cells */
-          table.noriks-sc thead tr:first-child th.noriks-sc-empty:first-child,
-          table.noriks-sc thead tr:first-child th:nth-child(2),
-          table.noriks-sc thead tr:nth-child(2) th:first-child { z-index: 5; }
           table.noriks-sc td.noriks-sc-empty { background: #ececec; color: transparent; }
           table.noriks-sc td.noriks-sc-size {
             background: #d9d9d9;
@@ -489,7 +461,7 @@
           @media (max-width: 600px) {
             .noriks-sc-steps-grid { grid-template-columns: 1fr; }
             table.noriks-sc { font-size: 9.6px; min-width: 760px; }
-            .noriks-size-chart-wrap { padding: 4px 6px 14px; }
+            .noriks-size-chart-wrap { padding: 0; }
             .noriks-sc-steps h3 { font-size: 13px; }
             .noriks-sc-step { font-size: 10.4px; }
             .noriks-sc-step .noriks-sc-num { flex: 0 0 18px; width: 18px; height: 18px; font-size: 10px; }
