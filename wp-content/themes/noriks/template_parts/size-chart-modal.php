@@ -459,7 +459,8 @@
           }
           @media (max-width: 600px) {
             .noriks-sc-steps-grid { grid-template-columns: 1fr; }
-            table.noriks-sc { font-size: 9.6px; min-width: 760px; }
+            table.noriks-sc { font-size: 9.6px; min-width: 760px; margin-top: 0; }
+            .noriks-sc-steps { margin-top: 0; }
             .noriks-size-chart-wrap { padding: 0; }
             .noriks-sc-steps h3 { font-size: 13px; }
             .noriks-sc-step { font-size: 10.4px; }
