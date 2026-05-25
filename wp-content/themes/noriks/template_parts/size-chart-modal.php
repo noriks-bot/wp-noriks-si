@@ -339,20 +339,19 @@
             width: 32px;
             letter-spacing: 1px;
           }
-          /* Sticky col 1 (Visina label) + col 2 (height column) on horizontal scroll */
-          table.noriks-sc thead tr:first-child > th:first-child,
+          /* Sticky col 1 (Visina label) + col 2 (Velikost / height column) on horizontal scroll */
+          table.noriks-sc thead th:first-child,
           table.noriks-sc tbody th.noriks-sc-vis-label {
             position: sticky;
             left: 0;
             z-index: 5;
             background: #b8b8b8;
           }
-          table.noriks-sc thead tr:first-child > th:nth-child(2),
-          table.noriks-sc thead tr:nth-child(2) > th:first-child,
-          table.noriks-sc tbody tr:first-child > th:nth-of-type(2),
+          table.noriks-sc thead th:nth-child(2),
+          table.noriks-sc tbody tr > th:nth-of-type(2),
           table.noriks-sc tbody tr:not(:first-child) > th:first-of-type {
             position: sticky;
-            left: 32px;
+            left: 42px;
             z-index: 4;
             background: #b8b8b8;
             box-shadow: 3px 0 5px -2px rgba(0,0,0,0.18);
@@ -362,11 +361,11 @@
             position: sticky;
             top: 0;
             z-index: 6;
+            background: #b8b8b8;
           }
           /* Top-left sticky corners need higher z so they win */
-          table.noriks-sc thead tr:first-child > th:first-child { z-index: 9; }
-          table.noriks-sc thead tr:first-child > th:nth-child(2),
-          table.noriks-sc thead tr:nth-child(2) > th:first-child { z-index: 8; }
+          table.noriks-sc thead th:first-child { z-index: 9; }
+          table.noriks-sc thead th:nth-child(2) { z-index: 8; }
           table.noriks-sc td.noriks-sc-empty { background: #ececec; color: transparent; }
           table.noriks-sc td.noriks-sc-size {
             background: #d9d9d9;
@@ -476,11 +475,8 @@
           <table class="noriks-sc">
             <thead>
               <tr>
-                <th class="noriks-sc-empty" rowspan="2" style="width:42px;"></th>
+                <th class="noriks-sc-empty" style="width:42px;"></th>
                 <th class="noriks-sc-empty" style="width:80px;">Velikost</th>
-                <th colspan="9">Teža (kg)</th>
-              </tr>
-              <tr>
                 <th>59-68 kg</th>
                 <th>69-77 kg</th>
                 <th>78-84 kg</th>
