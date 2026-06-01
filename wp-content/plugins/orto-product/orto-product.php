@@ -446,7 +446,7 @@ function gck_render_bundle_selector() {
       .bundle-option.active { border-color: #f39c12; background: #f39c1217; }
       .bundle-pairs { margin-top: 10px; padding-top: 10px; border-top: 1px solid #969696; }
 
-      .bundle-pair { display: flex; flex-direction: column; gap: 8px; margin-bottom: 12px; }
+      .bundle-pair { display: flex; flex-direction: column; gap: 3px; margin-bottom: 4px; }
       .bundle-attr-row{ display: flex; align-items: center; flex-wrap: wrap; gap: 8px; }
 
       .gck-group-title{
@@ -463,8 +463,9 @@ function gck_render_bundle_selector() {
           font-weight: 800;
           font-size: 13px;
           color: #111;
-          margin: 6px 0 2px 0;
+          margin: 1px 0 0 0;
           letter-spacing: .2px;
+          line-height: 1.1;
       }
       .gck-pair-label.is-gratis{ color: #c00; }
 
