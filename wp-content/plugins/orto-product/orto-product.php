@@ -63,8 +63,8 @@ function gck_register_orto_acf_fields() {
                 'label'             => 'Trajanje odštevalnika (minute)',
                 'name'              => 'orto_countdown_minutes',
                 'type'              => 'number',
-                'instructions'      => 'Koliko minut traja odštevalnik za posameznega obiskovalca. Privzeto 15. Ko poteče, se ob naslednjem obisku diskretno ponastavi.',
-                'default_value'     => 15,
+                'instructions'      => 'Koliko minut traja odštevalnik za posameznega obiskovalca. Privzeto 10. Ko poteče, se ob naslednjem obisku diskretno ponastavi.',
+                'default_value'     => 10,
                 'min'               => 1,
                 'max'               => 1440,
                 'append'            => 'min',
@@ -481,7 +481,7 @@ function gck_render_bundle_selector() {
     $show_countdown        = (bool) get_field( 'orto_show_countdown', $product_id );
     $countdown_minutes     = (int) get_field( 'orto_countdown_minutes', $product_id );
     if ( $countdown_minutes < 1 || $countdown_minutes > 1440 ) {
-        $countdown_minutes = 15;
+        $countdown_minutes = 10;
     }
     $countdown_stock = (int) get_field( 'orto_countdown_stock', $product_id );
     if ( $countdown_stock < 0 ) {
