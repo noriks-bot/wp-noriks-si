@@ -878,6 +878,16 @@ function gck_render_bundle_selector() {
                 <li style="color: #c00;"><strong>✔ Omejeno na 1.000 paketov</strong></li>
             <?php endif; ?>
         </ul>
+
+        <?php if ( ! $show_countdown ) : ?>
+        <a id="open-size-chartCustom" href="#size-chart" class="gck-size-link">
+            <svg style="margin-right: 5px; width: 23px; height: 23px; display: inline-block; vertical-align: middle;" xmlns="http://www.w3.org/2000/svg" width="18" height="19" viewBox="0 0 18 19" fill="none">
+                <path d="M11.4124 2.58464L2.08525 11.9118C1.86558 12.1315 1.86558 12.4876 2.08525 12.7073L5.78977 16.4118C6.00944 16.6315 6.3656 16.6315 6.58527 16.4118L15.9124 7.08466C16.1321 6.86499 16.1321 6.50883 15.9124 6.28916L12.2079 2.58464C11.9883 2.36497 11.6321 2.36497 11.4124 2.58464Z" stroke="#111213" stroke-width="0.84375"></path>
+                <path d="M9.28125 4.71875L11.5312 6.96875M6.75 7.25L9 9.5M4.21875 9.78125L6.46875 12.0312" stroke="#111213" stroke-width="0.84375"></path>
+            </svg>
+            Tabela velikosti
+        </a>
+        <?php endif; ?>
     </div>
 
     <div class="gck-top-banner-wrap">
@@ -1016,6 +1026,7 @@ function gck_render_bundle_selector() {
         </script>
     <?php endif; ?>
 
+    <?php if ( $show_countdown ) : ?>
     <div class="gck-size-link-wrap" style="text-align:right; margin:0 0 8px 0;">
         <a id="open-size-chartCustom" href="#size-chart" class="gck-size-link">
             <svg style="margin-right: 5px; width: 23px; height: 23px; display: inline-block; vertical-align: middle;" xmlns="http://www.w3.org/2000/svg" width="18" height="19" viewBox="0 0 18 19" fill="none">
@@ -1025,6 +1036,7 @@ function gck_render_bundle_selector() {
             Tabela velikosti
         </a>
     </div>
+    <?php endif; ?>
 
     <div id="bundle-selector" class="bundle-box">
         <?php
