@@ -671,13 +671,13 @@ function gck_render_bundle_selector() {
 }
 
       @media (max-width: 767px) {
-          .bundle-option { padding: 13px 8px 13px 12px; }
+          .bundle-option { padding: 10px 8px 10px 12px; }
 
-          /* more vertical breathing room between rows + sections */
-          .bundle-pair { margin-bottom: 9px; gap: 6px; }
-          .bundle-pairs { padding-top: 12px; }
-          .gck-pair-label { font-size: 14px; margin: 2px 0 7px 0; }
-          .gck-pair-label.is-gratis { margin-top: 15px; }
+          /* tighter vertical rhythm between rows + sections */
+          .bundle-pair { margin-bottom: 5px; gap: 3px; }
+          .bundle-pairs { padding-top: 6px; }
+          .gck-pair-label { font-size: 14px; margin: 1px 0 4px 0; }
+          .gck-pair-label.is-gratis { margin-top: 8px; }
 
           /* a touch more space between color swatches (less cramped) */
           .bundle-attr-row { gap: 7px; }
@@ -686,11 +686,11 @@ function gck_render_bundle_selector() {
           .swatch-circle { width: 24px; height: 24px; }
           .bundle-box select { min-width: 60px; }
 
-          /* move the price pills onto their own line under the title (less cramped) */
+          /* price pills on their own line under the title, tight spacing */
           .gck-hl-break { display: block; }
-          .gck-per-chip { margin-left: 0; margin-top: 8px; }
-          .gck-discount-badge { margin-top: 8px; margin-left: 6px; }
-          .bundle-total-line { margin-top: 6px; }
+          .gck-per-chip { margin-left: 0; margin-top: 4px; }
+          .gck-discount-badge { margin-top: 4px; margin-left: 6px; }
+          .bundle-total-line { margin-top: 3px; }
       }
     </style>
     
