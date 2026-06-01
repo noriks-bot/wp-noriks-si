@@ -42,6 +42,14 @@ function gck_register_orto_acf_fields() {
                 'instructions' => 'Doda oznake (Majica 1, Gratis majica 1 ...) nad izbirnike barv/velikosti. Število gratis kosov se prebere iz naslova ponudbe, npr. "2+2".',
                 'ui'           => 1,
             ),
+            array(
+                'key'          => 'field_orto_show_price_highlights',
+                'label'        => 'Prikaži poudarke cene (cena/kos + popust)',
+                'name'         => 'orto_show_price_highlights',
+                'type'         => 'true_false',
+                'instructions' => 'Doda okvirček s ceno na kos (prečrtana redna cena/kos) in zeleno značko popusta (−XX%) pri vsaki ponudbi. Velja samo za ta produkt.',
+                'ui'           => 1,
+            ),
         ),
         'location' => array(
             array(
@@ -419,8 +427,9 @@ function gck_render_bundle_selector() {
     if ( empty( $offers ) ) return;
 
     // Per-product toggles (registered in code above).
-    $precheck_second = (bool) get_field( 'orto_precheck_second', $product_id );
-    $show_gratis     = (bool) get_field( 'orto_show_gratis_labels', $product_id );
+    $precheck_second       = (bool) get_field( 'orto_precheck_second', $product_id );
+    $show_gratis           = (bool) get_field( 'orto_show_gratis_labels', $product_id );
+    $show_price_highlights = (bool) get_field( 'orto_show_price_highlights', $product_id );
 
     $custom_attrs = gck_get_custom_attributes_in_order( $product );
     if ( count( $custom_attrs ) < 2 ) return;
@@ -494,6 +503,32 @@ function gck_render_bundle_selector() {
           line-height: 1.2;
       }
       .gck-pair-label.is-gratis{ color: #c00; margin-top: 12px; }
+
+      .gck-per-chip{
+          display: inline-flex;
+          align-items: center;
+          gap: 6px;
+          border: 1.5px solid #ff6d2e;
+          border-radius: 6px;
+          padding: 1px 8px;
+          margin-left: 4px;
+          font-size: 14px;
+          font-weight: 600;
+          vertical-align: middle;
+      }
+      .gck-per-old{ color: #c00; text-decoration: line-through; font-weight: 700; }
+      .gck-per-new{ color: #111; }
+      .gck-discount-badge{
+          display: inline-block;
+          margin-left: 6px;
+          background: #2e7d32;
+          color: #fff;
+          font-size: 13px;
+          font-weight: 700;
+          padding: 2px 8px;
+          border-radius: 6px;
+          vertical-align: middle;
+      }
 
       .bundle-total-line { margin-top: 0px; text-align: right; font-weight: 600; color: black; }
       small { color: black; }
@@ -836,6 +871,12 @@ function gck_render_bundle_selector() {
                     $force_source_group = 1;
                 } // mixed or empty => null
             }
+
+            // Price highlights: per-piece regular price + discount %.
+            $per_regular  = ( $pairs > 0 ) ? ( (float) $data['regular'] / $pairs ) : 0;
+            $discount_pct = ( (float) $data['regular'] > 0 )
+                ? (int) round( ( ( (float) $data['regular'] - (float) $data['total'] ) / (float) $data['regular'] ) * 100 )
+                : 0;
         ?>
             <label style="position: relative; <?php if ( ($loop_index == 1 ||  $loop_index == 3) && ! $show_group_titles) : ?> margin-top: 25px;  <?php endif; ?>"
                    class="bundle-option<?php echo $is_default ? ' active' : ''; ?>">
@@ -866,14 +907,24 @@ function gck_render_bundle_selector() {
                 
                   <?php
 
-    if (  !has_term( array( 'orto-starter' ), 'product_cat', $product_id ) 
-    
-    && !has_term( array( 'starter-paketi' ), 'product_cat', $product_id ) 
-    
+    if (  !has_term( array( 'orto-starter' ), 'product_cat', $product_id )
+
+    && !has_term( array( 'starter-paketi' ), 'product_cat', $product_id )
+
     )  :  ?>
-                — <span class="bundle-option-title"><?php echo number_format( (float) $data['per'], 2 ); ?>€ / kos</span>
-                
-                
+                <?php if ( $show_price_highlights ) : ?>
+                    <span class="gck-per-chip">
+                        <?php if ( $per_regular > (float) $data['per'] ) : ?>
+                            <span class="gck-per-old"><?php echo number_format( $per_regular, 2 ); ?>€</span>
+                        <?php endif; ?>
+                        <span class="gck-per-new"><?php echo number_format( (float) $data['per'], 2 ); ?>€ / kos</span>
+                    </span>
+                    <?php if ( $discount_pct > 0 ) : ?>
+                        <span class="gck-discount-badge">−<?php echo (int) $discount_pct; ?>%</span>
+                    <?php endif; ?>
+                <?php else : ?>
+                    — <span class="bundle-option-title"><?php echo number_format( (float) $data['per'], 2 ); ?>€ / kos</span>
+                <?php endif; ?>
                 <?php endif; ?>
                 
 
@@ -1174,13 +1225,14 @@ document.addEventListener("DOMContentLoaded", function () {
                 firstSelect.dataset.gckBound = '1';
 
                 firstSelect.addEventListener('change', function () {
-                    const newSize = this.value;
+                    const newSize  = this.value;
+                    const selector = document.getElementById('bundle-selector');
+                    if (!selector) return;
 
-                    pairBlock.querySelectorAll('.bundle-pair').forEach((pair, index) => {
-                        if (index === 0) return;
-                        const sel = pair.querySelector('select.gck-size-select[data-size-key="' + CSS.escape(sizeKey) + '"]');
-                        if (sel) sel.value = newSize;
-                    });
+                    // Sync this size across ALL pairs in ALL offers (e.g. 4+4 -> 2+2)
+                    selector
+                        .querySelectorAll('select.gck-size-select[data-size-key="' + CSS.escape(sizeKey) + '"]')
+                        .forEach(sel => { if (sel !== this) sel.value = newSize; });
                 });
             });
         });
