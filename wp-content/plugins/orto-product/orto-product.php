@@ -1011,7 +1011,7 @@ function gck_render_bundle_selector() {
                         </div>
                     <?php endfor; ?>
 
-                    <small style="display: block; line-height: 1;"><?php esc_html_e( 'Ponujamo 30 dni za vračilo denarja ali brezplačno zamenjavo izdelka – brezskrbno nakupovanje!
+                    <small style="display: block; line-height: 1.3; margin-top: 14px;"><?php esc_html_e( 'Ponujamo 30 dni za vračilo denarja ali brezplačno zamenjavo izdelka – brezskrbno nakupovanje!
 ', 'gift-card-kompetentnost' ); ?></small>
                 </div>
             </label>
@@ -1163,7 +1163,7 @@ document.addEventListener('DOMContentLoaded', function () {
 document.addEventListener("DOMContentLoaded", function () {
     function activateSizeSync() {
         document.querySelectorAll('.bundle-pairs').forEach(pairBlock => {
-            const firstPair = pairBlock.querySelector('.bundle-pair:nth-child(1)');
+            const firstPair = pairBlock.querySelector('.bundle-pair');
             if (!firstPair) return;
 
             firstPair.querySelectorAll('select.gck-size-select').forEach(firstSelect => {
