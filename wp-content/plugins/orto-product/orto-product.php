@@ -633,7 +633,7 @@ function gck_render_bundle_selector() {
       }
       @keyframes gckPopularPulse {
           0%, 100% { transform: rotate(3deg) scale(1); }
-          50%      { transform: rotate(3deg) scale(1.10); }
+          50%      { transform: rotate(3deg) scale(1.05); }
       }
       /* Theme sets ".summary{overflow:hidden}" which clips the popular badge.
          Only this plugin's products render this style, so the override is scoped. */
@@ -703,6 +703,10 @@ function gck_render_bundle_selector() {
           .gck-per-chip { margin-left: 0; margin-top: 4px; }
           .gck-discount-badge { margin-top: 4px; margin-left: 6px; }
           .bundle-total-line { margin-top: 3px; }
+
+          /* body has overflow-x:hidden, so pull the popular badge inward
+             on narrow screens so it isn't clipped at the right edge */
+          .gck-popular-badge, .gck-popular-badge-2 { right: 4px; }
       }
     </style>
     
