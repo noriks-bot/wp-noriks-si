@@ -509,24 +509,25 @@ function gck_render_bundle_selector() {
           align-items: center;
           gap: 6px;
           border: 1.5px solid #ff6d2e;
-          border-radius: 6px;
-          padding: 1px 8px;
+          background: #fff3ec;
+          border-radius: 4px;
+          padding: 2px 9px;
           margin-left: 4px;
           font-size: 14px;
           font-weight: 600;
           vertical-align: middle;
       }
-      .gck-per-old{ color: #c00; text-decoration: line-through; font-weight: 700; }
-      .gck-per-new{ color: #111; }
+      .gck-per-old{ color: #9a9a9a; text-decoration: line-through; font-weight: 600; }
+      .gck-per-new{ color: #c00; font-weight: 800; }
       .gck-discount-badge{
           display: inline-block;
           margin-left: 6px;
           background: #2e7d32;
           color: #fff;
           font-size: 13px;
-          font-weight: 700;
-          padding: 2px 8px;
-          border-radius: 6px;
+          font-weight: 800;
+          padding: 3px 9px;
+          border-radius: 4px;
           vertical-align: middle;
       }
 
