@@ -12,6 +12,54 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 // ============================================================
+// EXTRA ACF FIELDS (registered in code, per product)
+// ============================================================
+// Two per-product toggles. They take effect ONLY on products where
+// they are checked; all other products keep the original behavior.
+add_action( 'acf/init', 'gck_register_orto_acf_fields' );
+function gck_register_orto_acf_fields() {
+    if ( ! function_exists( 'acf_add_local_field_group' ) ) {
+        return;
+    }
+
+    acf_add_local_field_group( array(
+        'key'    => 'group_orto_bundle_options',
+        'title'  => 'Orto Bundle – dodatne nastavitve',
+        'fields' => array(
+            array(
+                'key'          => 'field_orto_precheck_second',
+                'label'        => 'Privzeto označi 2. ponudbo',
+                'name'         => 'orto_precheck_second',
+                'type'         => 'true_false',
+                'instructions' => 'Če je vključeno, je ob nalaganju strani prechekana DRUGA ponudba namesto prve. Velja samo za ta produkt.',
+                'ui'           => 1,
+            ),
+            array(
+                'key'          => 'field_orto_show_gratis_labels',
+                'label'        => 'Prikaži "Gratis majica" oznake',
+                'name'         => 'orto_show_gratis_labels',
+                'type'         => 'true_false',
+                'instructions' => 'Doda oznake (Majica 1, Gratis majica 1 ...) nad izbirnike barv/velikosti. Število gratis kosov se prebere iz naslova ponudbe, npr. "2+2".',
+                'ui'           => 1,
+            ),
+        ),
+        'location' => array(
+            array(
+                array(
+                    'param'    => 'post_type',
+                    'operator' => '==',
+                    'value'    => 'product',
+                ),
+            ),
+        ),
+        'menu_order' => 0,
+        'position'   => 'normal',
+        'style'      => 'default',
+        'active'     => true,
+    ) );
+}
+
+// ============================================================
 // OFFERS (ACF repeater)
 // ============================================================
 
@@ -344,6 +392,10 @@ function gck_render_bundle_selector() {
     $offers = gck_get_bundle_offers( $product_id );
     if ( empty( $offers ) ) return;
 
+    // Per-product toggles (registered in code above).
+    $precheck_second = (bool) get_field( 'orto_precheck_second', $product_id );
+    $show_gratis     = (bool) get_field( 'orto_show_gratis_labels', $product_id );
+
     $custom_attrs = gck_get_custom_attributes_in_order( $product );
     if ( count( $custom_attrs ) < 2 ) return;
 
@@ -405,6 +457,16 @@ function gck_render_bundle_selector() {
           margin: 2px 0 0 0;
           letter-spacing: .2px;
       }
+
+      .gck-pair-label{
+          width: 100%;
+          font-weight: 800;
+          font-size: 13px;
+          color: #111;
+          margin: 6px 0 2px 0;
+          letter-spacing: .2px;
+      }
+      .gck-pair-label.is-gratis{ color: #c00; }
 
       .bundle-total-line { margin-top: 0px; text-align: right; font-weight: 600; color: black; }
       small { color: black; }
@@ -721,7 +783,7 @@ function gck_render_bundle_selector() {
 
     <div id="bundle-selector" class="bundle-box">
         <?php
-        $default_index = 0;
+        $default_index = ( $precheck_second && count( $offers ) > 1 ) ? 1 : 0;
         $loop_index    = 0;
 
         foreach ( $offers as $offer_id => $data ) :
@@ -816,8 +878,31 @@ function gck_render_bundle_selector() {
                      data-offer-id="<?php echo esc_attr( $offer_id ); ?>"
                      data-qty="<?php echo esc_attr( $pairs ); ?>">
 
-                    <?php for ( $i = 1; $i <= $pairs; $i++ ) : ?>
+                    <?php
+                    // Gratis labels: parse "X+Y" from offer title (X = paid, Y = gratis).
+                    $gck_paid = 0;
+                    $gck_free = 0;
+                    if ( $show_gratis && preg_match( '/(\d+)\s*\+\s*(\d+)/u', (string) ( $data['title'] ?? '' ), $gck_m ) ) {
+                        $gck_paid = (int) $gck_m[1];
+                        $gck_free = (int) $gck_m[2];
+                    }
+                    ?>
+                    <?php for ( $i = 1; $i <= $pairs; $i++ ) :
+                        $pair_label     = '';
+                        $pair_is_gratis = false;
+                        if ( $show_gratis && ! $show_group_titles && ( $gck_paid + $gck_free ) > 0 ) {
+                            if ( $i <= $gck_paid ) {
+                                $pair_label = 'Majica ' . $i;
+                            } else {
+                                $pair_is_gratis = true;
+                                $pair_label     = 'Gratis majica ' . ( $i - $gck_paid );
+                            }
+                        }
+                    ?>
                         <div class="bundle-pair">
+                            <?php if ( $pair_label !== '' ) : ?>
+                                <div class="gck-pair-label<?php echo $pair_is_gratis ? ' is-gratis' : ''; ?>"><?php echo esc_html( $pair_label ); ?></div>
+                            <?php endif; ?>
                             <?php foreach ( $attr_groups as $g_index => $group ) :
 
                                 // Target group (field keys used for saving)
