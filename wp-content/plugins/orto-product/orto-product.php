@@ -477,6 +477,7 @@ function gck_render_bundle_selector() {
           font-weight: 600;
           color: black;
           letter-spacing: 0.3px;
+          vertical-align: middle;
       }
       .bundle-option.active { border-color: #f39c12; background: #f39c1217; }
       .bundle-pairs { margin-top: 10px; padding-top: 10px; border-top: 1px solid #969696; }
@@ -508,19 +509,20 @@ function gck_render_bundle_selector() {
           display: inline-flex;
           align-items: center;
           gap: 6px;
-          border: 1.5px solid #ff6d2e;
-          background: #fff3ec;
+          background: #ff6d2e;
           border-radius: 4px;
-          padding: 2px 9px;
+          padding: 3px 9px;
           margin-left: 4px;
           font-size: 14px;
           font-weight: 600;
+          line-height: 1;
           vertical-align: middle;
       }
-      .gck-per-old{ color: #9a9a9a; text-decoration: line-through; font-weight: 600; }
-      .gck-per-new{ color: #c00; font-weight: 800; }
+      .gck-per-old{ color: rgba(255,255,255,0.85); text-decoration: line-through; font-weight: 600; }
+      .gck-per-new{ color: #fff; font-weight: 800; }
       .gck-discount-badge{
-          display: inline-block;
+          display: inline-flex;
+          align-items: center;
           margin-left: 6px;
           background: #2e7d32;
           color: #fff;
@@ -528,6 +530,7 @@ function gck_render_bundle_selector() {
           font-weight: 800;
           padding: 3px 9px;
           border-radius: 4px;
+          line-height: 1;
           vertical-align: middle;
       }
 
