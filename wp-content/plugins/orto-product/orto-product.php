@@ -911,7 +911,7 @@ function gck_render_bundle_selector() {
                 <div class="dev-banner__fill"></div>
             </div>
         </div>
-    <?php else: ?>
+    <?php elseif ( ! $show_countdown ) : ?>
         <div style="height: 10px;"></div>
     <?php endif; ?>
 
@@ -946,7 +946,7 @@ function gck_render_bundle_selector() {
               background:#fdeeee;
               border:1px solid #f3c9c9;
               border-left:5px solid #c00;
-              border-radius:8px; padding:14px 16px; margin:0 0 14px 0;
+              border-radius:4px; padding:14px 16px; margin:14px 0;
               font-family:'Roboto', sans-serif; color:#333; text-align:left;
           }
           .gck-countdown__head{
@@ -961,7 +961,7 @@ function gck_render_bundle_selector() {
           @keyframes gckCdPulse{ 0%,100%{ transform:scale(1); } 50%{ transform:scale(1.18); } }
           @media (prefers-reduced-motion: reduce){ .gck-countdown__icon{ animation:none; } }
           @media (max-width: 767px){
-              .gck-countdown{ padding:12px 13px; margin-bottom:11px; }
+              .gck-countdown{ padding:12px 13px; margin:11px 0; }
               .gck-countdown__head{ font-size:15px; }
               .gck-countdown__icon{ font-size:16px; }
               .gck-countdown__body{ font-size:13px; }
