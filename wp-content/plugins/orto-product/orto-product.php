@@ -635,6 +635,9 @@ function gck_render_bundle_selector() {
           0%, 100% { transform: rotate(3deg) scale(1); }
           50%      { transform: rotate(3deg) scale(1.10); }
       }
+      /* Theme sets ".summary{overflow:hidden}" which clips the popular badge.
+         Only this plugin's products render this style, so the override is scoped. */
+      .summary { overflow: visible !important; }
       @media (prefers-reduced-motion: reduce) {
           .gck-popular-badge, .gck-popular-badge-2 { animation: none; }
       }
