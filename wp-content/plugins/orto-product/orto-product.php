@@ -375,6 +375,32 @@ function gck_get_color_hex( $color_name ) {
     return $map[ $key ] ?? null;
 }
 
+/**
+ * Slovenian noun phrase "majica" with correct case for a given count.
+ * Accusative (izberi X ...): 1 majico, 2 majici, 3-4 majice, 5+ majic.
+ * If $free, prepends the matching form of "brezplačen".
+ */
+function gck_sl_majice_phrase( int $n, bool $free = false ) : string {
+    $m100 = $n % 100;
+    $m10  = $n % 10;
+
+    $is1  = ( $m10 === 1 && $m100 !== 11 );
+    $is2  = ( $m10 === 2 && $m100 !== 12 );
+    $is34 = ( in_array( $m10, array( 3, 4 ), true ) && ! in_array( $m100, array( 13, 14 ), true ) );
+
+    if ( $is1 ) {
+        $adj = 'brezplačno'; $noun = 'majico';
+    } elseif ( $is2 ) {
+        $adj = 'brezplačni'; $noun = 'majici';
+    } elseif ( $is34 ) {
+        $adj = 'brezplačne'; $noun = 'majice';
+    } else {
+        $adj = 'brezplačnih'; $noun = 'majic';
+    }
+
+    return $free ? ( $adj . ' ' . $noun ) : $noun;
+}
+
 add_action( 'woocommerce_before_add_to_cart_button', 'gck_render_bundle_selector', 5 );
 
 function gck_render_bundle_selector() {
@@ -461,13 +487,13 @@ function gck_render_bundle_selector() {
       .gck-pair-label{
           width: 100%;
           font-weight: 800;
-          font-size: 13px;
+          font-size: 15px;
           color: #111;
-          margin: 1px 0 0 0;
+          margin: 2px 0 5px 0;
           letter-spacing: .2px;
-          line-height: 1.1;
+          line-height: 1.2;
       }
-      .gck-pair-label.is-gratis{ color: #c00; }
+      .gck-pair-label.is-gratis{ color: #c00; margin-top: 12px; }
 
       .bundle-total-line { margin-top: 0px; text-align: right; font-weight: 600; color: black; }
       small { color: black; }
@@ -888,22 +914,17 @@ function gck_render_bundle_selector() {
                         $gck_free = (int) $gck_m[2];
                     }
                     ?>
-                    <?php for ( $i = 1; $i <= $pairs; $i++ ) :
-                        $pair_label     = '';
-                        $pair_is_gratis = false;
-                        if ( $show_gratis && ! $show_group_titles && ( $gck_paid + $gck_free ) > 0 ) {
-                            if ( $i <= $gck_paid ) {
-                                $pair_label = 'Majica ' . $i;
-                            } else {
-                                $pair_is_gratis = true;
-                                $pair_label     = 'Gratis majica ' . ( $i - $gck_paid );
-                            }
-                        }
+                    <?php
+                    $gck_show_sections = ( $show_gratis && ! $show_group_titles && ( $gck_paid + $gck_free ) > 0 );
+                    for ( $i = 1; $i <= $pairs; $i++ ) :
                     ?>
+                        <?php if ( $gck_show_sections && $gck_paid > 0 && $i === 1 ) : ?>
+                            <div class="gck-pair-label">Izberi <?php echo (int) $gck_paid; ?> <?php echo esc_html( gck_sl_majice_phrase( $gck_paid ) ); ?></div>
+                        <?php endif; ?>
+                        <?php if ( $gck_show_sections && $gck_free > 0 && $i === ( $gck_paid + 1 ) ) : ?>
+                            <div class="gck-pair-label is-gratis">Izberi še <?php echo (int) $gck_free; ?> <?php echo esc_html( gck_sl_majice_phrase( $gck_free, true ) ); ?></div>
+                        <?php endif; ?>
                         <div class="bundle-pair">
-                            <?php if ( $pair_label !== '' ) : ?>
-                                <div class="gck-pair-label<?php echo $pair_is_gratis ? ' is-gratis' : ''; ?>"><?php echo esc_html( $pair_label ); ?></div>
-                            <?php endif; ?>
                             <?php foreach ( $attr_groups as $g_index => $group ) :
 
                                 // Target group (field keys used for saving)
