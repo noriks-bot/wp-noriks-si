@@ -50,6 +50,34 @@ function gck_register_orto_acf_fields() {
                 'instructions' => 'Doda okvirček s ceno na kos (prečrtana redna cena/kos) in zeleno značko popusta (−XX%) pri vsaki ponudbi. Velja samo za ta produkt.',
                 'ui'           => 1,
             ),
+            array(
+                'key'          => 'field_orto_show_countdown',
+                'label'        => 'Prikaži odštevalnik (pospeševalec prodaje)',
+                'name'         => 'orto_show_countdown',
+                'type'         => 'true_false',
+                'instructions' => 'Doda nad ponudbe pas z nujnostjo in teko­čim odštevalnikom (npr. "Akcija se izteče čez 29:59"). Vsak obiskovalec dobi svoj časovnik. Velja samo za ta produkt.',
+                'ui'           => 1,
+            ),
+            array(
+                'key'               => 'field_orto_countdown_minutes',
+                'label'             => 'Trajanje odštevalnika (minute)',
+                'name'              => 'orto_countdown_minutes',
+                'type'              => 'number',
+                'instructions'      => 'Koliko minut traja odštevalnik za posameznega obiskovalca. Privzeto 30. Ko poteče, se ob naslednjem obisku ponastavi.',
+                'default_value'     => 30,
+                'min'               => 1,
+                'max'               => 1440,
+                'append'            => 'min',
+                'conditional_logic' => array(
+                    array(
+                        array(
+                            'field'    => 'field_orto_show_countdown',
+                            'operator' => '==',
+                            'value'    => '1',
+                        ),
+                    ),
+                ),
+            ),
         ),
         'location' => array(
             array(
@@ -430,6 +458,11 @@ function gck_render_bundle_selector() {
     $precheck_second       = (bool) get_field( 'orto_precheck_second', $product_id );
     $show_gratis           = (bool) get_field( 'orto_show_gratis_labels', $product_id );
     $show_price_highlights = (bool) get_field( 'orto_show_price_highlights', $product_id );
+    $show_countdown        = (bool) get_field( 'orto_show_countdown', $product_id );
+    $countdown_minutes     = (int) get_field( 'orto_countdown_minutes', $product_id );
+    if ( $countdown_minutes < 1 || $countdown_minutes > 1440 ) {
+        $countdown_minutes = 30;
+    }
 
     $custom_attrs = gck_get_custom_attributes_in_order( $product );
     if ( count( $custom_attrs ) < 2 ) return;
@@ -882,6 +915,83 @@ function gck_render_bundle_selector() {
         el.querySelector(".dev-banner__fill").style.width = pct + "%";
       })();
     </script>
+
+    <?php if ( $show_countdown ) : ?>
+        <style>
+          .gck-countdown{
+              display:flex; align-items:center; justify-content:center; gap:10px;
+              background:#c00; color:#fff;
+              border-radius:8px; padding:11px 14px; margin:0 0 14px 0;
+              font-family:'Roboto', sans-serif; line-height:1.2;
+              box-shadow:0 4px 14px rgba(204,0,0,0.28);
+          }
+          .gck-countdown__icon{ font-size:20px; line-height:1; animation:gckCdPulse 1.3s ease-in-out infinite; }
+          .gck-countdown__text{ font-size:15px; font-weight:700; letter-spacing:.1px; }
+          .gck-countdown__timer{
+              display:inline-flex; align-items:center; gap:4px;
+              background:rgba(0,0,0,0.22); border-radius:6px;
+              padding:5px 9px; margin-left:2px;
+              font-size:17px; font-weight:800; font-variant-numeric:tabular-nums;
+              letter-spacing:.5px; white-space:nowrap;
+          }
+          @keyframes gckCdPulse{ 0%,100%{ transform:scale(1); } 50%{ transform:scale(1.18); } }
+          @media (prefers-reduced-motion: reduce){ .gck-countdown__icon{ animation:none; } }
+          @media (max-width: 767px){
+              .gck-countdown{ gap:8px; padding:9px 11px; margin-bottom:11px; }
+              .gck-countdown__text{ font-size:13.5px; }
+              .gck-countdown__timer{ font-size:15px; padding:4px 7px; }
+              .gck-countdown__icon{ font-size:18px; }
+          }
+        </style>
+        <div class="gck-countdown" id="gck-countdown"
+             data-minutes="<?php echo esc_attr( $countdown_minutes ); ?>"
+             data-key="gck_cd_<?php echo esc_attr( $product_id ); ?>">
+            <span class="gck-countdown__icon">🔥</span>
+            <span class="gck-countdown__text">Akcijska cena se izteče čez</span>
+            <span class="gck-countdown__timer" aria-live="polite">--:--</span>
+        </div>
+        <script>
+          (function(){
+              var el = document.getElementById('gck-countdown');
+              if (!el) return;
+              var minutes = parseInt(el.getAttribute('data-minutes'), 10) || 30;
+              var key = el.getAttribute('data-key') || 'gck_cd_default';
+              var timerEl = el.querySelector('.gck-countdown__timer');
+              var durationMs = minutes * 60 * 1000;
+              var now = Date.now();
+              var end;
+              try {
+                  var stored = window.localStorage.getItem(key);
+                  end = stored ? parseInt(stored, 10) : 0;
+                  if (!end || isNaN(end) || end <= now) {
+                      end = now + durationMs;
+                      window.localStorage.setItem(key, String(end));
+                  }
+              } catch (e) {
+                  end = now + durationMs;
+              }
+              function pad(n){ return (n < 10 ? '0' : '') + n; }
+              function tick(){
+                  var diff = end - Date.now();
+                  if (diff <= 0){
+                      // Restart the timer so it stays "evergreen".
+                      end = Date.now() + durationMs;
+                      try { window.localStorage.setItem(key, String(end)); } catch (e) {}
+                      diff = durationMs;
+                  }
+                  var totalSec = Math.floor(diff / 1000);
+                  var h = Math.floor(totalSec / 3600);
+                  var m = Math.floor((totalSec % 3600) / 60);
+                  var s = totalSec % 60;
+                  timerEl.textContent = h > 0
+                      ? (pad(h) + ':' + pad(m) + ':' + pad(s))
+                      : (pad(m) + ':' + pad(s));
+              }
+              tick();
+              setInterval(tick, 1000);
+          })();
+        </script>
+    <?php endif; ?>
 
     <div id="bundle-selector" class="bundle-box">
         <?php
