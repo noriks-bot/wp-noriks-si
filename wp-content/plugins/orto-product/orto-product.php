@@ -84,7 +84,7 @@ function gck_register_orto_acf_fields() {
                 'name'              => 'orto_countdown_stock',
                 'type'              => 'number',
                 'instructions'      => 'Število, ki se prikaže v pasici ("Ostalo le X kosov"). Pusti prazno ali 0, da se ta del skrije.',
-                'default_value'     => 17,
+                'default_value'     => 27,
                 'min'               => 0,
                 'max'               => 9999,
                 'append'            => 'kosov',
