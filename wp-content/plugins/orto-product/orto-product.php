@@ -509,7 +509,7 @@ function gck_render_bundle_selector() {
           display: inline-flex;
           align-items: center;
           gap: 6px;
-          background: #ff6d2e;
+          background: #c00;
           border-radius: 4px;
           padding: 3px 9px;
           margin-left: 4px;
@@ -533,6 +533,7 @@ function gck_render_bundle_selector() {
           line-height: 1;
           vertical-align: middle;
       }
+      .gck-hl-break{ display: none; }
 
       .bundle-total-line { margin-top: 0px; text-align: right; font-weight: 600; color: black; }
       small { color: black; }
@@ -685,9 +686,11 @@ function gck_render_bundle_selector() {
           .swatch-circle { width: 24px; height: 24px; }
           .bundle-box select { min-width: 60px; }
 
-          /* price chip + discount badge get a little space on small screens */
-          .gck-per-chip { margin-top: 4px; }
-          .gck-discount-badge { margin-top: 4px; }
+          /* move the price pills onto their own line under the title (less cramped) */
+          .gck-hl-break { display: block; }
+          .gck-per-chip { margin-left: 0; margin-top: 8px; }
+          .gck-discount-badge { margin-top: 8px; margin-left: 6px; }
+          .bundle-total-line { margin-top: 6px; }
       }
     </style>
     
@@ -938,6 +941,7 @@ function gck_render_bundle_selector() {
 
     )  :  ?>
                 <?php if ( $show_price_highlights ) : ?>
+                    <br class="gck-hl-break">
                     <span class="gck-per-chip">
                         <?php if ( $per_regular > (float) $data['per'] ) : ?>
                             <span class="gck-per-old"><?php echo number_format( $per_regular, 2 ); ?>€</span>
