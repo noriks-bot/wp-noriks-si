@@ -63,11 +63,31 @@ function gck_register_orto_acf_fields() {
                 'label'             => 'Trajanje odštevalnika (minute)',
                 'name'              => 'orto_countdown_minutes',
                 'type'              => 'number',
-                'instructions'      => 'Koliko minut traja odštevalnik za posameznega obiskovalca. Privzeto 30. Ko poteče, se ob naslednjem obisku ponastavi.',
-                'default_value'     => 30,
+                'instructions'      => 'Koliko minut traja odštevalnik za posameznega obiskovalca. Privzeto 15. Ko poteče, se ob naslednjem obisku diskretno ponastavi.',
+                'default_value'     => 15,
                 'min'               => 1,
                 'max'               => 1440,
                 'append'            => 'min',
+                'conditional_logic' => array(
+                    array(
+                        array(
+                            'field'    => 'field_orto_show_countdown',
+                            'operator' => '==',
+                            'value'    => '1',
+                        ),
+                    ),
+                ),
+            ),
+            array(
+                'key'               => 'field_orto_countdown_stock',
+                'label'             => 'Preostala zaloga (kosov)',
+                'name'              => 'orto_countdown_stock',
+                'type'              => 'number',
+                'instructions'      => 'Število, ki se prikaže v pasici ("Ostalo le X kosov"). Pusti prazno ali 0, da se ta del skrije.',
+                'default_value'     => 17,
+                'min'               => 0,
+                'max'               => 9999,
+                'append'            => 'kosov',
                 'conditional_logic' => array(
                     array(
                         array(
@@ -461,7 +481,11 @@ function gck_render_bundle_selector() {
     $show_countdown        = (bool) get_field( 'orto_show_countdown', $product_id );
     $countdown_minutes     = (int) get_field( 'orto_countdown_minutes', $product_id );
     if ( $countdown_minutes < 1 || $countdown_minutes > 1440 ) {
-        $countdown_minutes = 30;
+        $countdown_minutes = 15;
+    }
+    $countdown_stock = (int) get_field( 'orto_countdown_stock', $product_id );
+    if ( $countdown_stock < 0 ) {
+        $countdown_stock = 0;
     }
 
     $custom_attrs = gck_get_custom_attributes_in_order( $product );
@@ -919,36 +943,46 @@ function gck_render_bundle_selector() {
     <?php if ( $show_countdown ) : ?>
         <style>
           .gck-countdown{
-              display:flex; align-items:center; justify-content:center; gap:10px;
+              display:flex; align-items:center; justify-content:center; flex-wrap:wrap; gap:8px;
               background:#c00; color:#fff;
               border-radius:8px; padding:11px 14px; margin:0 0 14px 0;
               font-family:'Roboto', sans-serif; line-height:1.2;
               box-shadow:0 4px 14px rgba(204,0,0,0.28);
+              text-align:center;
           }
-          .gck-countdown__icon{ font-size:20px; line-height:1; animation:gckCdPulse 1.3s ease-in-out infinite; }
+          .gck-countdown__icon{ font-size:18px; line-height:1; animation:gckCdPulse 1.3s ease-in-out infinite; }
           .gck-countdown__text{ font-size:15px; font-weight:700; letter-spacing:.1px; }
           .gck-countdown__timer{
-              display:inline-flex; align-items:center; gap:4px;
+              display:inline-block; min-width:74px;
               background:rgba(0,0,0,0.22); border-radius:6px;
-              padding:5px 9px; margin-left:2px;
-              font-size:17px; font-weight:800; font-variant-numeric:tabular-nums;
+              padding:4px 8px; margin:0 1px;
+              font-size:16px; font-weight:800; font-variant-numeric:tabular-nums;
               letter-spacing:.5px; white-space:nowrap;
           }
+          .gck-countdown__sep{ opacity:.55; font-weight:700; padding:0 2px; }
+          .gck-countdown__stock{ font-size:15px; font-weight:800; white-space:nowrap; }
           @keyframes gckCdPulse{ 0%,100%{ transform:scale(1); } 50%{ transform:scale(1.18); } }
           @media (prefers-reduced-motion: reduce){ .gck-countdown__icon{ animation:none; } }
           @media (max-width: 767px){
-              .gck-countdown{ gap:8px; padding:9px 11px; margin-bottom:11px; }
-              .gck-countdown__text{ font-size:13.5px; }
-              .gck-countdown__timer{ font-size:15px; padding:4px 7px; }
-              .gck-countdown__icon{ font-size:18px; }
+              .gck-countdown{ gap:6px; padding:9px 11px; margin-bottom:11px; }
+              .gck-countdown__text{ font-size:13px; }
+              .gck-countdown__timer{ font-size:14px; min-width:64px; padding:3px 6px; }
+              .gck-countdown__stock{ font-size:13px; }
+              .gck-countdown__icon{ font-size:16px; }
+              .gck-countdown__sep{ display:none; }
           }
         </style>
         <div class="gck-countdown" id="gck-countdown"
              data-minutes="<?php echo esc_attr( $countdown_minutes ); ?>"
              data-key="gck_cd_<?php echo esc_attr( $product_id ); ?>">
             <span class="gck-countdown__icon">🔥</span>
-            <span class="gck-countdown__text">Akcijska cena se izteče čez</span>
-            <span class="gck-countdown__timer" aria-live="polite">--:--</span>
+            <span class="gck-countdown__text">Akcija velja samo danes — še
+                <span class="gck-countdown__timer" aria-live="polite">--:--</span>
+            </span>
+            <?php if ( $countdown_stock > 0 ) : ?>
+                <span class="gck-countdown__sep">|</span>
+                <span class="gck-countdown__stock">Ostalo le <?php echo esc_html( $countdown_stock ); ?> kosov</span>
+            <?php endif; ?>
         </div>
         <script>
           (function(){
