@@ -625,9 +625,18 @@ function gck_render_bundle_selector() {
           padding: 3px 17px;
           border-radius: 8px;
           font-weight: 600;
-          z-index: 10;
+          z-index: 30;
           box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
           white-space: nowrap;
+          transform-origin: center;
+          animation: gckPopularPulse 1.3s ease-in-out infinite;
+      }
+      @keyframes gckPopularPulse {
+          0%, 100% { transform: rotate(3deg) scale(1); }
+          50%      { transform: rotate(3deg) scale(1.08); }
+      }
+      @media (prefers-reduced-motion: reduce) {
+          .gck-popular-badge, .gck-popular-badge-2 { animation: none; }
       }
 
       .gck-top-banner-wrap { margin-bottom: 0px; }
