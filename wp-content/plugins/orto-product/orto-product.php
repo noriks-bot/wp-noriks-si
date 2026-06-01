@@ -633,7 +633,7 @@ function gck_render_bundle_selector() {
       }
       @keyframes gckPopularPulse {
           0%, 100% { transform: rotate(3deg) scale(1); }
-          50%      { transform: rotate(3deg) scale(1.08); }
+          50%      { transform: rotate(3deg) scale(1.10); }
       }
       @media (prefers-reduced-motion: reduce) {
           .gck-popular-badge, .gck-popular-badge-2 { animation: none; }
