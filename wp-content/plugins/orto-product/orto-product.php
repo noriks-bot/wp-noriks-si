@@ -511,7 +511,7 @@ function gck_render_bundle_selector() {
           gap: 6px;
           background: #c00;
           border-radius: 4px;
-          padding: 3px 9px;
+          padding: 6px 9px;
           margin-left: 4px;
           font-size: 14px;
           font-weight: 600;
@@ -528,7 +528,7 @@ function gck_render_bundle_selector() {
           color: #fff;
           font-size: 13px;
           font-weight: 800;
-          padding: 3px 9px;
+          padding: 6px 9px;
           border-radius: 4px;
           line-height: 1;
           vertical-align: middle;
