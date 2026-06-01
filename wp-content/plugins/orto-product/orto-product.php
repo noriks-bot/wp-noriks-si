@@ -943,46 +943,43 @@ function gck_render_bundle_selector() {
     <?php if ( $show_countdown ) : ?>
         <style>
           .gck-countdown{
-              display:flex; align-items:center; justify-content:center; flex-wrap:wrap; gap:8px;
-              background:#c00; color:#fff;
-              border-radius:8px; padding:11px 14px; margin:0 0 14px 0;
-              font-family:'Roboto', sans-serif; line-height:1.2;
-              box-shadow:0 4px 14px rgba(204,0,0,0.28);
-              text-align:center;
+              background:#fdeeee;
+              border:1px solid #f3c9c9;
+              border-left:5px solid #c00;
+              border-radius:8px; padding:14px 16px; margin:0 0 14px 0;
+              font-family:'Roboto', sans-serif; color:#333; text-align:left;
+          }
+          .gck-countdown__head{
+              display:flex; align-items:center; gap:8px;
+              color:#c00; font-weight:800; font-size:16px;
+              margin-bottom:6px; line-height:1.2;
           }
           .gck-countdown__icon{ font-size:18px; line-height:1; animation:gckCdPulse 1.3s ease-in-out infinite; }
-          .gck-countdown__text{ font-size:15px; font-weight:700; letter-spacing:.1px; }
-          .gck-countdown__timer{
-              display:inline-block; min-width:74px;
-              background:rgba(0,0,0,0.22); border-radius:6px;
-              padding:4px 8px; margin:0 1px;
-              font-size:16px; font-weight:800; font-variant-numeric:tabular-nums;
-              letter-spacing:.5px; white-space:nowrap;
-          }
-          .gck-countdown__sep{ opacity:.55; font-weight:700; padding:0 2px; }
-          .gck-countdown__stock{ font-size:15px; font-weight:800; white-space:nowrap; }
+          .gck-countdown__body{ font-size:14px; line-height:1.45; color:#333; }
+          .gck-countdown__body strong{ color:#c00; font-weight:800; }
+          .gck-countdown__timer{ font-weight:800; color:#c00; font-variant-numeric:tabular-nums; white-space:nowrap; }
           @keyframes gckCdPulse{ 0%,100%{ transform:scale(1); } 50%{ transform:scale(1.18); } }
           @media (prefers-reduced-motion: reduce){ .gck-countdown__icon{ animation:none; } }
           @media (max-width: 767px){
-              .gck-countdown{ gap:6px; padding:9px 11px; margin-bottom:11px; }
-              .gck-countdown__text{ font-size:13px; }
-              .gck-countdown__timer{ font-size:14px; min-width:64px; padding:3px 6px; }
-              .gck-countdown__stock{ font-size:13px; }
+              .gck-countdown{ padding:12px 13px; margin-bottom:11px; }
+              .gck-countdown__head{ font-size:15px; }
               .gck-countdown__icon{ font-size:16px; }
-              .gck-countdown__sep{ display:none; }
+              .gck-countdown__body{ font-size:13px; }
           }
         </style>
         <div class="gck-countdown" id="gck-countdown"
              data-minutes="<?php echo esc_attr( $countdown_minutes ); ?>"
              data-key="gck_cd_<?php echo esc_attr( $product_id ); ?>">
-            <span class="gck-countdown__icon">🔥</span>
-            <span class="gck-countdown__text">Akcija velja samo danes — še
-                <span class="gck-countdown__timer" aria-live="polite">--:--</span>
-            </span>
-            <?php if ( $countdown_stock > 0 ) : ?>
-                <span class="gck-countdown__sep">|</span>
-                <span class="gck-countdown__stock">Ostalo le <?php echo esc_html( $countdown_stock ); ?> kosov</span>
-            <?php endif; ?>
+            <div class="gck-countdown__head">
+                <span class="gck-countdown__icon">🔥</span>
+                Omejena zaloga
+            </div>
+            <div class="gck-countdown__body">
+                Akcija velja samo danes — še <span class="gck-countdown__timer" aria-live="polite">--:--</span>.<?php
+                if ( $countdown_stock > 0 ) :
+                    ?> Ostalo le <strong><?php echo esc_html( $countdown_stock ); ?> kosov</strong>.<?php
+                endif; ?> <strong>Pohiti, preden jih zmanjka!</strong>
+            </div>
         </div>
         <script>
           (function(){
