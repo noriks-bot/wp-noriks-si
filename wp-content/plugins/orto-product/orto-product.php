@@ -665,6 +665,27 @@ function gck_render_bundle_selector() {
   font-weight:700;
   margin-right:6px;
 }
+
+      @media (max-width: 767px) {
+          .bundle-option { padding: 13px 8px 13px 12px; }
+
+          /* more vertical breathing room between rows + sections */
+          .bundle-pair { margin-bottom: 9px; gap: 6px; }
+          .bundle-pairs { padding-top: 12px; }
+          .gck-pair-label { font-size: 14px; margin: 2px 0 7px 0; }
+          .gck-pair-label.is-gratis { margin-top: 15px; }
+
+          /* a touch more space between color swatches (less cramped) */
+          .bundle-attr-row { gap: 7px; }
+          .color-swatches { gap: 3px; }
+          .color-swatches .swatch { width: 30px; height: 31px; }
+          .swatch-circle { width: 24px; height: 24px; }
+          .bundle-box select { min-width: 60px; }
+
+          /* price chip + discount badge get a little space on small screens */
+          .gck-per-chip { margin-top: 4px; }
+          .gck-discount-badge { margin-top: 4px; }
+      }
     </style>
     
     
