@@ -1204,14 +1204,14 @@ body.single-product {
   text-indent: 0 !important;
   line-height: normal !important;
   display: flex !important;
-  flex-wrap: nowrap !important;
+  flex-wrap: wrap !important;      /* 5 per row, overflow wraps to next line */
   justify-content: flex-start !important;
   gap: 0 !important;
   list-style: none;
   box-sizing: border-box !important;
 }
-/* Each thumbnail is exactly 20% wide with an internal 5px padding gutter,
-   box-sizing:border-box so 5 x 20% = 100% and the row spans hero edge-to-edge. */
+/* Each thumbnail is exactly 20% wide with an internal padding gutter,
+   box-sizing:border-box so 5 x 20% = 100% per row; extra images wrap below. */
 .single-product div.product .woocommerce-product-gallery.woocommerce-product-gallery--columns-2 .flex-control-thumbs li,
 .single-product div.product .woocommerce-product-gallery.woocommerce-product-gallery--columns-3 .flex-control-thumbs li,
 .single-product div.product .woocommerce-product-gallery.woocommerce-product-gallery--columns-4 .flex-control-thumbs li,
@@ -1225,12 +1225,12 @@ body.single-product {
   box-sizing: border-box !important;
   list-style: none;
 }
-/* Remove the padding on the very first/last thumbnail edges so the row is
-   perfectly flush with the hero image left and right borders. */
-.single-product div.product .woocommerce-product-gallery .flex-control-thumbs li:first-child {
+/* Flush the row with the hero edges: first column no left pad, last column
+   (every 5th) no right pad — works per row when wrapping. */
+.single-product div.product .woocommerce-product-gallery .flex-control-thumbs li:nth-child(5n+1) {
   padding-left: 0 !important;
 }
-.single-product div.product .woocommerce-product-gallery .flex-control-thumbs li:last-child {
+.single-product div.product .woocommerce-product-gallery .flex-control-thumbs li:nth-child(5n) {
   padding-right: 0 !important;
 }
 .single-product div.product .woocommerce-product-gallery .flex-control-thumbs img {
@@ -1246,10 +1246,10 @@ body.single-product {
   opacity: 1;
 }
 
-/* Mobile: identical single-row edge-to-edge layout (inherits desktop rules) */
+/* Mobile: same 5-per-row wrapping layout (inherits desktop rules) */
 @media (max-width: 768px) {
   .single-product div.product .woocommerce-product-gallery .flex-control-thumbs {
-    flex-wrap: nowrap !important;
+    flex-wrap: wrap !important;
     justify-content: flex-start !important;
   }
 }
