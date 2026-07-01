@@ -73,11 +73,11 @@ $wrapper_classes   = apply_filters(
 	        }
 
 	        .badge-on-img {
-	            display: none !important;
 	            position: absolute;
 	            left: 15px;
 	            top: 15px;
 	            z-index: 9;
+	            display: inline-block;
 	            background-color: #971b1b;
 	            color: white;
 	            font-family: 'Roboto', sans-serif;
