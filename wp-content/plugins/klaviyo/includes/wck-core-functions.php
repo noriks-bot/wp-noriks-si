@@ -14,6 +14,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 require 'wck-cart-rebuild.php';
 require 'wck-added-to-cart.php';
+require 'wck-consent-functions.php';
 require 'wck-cart-functions.php';
 require 'wck-viewed-product.php';
 /**

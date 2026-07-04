@@ -110,12 +110,15 @@ class WCK_Options {
 	}
 
 	/**
-	 * Check if a key matches the Klaviyo private API key format (pk_ + 34 hex characters).
+	 * Check if a key matches the Klaviyo private API key format.
+	 *
+	 * Accepts both the legacy format (pk_ + 34 hex characters) and the
+	 * newer company-embedded format (pk_ + company id + _ + 34 hex characters).
 	 *
 	 * @param string $key The key to check.
 	 * @return bool
 	 */
 	public static function is_private_api_key( $key ) {
-		return (bool) preg_match( '/^pk_[0-9a-f]{34}$/', $key );
+		return (bool) preg_match( '/^pk_([0-9a-f]{34}|[A-Za-z0-9]+_[0-9a-f]{34})$/', $key );
 	}
 }

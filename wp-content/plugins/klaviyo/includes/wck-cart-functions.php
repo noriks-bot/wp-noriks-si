@@ -244,12 +244,22 @@ function kl_checkbox_custom_checkout_field( $fields ) {
 }
 
 /**
- * Add checkbox to subscribe profiles to SMS list during checkout.
+ * Add the single mobile (SMS / WhatsApp) consent checkbox to the legacy checkout.
+ *
+ * The checkbox label and disclosure intentionally pull from the existing
+ * `klaviyo_sms_consent_text` / `klaviyo_sms_consent_disclosure_text` settings
+ * (see `kl_mobile_channels_enabled()`); per IES-212 we reuse the legacy keys to
+ * cover all mobile channels rather than introducing duplicate `_mobile_*` keys.
+ *
+ * The input name (`kl_sms_consent_checkbox`) and CSS class
+ * (`kl_sms_consent_checkbox_field`) keep their legacy `_sms_` identifiers — even
+ * though this single checkbox now also covers WhatsApp — to avoid breaking
+ * existing merchant CSS that targets these selectors.
  *
  * @param array[] $fields Checkout form fields.
  * @return array[] $fields
  */
-function kl_sms_consent_checkout_field( $fields ) {
+function kl_mobile_consent_checkout_field( $fields ) {
 	$klaviyo_settings                             = get_option( 'klaviyo_settings' );
 	$fields['billing']['kl_sms_consent_checkbox'] = array(
 		'type'     => 'checkbox',
@@ -264,13 +274,16 @@ function kl_sms_consent_checkout_field( $fields ) {
 }
 
 /**
- * Echo compliance text.
+ * Echo the mobile consent compliance/disclosure text under the checkout billing form.
+ *
+ * Sourced from `klaviyo_sms_consent_disclosure_text` — which is shared by all
+ * mobile channels (SMS + WhatsApp) per IES-212.
  *
  * @return void
  */
-function kl_sms_compliance_text() {
+function kl_mobile_compliance_text() {
 	$klaviyo_settings = get_option( 'klaviyo_settings' );
-	echo esc_html($klaviyo_settings['klaviyo_sms_consent_disclosure_text']);
+	echo esc_html( $klaviyo_settings['klaviyo_sms_consent_disclosure_text'] );
 }
 
 /**
@@ -290,19 +303,22 @@ function kl_add_to_list() {
 		'data' => array(),
 	);
 
-	if ( isset( $_POST['kl_sms_consent_checkbox'] ) && sanitize_text_field( wp_unslash( $_POST['kl_sms_consent_checkbox'] ) ) ) {
-		array_push(
+	// POST key keeps its legacy `kl_sms_consent_checkbox` name (see kl_mobile_consent_checkout_field) — the single checkbox now covers SMS + WhatsApp.
+	$mobile_checkbox_checked = isset( $_POST['kl_sms_consent_checkbox'] )
+		&& sanitize_text_field( wp_unslash( $_POST['kl_sms_consent_checkbox'] ) );
+
+	if ( $mobile_checkbox_checked ) {
+		$customer     = array(
+			'email'   => $email,
+			'country' => $country,
+			'phone'   => $phone,
+		);
+		$body['data'] = array_merge(
 			$body['data'],
-			array(
-				'customer'     => array(
-					'email'   => $email,
-					'country' => $country,
-					'phone'   => $phone,
-				),
-				'consent'      => true,
-				'updated_at'   => gmdate( DATE_ATOM, date_timestamp_get( date_create() ) ),
-				'consent_type' => 'sms',
-				'group_id'     => $klaviyo_settings['klaviyo_sms_list_id'],
+			kl_build_mobile_consent_records(
+				$customer,
+				kl_mobile_channels_enabled( $klaviyo_settings ),
+				$klaviyo_settings['klaviyo_sms_list_id'] ?? null
 			)
 		);
 	}
@@ -324,6 +340,10 @@ function kl_add_to_list() {
 		);
 	}
     // phpcs:enable WordPress.Security.NonceVerification.Missing
+
+	if ( empty( $body['data'] ) ) {
+		return;
+	}
 
 	wp_remote_post(
 		$url,
@@ -354,17 +374,13 @@ if (
 	add_action( 'woocommerce_checkout_update_order_meta', 'kl_add_to_list' );
 }
 
-if (
-	isset( $klaviyo_settings['klaviyo_sms_subscribe_checkbox'] )
-	&& $klaviyo_settings['klaviyo_sms_subscribe_checkbox']
-	&& ! empty( $klaviyo_settings['klaviyo_sms_list_id'] )
-) {
-	// Add the checkbox field.
-	add_filter( 'woocommerce_checkout_fields', 'kl_sms_consent_checkout_field', 11 );
+if ( kl_any_mobile_channel_enabled( $klaviyo_settings ) ) {
+	// Add the single mobile (SMS / WhatsApp) consent checkbox field.
+	add_filter( 'woocommerce_checkout_fields', 'kl_mobile_consent_checkout_field', 11 );
 
 	// Add data compliance messaging to checkout page.
-	add_filter( 'woocommerce_after_checkout_billing_form', 'kl_sms_compliance_text' );
+	add_filter( 'woocommerce_after_checkout_billing_form', 'kl_mobile_compliance_text' );
 
-	// Post SMS request to Klaviyo.
+	// Post mobile consent request to Klaviyo (fans out one webhook call per enabled channel).
 	add_action( 'woocommerce_checkout_update_order_meta', 'kl_add_to_list' );
 }

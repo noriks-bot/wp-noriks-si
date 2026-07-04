@@ -97,11 +97,11 @@ class CheckoutIntegration implements \Automattic\WooCommerce\Blocks\Integrations
 	 */
 	public function get_script_data() {
 		return array(
-			'newsletterText'           => $this->get_newsletter_text(),
-			'smsConsentText'           => $this->get_sms_consent_text(),
-			'smsConsentDisclosureText' => $this->get_sms_consent_disclosure_text(),
-			'smsEnabled'               => $this->get_sms_enabled(),
-			'newsletterEnabled'        => $this->get_newsletter_enabled(),
+			'newsletterText'              => $this->get_newsletter_text(),
+			'mobileConsentText'           => $this->get_mobile_consent_text(),
+			'mobileConsentDisclosureText' => $this->get_mobile_consent_disclosure_text(),
+			'mobileEnabled'               => $this->get_mobile_enabled(),
+			'newsletterEnabled'           => $this->get_newsletter_enabled(),
 		);
 	}
 
@@ -115,30 +115,37 @@ class CheckoutIntegration implements \Automattic\WooCommerce\Blocks\Integrations
 	}
 
 	/**
-	 * Get sms consent text from settings.
+	 * Get mobile (SMS / WhatsApp) consent text from settings.
+	 *
+	 * Sourced from the legacy `klaviyo_sms_consent_text` key — IES-212 reuses the existing SMS
+	 * setting for all mobile channels (SMS + WhatsApp) rather than introducing a duplicate
+	 * `_mobile_*` key.
 	 *
 	 * @return mixed
 	 */
-	public function get_sms_consent_text() {
-		return $this->settings['klaviyo_sms_consent_text'] ?? __( 'Sign me up to receive SMS updates and news (optional)', 'klaviyo-checkout-block' );
+	public function get_mobile_consent_text() {
+		return $this->settings['klaviyo_sms_consent_text'] ?? __( 'Sign me up to receive SMS and WhatsApp updates and news (optional)', 'klaviyo-checkout-block' );
 	}
 
 	/**
-	 * Get sms consent disclosure text from settings.
+	 * Get mobile (SMS / WhatsApp) consent disclosure text from settings.
+	 *
+	 * Sourced from the legacy `klaviyo_sms_consent_disclosure_text` key (shared across mobile
+	 * channels per IES-212).
 	 *
 	 * @return mixed
 	 */
-	public function get_sms_consent_disclosure_text() {
+	public function get_mobile_consent_disclosure_text() {
 		return $this->settings['klaviyo_sms_consent_disclosure_text'] ?? __( 'By checking this box and entering your phone number above, you consent to receive marketing text messages (such as [promotion codes] and [cart reminders]) from [company name] at the number provided, including messages sent by autodialer. Consent is not a condition of any purchase. Message and data rates may apply. Message frequency varies. You can unsubscribe at any time by replying STOP or clicking the unsubscribe link (where available) in one of our messages. View our Privacy Policy [link] and Terms of Service [link]', 'klaviyo-checkout-block' );
 	}
 
 	/**
-	 * Whether sms consent collection is enabled in the integration settings.
+	 * Whether any mobile consent channel (SMS or WhatsApp) is enabled in settings.
 	 *
-	 * @return false|mixed
+	 * @return bool
 	 */
-	public function get_sms_enabled() {
-		return $this->settings['klaviyo_sms_subscribe_checkbox'] ?? false;
+	public function get_mobile_enabled() {
+		return kl_any_mobile_channel_enabled( $this->settings );
 	}
 
 	/**

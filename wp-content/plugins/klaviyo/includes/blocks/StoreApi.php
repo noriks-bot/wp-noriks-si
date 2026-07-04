@@ -44,9 +44,9 @@ class StoreApi {
 		 */
 		add_action( 'woocommerce_store_api_checkout_order_processed', array( $this, 'update_order_created_at' ), 10, 1 );
 
-		// Only run the logic if we have one of the newsletter checkboxes enabled.
+		// Only run the logic if we have one of the consent checkboxes enabled (any mobile channel or email).
 		if (
-			( isset($this->settings['klaviyo_sms_subscribe_checkbox']) && $this->settings['klaviyo_sms_subscribe_checkbox'] )
+			kl_any_mobile_channel_enabled( $this->settings )
 			|| ( isset($this->settings['klaviyo_subscribe_checkbox']) && $this->settings['klaviyo_subscribe_checkbox'] )
 		) {
 			// React to consent opt-in from Store API (Checkout block) and schedule an API call to Klaviyo.
@@ -96,8 +96,8 @@ class StoreApi {
 						'context'     => array(),
 						'arg_options' => $this->optional_boolean_arg_options(),
 					),
-					'sms'        => array(
-						'description' => __( 'Subscribe to sms marketing newsletter.', 'klaviyo-checkout-block' ),
+					'mobile'     => array(
+						'description' => __( 'Subscribe to mobile (SMS / WhatsApp) marketing.', 'klaviyo-checkout-block' ),
 						'type'        => array( 'boolean', 'null' ),
 						'context'     => array(),
 						'arg_options' => $this->optional_boolean_arg_options(),
@@ -131,44 +131,47 @@ class StoreApi {
 		$country         = $order->get_billing_country() ?? $request_country;
 
 		// Structure of extension data defined in schema_callback above.
-		$consent_to_sms        = $request['extensions']['klaviyo']['sms'] ?? false;
+		$consent_to_mobile     = $request['extensions']['klaviyo']['mobile'] ?? false;
 		$consent_to_newsletter = $request['extensions']['klaviyo']['newsletter'] ?? false;
 
-		if ( $consent_to_sms || $consent_to_newsletter ) {
-			as_enqueue_async_action( 'klaviyo_schedule_consent_event', array( $email, $phone, $country, $consent_to_sms, $consent_to_newsletter ), 'klaviyo' );
+		if ( $consent_to_mobile || $consent_to_newsletter ) {
+			as_enqueue_async_action( 'klaviyo_schedule_consent_event', array( $email, $phone, $country, $consent_to_mobile, $consent_to_newsletter ), 'klaviyo' );
 		}
 	}
 
 	/**
-	 * Triggers an API call to Klaviyo.
+	 * Triggers an API call to Klaviyo, fanning out one consent record per enabled mobile channel.
+	 *
+	 * The signature accepts a single `$consent_to_mobile` boolean covering both SMS and WhatsApp;
+	 * the actual fan-out (one record per enabled channel) is delegated to
+	 * `kl_build_mobile_consent_records()`.
 	 *
 	 * @param string  $email Customer email.
 	 * @param string  $phone Customer billing phone.
 	 * @param string  $country Customer billing country.
-	 * @param boolean $consent_to_sms If the customer consented to sms.
+	 * @param boolean $consent_to_mobile If the customer consented to mobile (SMS / WhatsApp) marketing.
 	 * @param boolean $consent_to_newsletter If the customer consented to newsletter.
 	 * @return void
 	 * @since 0.1.0
 	 */
-	public function send_consent_event( $email, $phone, $country, $consent_to_sms, $consent_to_newsletter ) {
+	public function send_consent_event( $email, $phone, $country, $consent_to_mobile, $consent_to_newsletter ) {
 		$url  = $this->api_url . 'webhook/integration/woocommerce?c=' . $this->settings['klaviyo_public_api_key'];
 		$body = array(
 			'data' => array(),
 		);
 
-		if ( $consent_to_sms ) {
-			array_push(
+		if ( $consent_to_mobile ) {
+			$customer     = array(
+				'email'   => $email,
+				'country' => $country,
+				'phone'   => $phone,
+			);
+			$body['data'] = array_merge(
 				$body['data'],
-				array(
-					'customer'     => array(
-						'email'   => $email,
-						'country' => $country,
-						'phone'   => $phone,
-					),
-					'consent'      => true,
-					'updated_at'   => gmdate( DATE_ATOM, date_timestamp_get( date_create() ) ),
-					'consent_type' => 'sms',
-					'group_id'     => $this->settings['klaviyo_sms_list_id'],
+				kl_build_mobile_consent_records(
+					$customer,
+					kl_mobile_channels_enabled( $this->settings ),
+					$this->settings['klaviyo_sms_list_id'] ?? null
 				)
 			);
 		}
@@ -187,6 +190,10 @@ class StoreApi {
 					'group_id'     => $this->settings['klaviyo_newsletter_list_id'],
 				)
 			);
+		}
+
+		if ( empty( $body['data'] ) ) {
+			return;
 		}
 
 		wp_remote_post(
