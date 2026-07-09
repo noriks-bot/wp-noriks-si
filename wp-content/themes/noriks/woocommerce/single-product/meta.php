@@ -428,7 +428,7 @@ $is_mixed_bundle = has_term( array( 'black-friday', 'majice-in-boksarice-paketi'
       </div>
       <div class="accordion-content">
           
-         <?php if( !$is_boxers &&  !$is_carape &&   !$is_mixed_bundle ): ?>
+         <?php if( !$is_boxers &&  !$is_carape &&   !$is_mixed_bundle && ! ( function_exists('noriks_is_type') && noriks_is_type('kompresijske-nogavice', $current_product_id) ) ): ?>
          
          
          
@@ -441,10 +441,14 @@ $is_mixed_bundle = has_term( array( 'black-friday', 'majice-in-boksarice-paketi'
         
                 Naše vrhunske majice s kratkimi rokavi so narejene iz vrhunske mešanice 60 % obročasto predenega bombaža in 40 % poliestra, kar zagotavlja izjemno mehko in proti gubam odporno tkanino. <br><br>Boksarice NORIKS so narejene iz vrhunske mešanice 95 % modala in 5 % elastana, kar zagotavlja izjemno mehko in elastično tkanino, ki se popolnoma prilagodi telesu. Elastičen pas je zasnovan za optimalno prileganje, ki zagotavlja udobje brez zožitve in popoln videz pod oblačili. <br>
         
+        <?php elseif( function_exists('noriks_is_type') && noriks_is_type('kompresijske-nogavice', $current_product_id) ): ?>
+
+                Z graduirano kompresijo 15–20 mmHg NORIKS kompresijske nogavice pomagajo izboljšati cirkulacijo, zmanjšati otekanje in ublažiti napetost v utrujenih ali težkih nogah. Stranska zadrga omogoča preprosto obuvanje in sezuvanje – idealno za osebe z zmanjšano gibljivostjo ali z artritisom. Mehka notranja podloga ščiti kožo pred zadrgo in zagotavlja udobje brez draženja.
+
         <?php else: ?>
-        
-        
-        
+
+
+
             <?php echo get_field("__overwrite_sekcije_bellow_1"); ?>
             
             
@@ -466,10 +470,20 @@ $is_mixed_bundle = has_term( array( 'black-friday', 'majice-in-boksarice-paketi'
       </div>
       <div class="accordion-content">
           
-           <?php if( $is_boxers ): ?>
-       
-        
-          <img src="https://noriks.com/si/wp-content/uploads/2026/04/bokserice_si.jpg">
+           <?php if( function_exists('noriks_is_type') && noriks_is_type('kompresijske-nogavice', $current_product_id) ): ?>
+
+          <div style="line-height:1.9;">
+            <strong>S/M</strong> : številka obutve 36–40 / obseg meče : 23–36 cm<br>
+            <strong>L/XL</strong> : številka obutve 40–44 / obseg meče : 36–45 cm<br>
+            <strong>2XL</strong> : številka obutve 44–48 / obseg meče : 45–56 cm<br><br>
+            Prosimo, izmerite obseg meče na najširšem mestu, da najdete svojo velikost.<br><br>
+            Priporočamo, da velikost izberete glede na obseg meče, ne glede na običajno številko obutve.
+          </div>
+
+        <?php elseif( $is_boxers ): ?>
+
+
+          <img class="js-open-size-chart" style="cursor:pointer;" src="https://noriks.com/si/wp-content/uploads/2026/04/bokserice_si.jpg">
           
           
           
@@ -477,17 +491,17 @@ $is_mixed_bundle = has_term( array( 'black-friday', 'majice-in-boksarice-paketi'
         <?php elseif(  $is_carape ): ?>
         
         
-                  <img src="https://noriks.com/si/wp-content/uploads/2026/04/nogavice_si.jpg">
+                  <img class="js-open-size-chart" style="cursor:pointer;" src="https://noriks.com/si/wp-content/uploads/2026/04/nogavice_si.jpg">
                   
     <?php elseif(  $is_mixed_bundle ): ?>
     
-     <img src="<?php echo get_template_directory_uri(); ?>/img/tabela-velikosti-majice.jpg">
-<img src="https://noriks.com/si/wp-content/uploads/2026/04/bokserice_si.jpg">
+     <img class="js-open-size-chart" style="cursor:pointer;" src="<?php echo get_template_directory_uri(); ?>/img/tabela-velikosti-majice.jpg">
+<img class="js-open-size-chart" style="cursor:pointer;" src="https://noriks.com/si/wp-content/uploads/2026/04/bokserice_si.jpg">
         
           <?php else: ?>
       
       
-       <img src="<?php echo get_template_directory_uri(); ?>/img/tabela-velikosti-majice.jpg">
+       <img class="js-open-size-chart" style="cursor:pointer;" src="<?php echo get_template_directory_uri(); ?>/img/tabela-velikosti-majice.jpg">
         
             
         <?php endif; ?>
@@ -502,7 +516,7 @@ $is_mixed_bundle = has_term( array( 'black-friday', 'majice-in-boksarice-paketi'
         <div class="toggle">+</div>
       </div>
       <div class="accordion-content">
-             <?php if( !$is_boxers &&  !$is_carape &&   !$is_mixed_bundle ): ?>
+             <?php if( !$is_boxers &&  !$is_carape &&   !$is_mixed_bundle && ! ( function_exists('noriks_is_type') && noriks_is_type('kompresijske-nogavice', $current_product_id) ) ): ?>
         <?php echo get_field("singlepp_acc_t_2","options"); ?>
         
          
@@ -513,6 +527,10 @@ $is_mixed_bundle = has_term( array( 'black-friday', 'majice-in-boksarice-paketi'
                       Barve perite skupaj z barvami. Nežno perite v hladni vodi. Sušite na ravni površini ali v sušilnem stroju pri nizki temperaturi. Ne belite.            
         
         
+          <?php elseif( function_exists('noriks_is_type') && noriks_is_type('kompresijske-nogavice', $current_product_id) ): ?>
+
+                Ročno pranje v hladni vodi ali strojno pranje na programu za občutljivo perilo. Ne uporabljajte belila.<br><br>Sušite izključno na zraku – ne uporabljajte sušilnega stroja, da ohranite elastičnost in učinkovitost kompresije.
+
           <?php else: ?>
             <?php echo get_field("__overwrite_sekcije_bellow_3"); ?>
         <?php endif; ?>

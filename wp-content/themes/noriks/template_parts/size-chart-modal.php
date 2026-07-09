@@ -198,13 +198,23 @@
   <div  style="<?php if ( has_term( array( 'orto-starter', 'orto-majica-bokserica' ), 'product_cat', get_the_ID() ) ): ?>  display: block; <?php endif; ?>"
         class="size-chart-left">
       
-      <?php if ( has_term( array( 'boksarice', 'orto-bokserice' , 'bokserice-sastavi-paket' ), 'product_cat', get_the_ID() )   && 
+      <?php if ( function_exists('noriks_is_type') && noriks_is_type('kompresijske-nogavice') ): ?>
+
+      <div style="line-height:1.9; text-align:left; margin:40px 0; padding:0 6px; font-size:15px; color:#111;">
+        <strong>S/M</strong> : številka obutve 36–40 / obseg meče : 23–36 cm<br>
+        <strong>L/XL</strong> : številka obutve 40–44 / obseg meče : 36–45 cm<br>
+        <strong>2XL</strong> : številka obutve 44–48 / obseg meče : 45–56 cm<br><br>
+        Prosimo, izmerite obseg meče na najširšem mestu, da najdete svojo velikost.<br><br>
+        Priporočamo, da velikost izberete glede na obseg meče, ne glede na običajno številko obutve.
+      </div>
+
+      <?php elseif ( has_term( array( 'boksarice', 'orto-bokserice' , 'bokserice-sastavi-paket' ), 'product_cat', get_the_ID() )   &&
        !has_term( 'black-friday', 'product_cat', get_the_ID() )   ): ?>
-      
+
     <img
-    
+
     style="margin-top: 70px;margin-bottom: 70px;"
-    
+
       src="https://noriks.com/si/wp-content/uploads/2026/04/bokserice_si.jpg"
       alt="Size Guide">
       
@@ -670,7 +680,13 @@ document.addEventListener("DOMContentLoaded", function () {
     document.body.style.overflow = "";
   }
 
-  openBtn?.addEventListener("click", openModal);
+  // Delegated: any trigger (existing #open-size-chart or an accordion
+  // image with .js-open-size-chart) opens the modal.
+  document.addEventListener("click", function (e) {
+    if (e.target.closest("#open-size-chart, #open-size-chart-secondary, .js-open-size-chart")) {
+      openModal(e);
+    }
+  });
   closeX?.addEventListener("click", closeModal);
   backdrop?.addEventListener("click", closeModal);
 
