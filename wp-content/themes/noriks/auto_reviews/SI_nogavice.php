@@ -1,0 +1,31 @@
+<?php
+// Review pool for compression socks (kompresijske nogavice).
+// Slovenian translations of the real Croatian sock reviews (Noriks_Reviews_DE_HR_HU).
+$auto_reviews_en = array(
+    array("name" => "Ivan K.", "text" => "Navdušen sem, kako udobne so nogavice in kako se odlično nosijo."),
+    array("name" => "Marko P.", "text" => "To je popolna nogavica! Zelo sem zadovoljen in jo priporočam naprej. 5 zvezdic!"),
+    array("name" => "Tomaž R.", "text" => "Odlično se prilegajo. Prava naslada."),
+    array("name" => "Jože D.", "text" => "To so najboljše kompresijske nogavice, kar sem jih imel."),
+    array("name" => "Luka M.", "text" => "Vse top, z veseljem ponovno."),
+    array("name" => "Peter G.", "text" => "super"),
+    array("name" => "Anton B.", "text" => "Dobra, napredna stvar. Čas, potreben za obuvanje nogavic, je precej krajši."),
+    array("name" => "Nikola R.", "text" => "Zelo dobra kakovost in izdelava, žal sem jih moral vrniti, ker so mi bile prekratke. Vračilo in povračilo kupnine nista bila noben problem – po pošiljanju nazaj je vse potekalo zelo hitro."),
+    array("name" => "Matija S.", "text" => "Zaenkrat še ne čutim izboljšanja, a ne odneham. Obuvanje nogavic je zahvaljujoč zadrgi brez vsakega napora. Lp"),
+    array("name" => "Domen K.", "text" => "Zadrga mi je praktična. Ker pa imam močnejša meča, imam kar nekaj težav z zapiranjem zadrge. Morda bi moral poskusiti velikost L, a bi mi potem stopalo lahko bilo preveliko? Pri velikosti obutve 38."),
+    array("name" => "Zvone P.", "text" => "Vse super, odlično se prilegajo. Udobne za nošenje."),
+    array("name" => "Branko N.", "text" => "Načeloma so mi všeč, le da se mi pri črnih nogavicah zadrga pri zapiranju vedno zatakne na enem jezičku in naprej ne gre. Svetle nogavice nosim vsak dan in dobro opravljajo svojo nalogo, a ne ravno tako kot tiste na recept."),
+    array("name" => "Renato T.", "text" => "Zame je pravo olajšanje, da jih obujem. Ne potrebujem niti pet minut za to."),
+    array("name" => "Andrej M.", "text" => "Predstavljal sem si drugače in udobneje."),
+    array("name" => "Dino K.", "text" => "Zlahka se obujejo. Dostavo sem prejel po določenem času čakanja. Natančnost prileganja je zelo dobra, za razliko od prejšnjih meritev v specializiranih trgovinah. Sistem zadrge je stabilen. Zadrge sem premaknil navznoter, tako da je potreben napor lažje obvladljiv. Žal se notranja zaščita zadrge zelo hitro zatakne. A en vikend vaje bi moral biti dovolj. Nošenje je zelo udobno, brez potnih stopal, brez stiskanja na robovih. Sezuvanje je preprosto genialno lahko – ne zahteva niti pretiranega napora niti tuje pomoči."),
+    array("name" => "Krešo V.", "text" => "Nogavica se dobro obuje. Edino, kar lahko očitam, je zadrga, ki se med nošenjem sama odpira. Lepo bi bilo, če bi zadrga imela majhno varovalo, ki preprečuje samodejno odpiranje. Sicer udobna za nošenje."),
+    array("name" => "Goran L.", "text" => "Zadrga se vendarle ne zapira tako zlahka kot v vaših reklamah. A z malo vaje gre povsem dobro. Razmerje med ceno in kakovostjo je pravo. Obseg meč malce pretesen za velikost obutve 36."),
+    array("name" => "Štefan C.", "text" => "Popolnoma zadovoljen."),
+    array("name" => "Vedran M.", "text" => "Prvo obuvanje je bilo malce težko, a sicer res super."),
+    array("name" => "Robert S.", "text" => "Nogavice so mi precej pretesne. Manjša velikost je bila namenjena mojemu očetu; in tudi večje so tako tesne, da ne more sam zapreti zadrge. Nogavico je treba stisniti zgoraj, nad zadrgo – le tako gre."),
+    array("name" => "Davor H.", "text" => "Popolnoma sem navdušen 🤩"),
+    array("name" => "Miha J.", "text" => "Zaenkrat 👍"),
+    array("name" => "Filip B.", "text" => "Res sem navdušen, kako zlahka se nogavice obujejo in kako udobne so za nošenje."),
+    array("name" => "Dario N.", "text" => "Spoštovani, leta se mučim s kompresijskimi nogavicami razreda 3 s pripomočki za obuvanje. Obuvanje brez pomoči mi zaradi gibljivosti in moči še vedno gre povsem dobro. Potem sem naletel na vas. Kljub strahu, da kompresija morda ne bo zadostna, sem se izmeril in naročil. Popolnoma sem očaran nad udobjem nošenja – preživeti dan brez bolečin je preprosto neopisljivo, še udobnejše obuvanje in sezuvanje pa je pravi bonus, hvala zadrgi. Enako pozitivno ocenjujem gladko izpeljano naročilo in podporo strankam. Tudi v prihodnje bom naročal pri vas."),
+    array("name" => "Zlatko M.", "text" => "Zelo dobra rešitev. Nošenja skoraj ne opaziš. Všeč mi je."),
+    array("name" => "Boris T.", "text" => "Udobno pri sezuvanju."),
+);
