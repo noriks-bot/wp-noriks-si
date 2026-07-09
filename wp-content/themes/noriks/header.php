@@ -131,7 +131,7 @@
             <?php if ($i === 0): ?>
                 <!-- FIRST ITEM WITH DROPDOWN -->
                 <div class="nav-item has-dropdown">
-                    <a href="<?php echo esc_url($link); ?>" class="nav-link">
+                    <a href="<?php echo esc_url($link); ?>" class="nav-link<?php echo !empty($item['pill']) ? ' nav-link--pill' : ''; ?>">
                         <?php echo esc_html($text); ?>
                     </a>
                         
@@ -146,7 +146,7 @@
             <?php elseif ($i === 1): ?>
 
                 <div class="nav-item has-dropdown">
-                    <a href="<?php echo esc_url($link); ?>" class="nav-link">
+                    <a href="<?php echo esc_url($link); ?>" class="nav-link<?php echo !empty($item['pill']) ? ' nav-link--pill' : ''; ?>">
                         <?php echo esc_html($text); ?>
                     </a>
                     <!--
@@ -159,7 +159,7 @@
                 
             <?php else: ?>
                 <!-- NORMAL ITEMS -->
-                <a href="<?php echo esc_url($link); ?>" class="nav-link<?php echo ( $i === count($header_nav) - 1 ) ? ' nav-link--pill' : ''; ?>">
+                <a href="<?php echo esc_url($link); ?>" class="nav-link<?php echo !empty($item['pill']) ? ' nav-link--pill' : ''; ?>">
                     <?php echo esc_html($text); ?>
                 </a>
             <?php endif; ?>
