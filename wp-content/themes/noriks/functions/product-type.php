@@ -35,12 +35,12 @@ function noriks_product_type_map() : array {
         'starter'   => array( 'zacetni-paketi', 'starter-paketi', 'orto-starter', 'orto-majica-bokserica' ),
         'majice'    => array( 'majice', 'orto-majice' ),
         'bokserice' => array( 'boksarice', 'orto-bokserice', 'boksarice-sestavi-paket', 'bokserice-sastavi-paket', 'bokserice' ),
-        'carape'    => array( 'nogavice', 'zimske-nogavice', 'zimske-carape', 'kompresijske-nogavice', 'orto-kompresijske-nogavice' ),
+        'carape'    => array( 'nogavice', 'zimske-nogavice', 'zimske-carape', 'kompresijske-nogavice', 'orto-kompresijske-nogavice', 'orto-kompresijske-carape' ),
 
         // --- sub-variants / special buckets ---
         // Compression socks: front category 'kompresijske-nogavice' (child of
-        // nogavice) and orto category 'orto-kompresijske-nogavice'.
-        'kompresijske-nogavice'   => array( 'kompresijske-nogavice', 'orto-kompresijske-nogavice' ),
+        // nogavice) and orto category 'orto-kompresijske-carape' (universal slug across markets).
+        'kompresijske-nogavice'   => array( 'kompresijske-nogavice', 'orto-kompresijske-nogavice', 'orto-kompresijske-carape' ),
         'ortopas'                 => array( 'orto-ortopas', 'ortopas' ),
         'bunion'                  => array( 'orto-bunion', 'bunion' ),
         'fisiorest'               => array( 'orto-fisiorest', 'fisiorest' ),
