@@ -44,6 +44,7 @@ function noriks_product_type_map() : array {
         'ortopas'                 => array( 'orto-ortopas', 'ortopas' ),
         'bunion'                  => array( 'orto-bunion', 'bunion' ),
         'fisiorest'               => array( 'orto-fisiorest', 'fisiorest' ),
+        'norikshers'              => array( 'orto-norikshers', 'orto-noriks-hers', 'norikshers' ),
         'singles-boxers'          => array( 'singles-boxers' ),
         'bokserice-1-komad'       => array( '1-komad-bokserice', '1-kos-boksarice' ),
         'majice-1-komad'          => array( '1-komad-majice', '1-kos-majice' ),
