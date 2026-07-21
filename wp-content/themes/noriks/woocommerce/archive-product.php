@@ -42,7 +42,7 @@ function is_active_menu_item( $path ) {
 ?>
 
 <!-- SECOND LEVEL MENU -->
-<section>
+<section class="category-menu-section">
 <nav class="category-menu">
   <ul>
     <li class="<?php echo is_shop() ? 'active' : ''; ?>">

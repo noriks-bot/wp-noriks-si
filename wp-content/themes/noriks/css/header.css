@@ -2,7 +2,7 @@
 .top-header {
   width: 100%;
   background: #d5d5d5;
-  padding: 2px 0;
+  padding: 6px 0;
   overflow: hidden;
 }
 
@@ -11,18 +11,24 @@
   overflow: hidden;
   white-space: nowrap;
   color: black;
+  display: flex;
+  align-items: center;
 }
 
 .marquee-content {
   display: inline-flex;
   align-items: center;
+  flex: 0 0 auto;
    color: black;
   gap: 70px;
+  line-height: 1;
   animation: marqueeScroll 28s linear infinite;
 }
 
 .marquee-content span {
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  line-height: 1;
     color: black;
 }
 
@@ -33,6 +39,17 @@
   text-decoration: none;
     color: black;
     text-transform: uppercase;
+  display: inline-flex;
+  align-items: center;
+  line-height: 1;
+  gap: 6px;
+}
+
+.marquee-content .mq-ico {
+  width: 19px;
+  height: 19px;
+  flex: 0 0 auto;
+  display: block;
 }
 
 @keyframes marqueeScroll {
@@ -108,6 +125,7 @@
 .navbar-center {
   display: flex;
   gap: 5px;
+  align-items: center;
 }
 
 @media (max-width: 768px) {
@@ -117,6 +135,7 @@
 
   .navbar-center {
     flex-direction: column;
+    align-items: flex-start;
     position: fixed;
     top: 0;
     left: -350px;
@@ -272,12 +291,29 @@ color: white;
     margin: 0 15px;
     font-size: 14px;
     font-weight: 500;
-    text-transform: uppercase;
-    letter-spacing: 0.59px !important;
+    text-transform: none;
+    letter-spacing: 0.3px !important;
 }
 
 .header .navbar-center a:hover {
   text-decoration: underline;
+}
+
+/* Last menu item as a pill button (orange, black text) */
+.header .navbar-center a.nav-link--pill {
+  display: inline-flex;
+  align-items: center;
+  line-height: 1;
+  background: #f5a623;
+  color: black !important;
+  padding: 6px 11px;
+  border-radius: 16px;
+  font-weight: 600;
+  letter-spacing: 0 !important;
+}
+.header .navbar-center a.nav-link--pill:hover {
+  background: #e0951c;
+  text-decoration: none;
 }
 
 .header .navbar-right {
@@ -288,9 +324,10 @@ color: white;
 .header .language-selector {
   display: flex;
   align-items: center;
-  background: rgba(255,255,255,0.05);
-  padding: 5px 10px;
-  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.05);
+  padding: 3px 13px;
+  border-radius: 18px;
+  border: 1px solid rgba(255, 255, 255, 1);
   margin-right: 20px;
 }
 

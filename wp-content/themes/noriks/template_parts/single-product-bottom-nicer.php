@@ -1,6 +1,69 @@
 
-<?php 
-if (  has_term( array( 'starter-paketi','orto-starter' ), 'product_cat', get_the_id() )  )   : 
+<?php if ( function_exists('noriks_is_type') && noriks_is_type('kompresijske-nogavice') ): ?>
+<!-- Compression socks: NORIKS vs. others comparison (demo/UGC videos need SI assets — omitted) -->
+<section class="why-section knc-compare-section">
+  <div class="knc-compare-wrap">
+    <h2 class="knc-compare-title">NORIKS proti ostalim</h2>
+    <div class="knc-table-scroll">
+      <table class="knc-table">
+        <thead>
+          <tr>
+            <th class="knc-feat"></th>
+            <th class="knc-comp">Klasične nogavice<span>(Bauerfeind, medi…)</span></th>
+            <th class="knc-comp">TV-nogavice<span>(Zip Sox &amp; Co.)</span></th>
+            <th class="knc-us">NORIKS<em class="knc-badge">Št. 1</em></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>Medicinska kompresija</td><td class="ok">✓</td><td class="no">✕</td><td class="us ok">✓</td></tr>
+          <tr><td>Zadrga za preprosto obuvanje</td><td class="no">✕</td><td class="ok">✓</td><td class="us ok">✓</td></tr>
+          <tr><td>Samostojno obuvanje brez pomoči</td><td class="no">✕</td><td class="mid">~</td><td class="us ok">✓</td></tr>
+          <tr><td>Ojačana zadrga, se nikoli ne zatakne</td><td class="mid">—</td><td class="no">✕</td><td class="us ok">✓</td></tr>
+          <tr><td>Zračna tkanina</td><td class="mid">~</td><td class="no">✕</td><td class="us ok">✓</td></tr>
+          <tr><td>Udobje ves dan (+12 ur)</td><td class="mid">~</td><td class="no">✕</td><td class="us ok">✓</td></tr>
+          <tr><td>60-dnevna garancija vračila denarja</td><td class="no">✕</td><td class="no">✕</td><td class="us ok">✓</td></tr>
+          <tr class="knc-price"><td>Cena na par</td><td>od 85 €</td><td>~15 €</td><td class="us">od 23,33 €</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+<style>
+  .knc-compare-section { background:#fff; padding:30px 0 40px; }
+  .knc-compare-wrap { max-width:940px; margin:0 auto; padding:0 16px; }
+  .knc-compare-title { text-align:center; font-size:clamp(24px,3vw,34px); font-weight:700; color:#111; margin:0 0 24px; }
+  .knc-table-scroll { border-radius:16px; overflow:hidden; box-shadow:0 12px 34px rgba(18,48,90,.12); border:1px solid #edf0f4; }
+  .knc-table { width:100%; border-collapse:collapse; table-layout:fixed; margin:0 !important; }
+  .knc-table th, .knc-table td { padding:15px 12px; text-align:center; font-size:15px; }
+  .knc-table thead th { color:#fff; font-weight:700; vertical-align:middle; font-size:14px; }
+  .knc-table thead th:first-child { width:34%; background:#fff; }
+  .knc-table .knc-comp { background:#767676; }
+  .knc-table .knc-comp span { display:block; font-weight:400; font-size:11.5px; opacity:.8; margin-top:3px; }
+  .knc-table .knc-us { background:#111; }
+  .knc-badge { display:inline-block; margin-left:6px; background:#fff; color:#111; font-style:normal; font-weight:700; font-size:10.5px; padding:2px 8px; border-radius:999px; vertical-align:middle; }
+  .knc-table tbody td:first-child { text-align:left; font-weight:600; color:#111; font-size:14px; line-height:1.3; padding-left:18px; }
+  .knc-table tbody tr { border-bottom:1px solid #eef0f4; }
+  .knc-table tbody tr:nth-child(even) { background:#fafbfc; }
+  .knc-table td.ok { color:#1a9e5f; font-size:19px; font-weight:700; }
+  .knc-table td.no { color:#cdd2da; font-size:18px; }
+  .knc-table td.mid { color:#e0a52e; font-size:18px; font-weight:700; }
+  .knc-table td.us { background:#f3f3f3 !important; }
+  .knc-table td.us.ok { color:#1a9e5f; }
+  .knc-table .knc-price td { font-weight:700; color:#4a5568; }
+  .knc-table .knc-price td:first-child { color:#1e2a3a; }
+  .knc-table .knc-price td.us { color:#111; font-size:16px; }
+  @media (max-width:640px){
+    .knc-table th, .knc-table td { padding:12px 6px; font-size:13px; }
+    .knc-table thead th { font-size:12px; }
+    .knc-table thead th:first-child { width:40%; }
+    .knc-table tbody td:first-child { font-size:12px; padding-left:10px; }
+    .knc-badge { display:block; margin:4px auto 0; width:-moz-max-content; width:max-content; }
+  }
+</style>
+<?php endif; ?>
+
+<?php
+if (  has_term( array( 'starter-paketi','orto-starter' ), 'product_cat', get_the_id() )  )   :
 ?>
 
 
@@ -583,19 +646,23 @@ endif;
       <!--<h4 style="" class="highlight"><?php echo get_field("singlepp_content_standard_reviews_t1","options"); ?></h4>-->
       <h1 style="color:black;     margin-bottom: 4px;">
           
-          <?php if ( !has_term( array( 'bokserice', 'bokserice-sastavi-paket' ), 'product_cat', get_the_ID() ) ): ?>
-          
+          <?php if ( function_exists('noriks_is_type') && noriks_is_type('kompresijske-nogavice') ): ?>
+
+          Nisi sam pri iskanju popolnih kompresijskih nogavic.
+
+          <?php elseif ( !has_term( array( 'bokserice', 'bokserice-sastavi-paket' ), 'product_cat', get_the_ID() ) ): ?>
+
           <?php echo get_field("singlepp_content_standard_reviews_t2","options"); ?>
-          
+
           <?php else: ?>
-          
+
           Nisi sam v iskanju najboljših bokseric.
-          
+
           <?php endif; ?>
-          
-          
+
+
           </h1>
-    <p class="note" style="color: black; margin-top: 0px; margin-bottom: 5px;"><?php echo get_field("singlepp_content_standard_reviews_t3","options"); ?></p>
+    <p class="note" style="color: black; margin-top: 0px; margin-bottom: 5px;"><?php if ( function_exists('noriks_is_type') && noriks_is_type('kompresijske-nogavice') ): ?>Tisoče moških že nosi NORIKS kompresijske nogavice za lažje in bolj spočite noge – v službi, na potovanjih in pri treningu.<?php else: ?><?php echo get_field("singlepp_content_standard_reviews_t3","options"); ?><?php endif; ?></p>
     </div>
   </section>
   </div>
@@ -665,9 +732,15 @@ endif;
   // Detect if current product belongs to bokserice group
   $current_product_id = (function_exists('is_product') && is_product()) ? get_queried_object_id() : get_the_id();
   $is_bokserice_page  = has_term( array( 'bokserice','orto-bokserice', 'bokserice-sastavi-paket' ), 'product_cat', $current_product_id );
+  $is_nogavice_page   = ( function_exists('noriks_is_type') && noriks_is_type('kompresijske-nogavice', $current_product_id) );
 
-  // Include review pools
-  if ( ! $is_bokserice_page )  {
+  // Fallback product name shown in review cards.
+  $rv_fallback_title = $is_nogavice_page ? 'Kompresijske nogavice z zadrgo' : 'Ena Siva Majica';
+
+  // Include review pools (own pool per product group)
+  if ( $is_nogavice_page ) {
+    include get_stylesheet_directory() . '/auto_reviews/SI_nogavice.php';
+  } elseif ( ! $is_bokserice_page )  {
     include get_stylesheet_directory() . '/auto_reviews/'.$reviews_language.'.php';
   } else {
     include get_stylesheet_directory() . '/auto_reviews/' . $reviews_language . '_bokserice.php';
@@ -732,11 +805,13 @@ endif;
       }
 
       $is_bokserice = false;
+      $is_nogavice  = false;
       if ( $product_id ) {
           $is_bokserice = has_term( array( 'bokserice','orto-bokserice', 'bokserice-sastavi-paket' ), 'product_cat', $product_id );
+          $is_nogavice  = ( function_exists('noriks_is_type') && noriks_is_type('kompresijske-nogavice', $product_id) );
       }
 
-      $cache_key = $transient_key . ( $is_bokserice ? '_bokserice' : '_all' );
+      $cache_key = $transient_key . ( $is_nogavice ? '_nogavice' : ( $is_bokserice ? '_bokserice' : '_all' ) );
 
       if ( function_exists( 'get_transient' ) ) {
           $cached = get_transient( $cache_key );
@@ -753,7 +828,9 @@ endif;
           'order'   => 'DESC',
       ];
 
-      if ( $is_bokserice ) {
+      if ( $is_nogavice ) {
+          $args['category'] = [ 'kompresijske-nogavice', 'orto-kompresijske-nogavice', 'nogavice' ];
+      } elseif ( $is_bokserice ) {
           $args['category'] = [ 'bokserice' ];
       } else {
           $args['tax_query'] = [
@@ -998,7 +1075,8 @@ function assign_unique_avatars_first_n(array $reviews, array $avatar_pool, strin
 
   // Avatar pools based on page category
   $avatar_type = $is_bokserice_page ? 'bokserice' : 'majice';
-  $avatar_pool = get_review_avatar_pool($avatar_type);
+  // Compression socks: text-only reviews (no avatar images).
+  $avatar_pool = $is_nogavice_page ? array() : get_review_avatar_pool($avatar_type);
 
   $product_pool = get_wc_product_pool();
 
@@ -1040,6 +1118,10 @@ $auto_reviews_ship = assign_unique_avatars_first_n($auto_reviews_ship, $avatar_p
   $ship_count = count($auto_reviews_ship);
 ?>
 
+<?php if ( $is_nogavice_page ) : ?>
+<style>/* compression socks: text-only reviews, no avatar */ #reviews-section .avatar { display: none !important; }</style>
+<?php endif; ?>
+
 <section id="reviews-section" class="basic-reviews-section" style="margin-bottom:40px!important;padding-bottom:40px!important;">
   <div class="container basic-reviews-section-container" style="width:100%;max-width:1440px;padding-top:20px!important;margin:0 auto;padding-left: 10px; padding-right: 10px;">
 
@@ -1060,7 +1142,7 @@ $auto_reviews_ship = assign_unique_avatars_first_n($auto_reviews_ship, $avatar_p
       <?php if (!empty($initial_product)) : foreach ($initial_product as $review) :
         $name  = $review['name'] ?? 'Anonymní';
         $text  = $review['text'] ?? '';
-        $title = !empty($review['product_title']) ? $review['product_title'] : 'Jedna Siva Majica';
+        $title = !empty($review['product_title']) ? $review['product_title'] : $rv_fallback_title;
         $url   = !empty($review['product_url'])   ? $review['product_url']   : '#';
         $stars = '★★★★★';
         $date_display = $review['assigned_date'] ?? '';
@@ -1095,7 +1177,7 @@ $auto_reviews_ship = assign_unique_avatars_first_n($auto_reviews_ship, $avatar_p
       <?php if (!empty($initial_ship)) : foreach ($initial_ship as $review) :
         $name  = $review['name'] ?? 'Anonymní';
         $text  = $review['text'] ?? '';
-        $title = !empty($review['product_title']) ? $review['product_title'] : 'Jedna Siva Majica';
+        $title = !empty($review['product_title']) ? $review['product_title'] : $rv_fallback_title;
         $url   = !empty($review['product_url'])   ? $review['product_url']   : '#';
         $stars = '★★★★★';
         $date_display = $review['assigned_date'] ?? '';
@@ -1199,7 +1281,7 @@ $auto_reviews_ship = assign_unique_avatars_first_n($auto_reviews_ship, $avatar_p
         article.className = 'review-card is-new';
 
         const url       = review.product_url   || '#';
-        const title     = review.product_title || 'Jedna Siva Majica';
+        const title     = review.product_title || '<?php echo esc_js($rv_fallback_title); ?>';
         const name      = review.name          || 'Anonymní';
         const text      = review.text          || '';
         const headline  = review.headline      || '';
@@ -1455,6 +1537,21 @@ $auto_reviews_ship = assign_unique_avatars_first_n($auto_reviews_ship, $avatar_p
 $faq_list = get_field('faq_list', 'option');
 $faq_list2 = get_field('faq_list_2', 'option');
 $faq_list3 = get_field('faq_list_3', 'option');
+
+$is_knc = ( function_exists('noriks_is_type') && noriks_is_type('kompresijske-nogavice') );
+// Compression-sock benefit content — replaces ONLY the product-info FAQ
+// container ("...izdelku") on sock products; delivery/returns stay.
+$knc_faq = array(
+  array( 'questioon' => 'Težke in utrujene noge', 'answer' => 'NORIKS kompresijske nogavice uporabljajo graduirano kompresijo 15–20 mmHg, da spodbudijo cirkulacijo od gležnja navzgor. Namesto da bi se kri zadrževala v nogah, postopni pritisk podpira naravni povratni tok. Vaše noge se že po nekaj urah počutijo lažje.' ),
+  array( 'questioon' => 'Krčne žile in venske težave', 'answer' => 'Ko cirkulacija oslabi, se žile razširijo ter postanejo vidne in boleče. NORIKS nogavice izvajajo blag, a stalen pritisk, ki podpira stene žil in olajša pretok krvi. Idealne so kot dopolnilo medicinskemu zdravljenju ali za preventivo pri osebah, nagnjenih k venskim težavam.' ),
+  array( 'questioon' => 'Otekline in zadrževanje vode', 'answer' => 'Dolgotrajno sedenje ali stanje povzroča kopičenje tekočine v gležnjih in mečih. NORIKS nogavice izvajajo najmočnejši pritisk ob gležnju, ki se navzgor postopno zmanjšuje — ta graduirana kompresija pomaga zmanjšati otekline in preprečuje, da bi se zadrževanje vode čez dan ustalilo.' ),
+  array( 'questioon' => 'Odrevenelost in mravljinci', 'answer' => 'Preozke ali slabo prilegajoče nogavice pritiskajo na žile in povzročajo ta neprijeten občutek mravljincev. NORIKS nogavice so zasnovane iz zračne tkanine in z uravnoteženo kompresijo, ki spodbuja cirkulacijo, ne da bi prekinila pretok krvi. Vaše noge ostanejo vitalne in občutljive, brez odrevenelosti ali mravljincev.' ),
+  array( 'questioon' => 'Udobje za občutljivo kožo', 'answer' => 'Že blag pritisk lahko postane neprijeten na občutljivi ali razdraženi koži. NORIKS nogavice združujejo mehko in zračno tkanino, zaščitno notranjo podlogo ob zadrgi ter zmerno kompresijo za učinkovito oporo brez drgnjenja ali draženja. Nosite jih ves dan brez skrbi.' ),
+);
+$faq_pick = function( $title, $list ) use ( $is_knc, $knc_faq ) {
+  if ( $is_knc && stripos( (string) $title, 'izdelku' ) !== false ) { return $knc_faq; }
+  return $list;
+};
 ?>
 
 
@@ -1472,7 +1569,8 @@ $faq_list3 = get_field('faq_list_3', 'option');
             color: #222223;
             margin-bottom: 10px; "><?php echo get_field('faq_title_1', 'option'); ?></h4>
             <?php 
-              if( $faq_list && is_array($faq_list) ): 
+              $faq_list = $faq_pick( get_field('faq_title_1', 'option'), $faq_list );
+              if( $faq_list && is_array($faq_list) ):
                       foreach( $faq_list as $faq_item ):
               ?>
                     <div class="faq-item">
@@ -1498,7 +1596,8 @@ $faq_list3 = get_field('faq_list_3', 'option');
             color: #001e36;
             margin-bottom: 10px; "><?php echo get_field('faq_title_2', 'option'); ?></h4>
             <?php 
-              if( $faq_list2 && is_array($faq_list2) ): 
+              $faq_list2 = $faq_pick( get_field('faq_title_2', 'option'), $faq_list2 );
+              if( $faq_list2 && is_array($faq_list2) ):
                       foreach( $faq_list2 as $faq_item ):
               ?>
                     <div class="faq-item">
@@ -1524,7 +1623,8 @@ $faq_list3 = get_field('faq_list_3', 'option');
             color: #001e36;
             margin-bottom: 10px; "><?php echo get_field('faq_title_3', 'option'); ?></h4>
             <?php 
-              if( $faq_list3 && is_array($faq_list3) ): 
+              $faq_list3 = $faq_pick( get_field('faq_title_3', 'option'), $faq_list3 );
+              if( $faq_list3 && is_array($faq_list3) ):
                       foreach( $faq_list3 as $faq_item ):
               ?>
                     <div class="faq-item">
