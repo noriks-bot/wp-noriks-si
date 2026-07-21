@@ -445,6 +445,18 @@ $is_mixed_bundle = has_term( array( 'black-friday', 'majice-in-boksarice-paketi'
 
                 Z graduirano kompresijo 15–20 mmHg NORIKS kompresijske nogavice pomagajo izboljšati cirkulacijo, zmanjšati otekanje in ublažiti napetost v utrujenih ali težkih nogah. Stranska zadrga omogoča preprosto obuvanje in sezuvanje – idealno za osebe z zmanjšano gibljivostjo ali z artritisom. Mehka notranja podloga ščiti kožo pred zadrgo in zagotavlja udobje brez draženja.
 
+        <?php elseif( function_exists('noriks_is_type') && noriks_is_type('fisiorest', $current_product_id) ): ?>
+
+                NORIKS FisioRest je terapevtska blazina za vrat, ki združuje trakcijo, toploto in vibracijsko masažo v ergonomski zasnovi iz spominske pene. Nežno razteza vrat pod pravim kotom, razbremeni vratno hrbtenico ter s toploto in masažo sprošča mišično napetost. Brezžična, polnilna in ovita v mehko hladilno svilo – varna tudi za spanje.
+
+        <?php elseif( function_exists('noriks_is_type') && noriks_is_type('bunion', $current_product_id) ): ?>
+
+                NORIKS korektor haluksa z napredno terapijo poravnave in patentiranim zglobnim mehanizmom nežno vrača palec v naraven položaj, blaži nelagodje in preprečuje nadaljnjo rast izbokline. Gibljiva zasnova omogoča, da z njim tudi hodite. Prilega se vsem velikostim stopal, brez leve ali desne strani. Za uporabo v mirovanju – med počitkom, gledanjem TV, branjem ali spanjem.
+
+        <?php elseif( function_exists('noriks_is_type') && noriks_is_type('ortopas', $current_product_id) ): ?>
+
+                NORIKS ortopedski pas ciljno stabilizira spodnji del hrbta s pomočjo ciljne kompresije, pravilno poravna medenico in razbremeni išijasni živec. Tanek in neopazen pod oblačili, z nastavljivo stopnjo opore. Primeren pri bolečinah v križu, išiasu, mišični napetosti in težavah s SI-sklepom.
+
         <?php else: ?>
 
 
@@ -463,14 +475,23 @@ $is_mixed_bundle = has_term( array( 'black-friday', 'majice-in-boksarice-paketi'
     
      
      <!-- 2 - slika tablica velicina -->
+     <?php if ( ! ( function_exists('noriks_is_type') && ( noriks_is_type('bunion', $current_product_id) || noriks_is_type('fisiorest', $current_product_id) ) ) ) : // ni tabele velikosti za bunion + fisiorest ?>
      <div class="accordion-item">
       <div class="accordion-header" onclick="toggleAccordion(this)">
         <h3>Tabela velikosti</h3>
         <div class="toggle">+</div>
       </div>
       <div class="accordion-content">
-          
-           <?php if( function_exists('noriks_is_type') && noriks_is_type('kompresijske-nogavice', $current_product_id) ): ?>
+
+           <?php if( function_exists('noriks_is_type') && noriks_is_type('ortopas', $current_product_id) ): ?>
+
+          <div style="line-height:1.9;">
+            <strong>S/M</strong> : obseg bokov 75–110 cm<br>
+            <strong>L/XL</strong> : obseg bokov 110–140 cm<br><br>
+            Prosimo, izmerite obseg bokov, da najdete svojo velikost.
+          </div>
+
+        <?php elseif( function_exists('noriks_is_type') && noriks_is_type('kompresijske-nogavice', $current_product_id) ): ?>
 
           <div style="line-height:1.9;">
             <strong>S/M</strong> : številka obutve 36–40 / obseg meče : 23–36 cm<br>
@@ -502,14 +523,16 @@ $is_mixed_bundle = has_term( array( 'black-friday', 'majice-in-boksarice-paketi'
       
       
        <img class="js-open-size-chart" style="cursor:pointer;" src="<?php echo get_template_directory_uri(); ?>/img/tabela-velikosti-majice.jpg">
-        
-            
+
+
         <?php endif; ?>
       </div>
     </div>
+    <?php endif; // /ni tabele velikosti za bunion + fisiorest ?>
 
 
     <!-- 3 - savjeti za pranje-->
+    <?php if ( ! ( function_exists('noriks_is_type') && ( noriks_is_type('ortopas', $current_product_id) || noriks_is_type('bunion', $current_product_id) || noriks_is_type('fisiorest', $current_product_id) ) ) ) : // ni nasvetov za pranje za pas/bunion/fisiorest ?>
     <div class="accordion-item">
       <div class="accordion-header" onclick="toggleAccordion(this)">
         <h3><?php echo get_field("singlepp_acc_h_2","options"); ?></h3>
@@ -536,6 +559,7 @@ $is_mixed_bundle = has_term( array( 'black-friday', 'majice-in-boksarice-paketi'
         <?php endif; ?>
       </div>
     </div>
+    <?php endif; // /ni nasvetov za pranje za pas/bunion/fisiorest ?>
 
 
 

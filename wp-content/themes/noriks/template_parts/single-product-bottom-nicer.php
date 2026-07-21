@@ -1,4 +1,18 @@
 
+<?php
+/* Bunion (korektor haluksa) in ortopas (ortopedski pas): lastne why-sekcije.
+   BREZ return — za tem teče skupni sistem mnenj + FAQ (ostale why-sekcije so
+   tipsko zaščitene, zato se za te produkte ne prikažejo). */
+if ( function_exists( 'noriks_is_type' ) ) {
+    if ( noriks_is_type( 'bunion' ) ) {
+        get_template_part( 'template_parts/product-bottom/why-bunion' );
+    } elseif ( noriks_is_type( 'ortopas' ) ) {
+        get_template_part( 'template_parts/product-bottom/why-ortopas' );
+    } elseif ( noriks_is_type( 'fisiorest' ) ) {
+        get_template_part( 'template_parts/product-bottom/why-fisiorest' );
+    }
+}
+?>
 <?php if ( function_exists('noriks_is_type') && noriks_is_type('kompresijske-nogavice') ): ?>
 <!-- Compression socks: NORIKS vs. others comparison (demo/UGC videos need SI assets — omitted) -->
 <section class="why-section knc-compare-section">
@@ -646,7 +660,19 @@ endif;
       <!--<h4 style="" class="highlight"><?php echo get_field("singlepp_content_standard_reviews_t1","options"); ?></h4>-->
       <h1 style="color:black;     margin-bottom: 4px;">
           
-          <?php if ( function_exists('noriks_is_type') && noriks_is_type('kompresijske-nogavice') ): ?>
+          <?php if ( function_exists('noriks_is_type') && noriks_is_type('fisiorest') ): ?>
+
+          Nisi sam v boju proti napetosti v vratu.
+
+          <?php elseif ( function_exists('noriks_is_type') && noriks_is_type('bunion') ): ?>
+
+          Nisi sam v boju proti bolečinam zaradi haluksa.
+
+          <?php elseif ( function_exists('noriks_is_type') && noriks_is_type('ortopas') ): ?>
+
+          Nisi sam v boju proti bolečinam v hrbtu.
+
+          <?php elseif ( function_exists('noriks_is_type') && noriks_is_type('kompresijske-nogavice') ): ?>
 
           Nisi sam pri iskanju popolnih kompresijskih nogavic.
 
@@ -662,7 +688,7 @@ endif;
 
 
           </h1>
-    <p class="note" style="color: black; margin-top: 0px; margin-bottom: 5px;"><?php if ( function_exists('noriks_is_type') && noriks_is_type('kompresijske-nogavice') ): ?>Tisoče moških že nosi NORIKS kompresijske nogavice za lažje in bolj spočite noge – v službi, na potovanjih in pri treningu.<?php else: ?><?php echo get_field("singlepp_content_standard_reviews_t3","options"); ?><?php endif; ?></p>
+    <p class="note" style="color: black; margin-top: 0px; margin-bottom: 5px;"><?php if ( function_exists('noriks_is_type') && noriks_is_type('fisiorest') ): ?>Tisoči ljudi že uporabljajo NORIKS FisioRest za manj bolečin in napetosti v vratu – trakcija, vibracija in toplota v eni napravi.<?php elseif ( function_exists('noriks_is_type') && noriks_is_type('bunion') ): ?>Tisoči ljudi že uporabljajo NORIKS korektor haluksa za manj bolečin in bolj pravilno lego palca – doma, med gledanjem TV ali med spanjem.<?php elseif ( function_exists('noriks_is_type') && noriks_is_type('ortopas') ): ?>Tisoči ljudi že nosijo NORIKS ortopedski pas za manj bolečin in stabilnejši hrbet – med delom, pri dvigovanju in dolgotrajnem sedenju.<?php elseif ( function_exists('noriks_is_type') && noriks_is_type('kompresijske-nogavice') ): ?>Tisoče moških že nosi NORIKS kompresijske nogavice za lažje in bolj spočite noge – v službi, na potovanjih in pri treningu.<?php else: ?><?php echo get_field("singlepp_content_standard_reviews_t3","options"); ?><?php endif; ?></p>
     </div>
   </section>
   </div>
@@ -733,12 +759,24 @@ endif;
   $current_product_id = (function_exists('is_product') && is_product()) ? get_queried_object_id() : get_the_id();
   $is_bokserice_page  = has_term( array( 'bokserice','orto-bokserice', 'bokserice-sastavi-paket' ), 'product_cat', $current_product_id );
   $is_nogavice_page   = ( function_exists('noriks_is_type') && noriks_is_type('kompresijske-nogavice', $current_product_id) );
+  $is_ortopas_page    = ( function_exists('noriks_is_type') && noriks_is_type('ortopas', $current_product_id) );
+  $is_bunion_page     = ( function_exists('noriks_is_type') && noriks_is_type('bunion', $current_product_id) );
+  $is_fisiorest_page  = ( function_exists('noriks_is_type') && noriks_is_type('fisiorest', $current_product_id) );
 
   // Fallback product name shown in review cards.
-  $rv_fallback_title = $is_nogavice_page ? 'Kompresijske nogavice z zadrgo' : 'Ena Siva Majica';
+  $rv_fallback_title = $is_fisiorest_page ? 'NORIKS | FisioRest'
+                     : ( $is_bunion_page ? 'NORIKS | Korektor haluksa'
+                     : ( $is_ortopas_page ? 'NORIKS | Ortopedski pas'
+                     : ( $is_nogavice_page ? 'Kompresijske nogavice z zadrgo' : 'Ena Siva Majica' ) ) );
 
   // Include review pools (own pool per product group)
-  if ( $is_nogavice_page ) {
+  if ( $is_fisiorest_page ) {
+    include get_stylesheet_directory() . '/auto_reviews/SI_fisiorest.php';
+  } elseif ( $is_bunion_page ) {
+    include get_stylesheet_directory() . '/auto_reviews/SI_bunion.php';
+  } elseif ( $is_ortopas_page ) {
+    include get_stylesheet_directory() . '/auto_reviews/SI_ortopas.php';
+  } elseif ( $is_nogavice_page ) {
     include get_stylesheet_directory() . '/auto_reviews/SI_nogavice.php';
   } elseif ( ! $is_bokserice_page )  {
     include get_stylesheet_directory() . '/auto_reviews/'.$reviews_language.'.php';
@@ -806,12 +844,18 @@ endif;
 
       $is_bokserice = false;
       $is_nogavice  = false;
+      $is_ortopas   = false;
+      $is_bunion    = false;
+      $is_fisiorest = false;
       if ( $product_id ) {
           $is_bokserice = has_term( array( 'bokserice','orto-bokserice', 'bokserice-sastavi-paket' ), 'product_cat', $product_id );
           $is_nogavice  = ( function_exists('noriks_is_type') && noriks_is_type('kompresijske-nogavice', $product_id) );
+          $is_ortopas   = ( function_exists('noriks_is_type') && noriks_is_type('ortopas', $product_id) );
+          $is_bunion    = ( function_exists('noriks_is_type') && noriks_is_type('bunion', $product_id) );
+          $is_fisiorest = ( function_exists('noriks_is_type') && noriks_is_type('fisiorest', $product_id) );
       }
 
-      $cache_key = $transient_key . ( $is_nogavice ? '_nogavice' : ( $is_bokserice ? '_bokserice' : '_all' ) );
+      $cache_key = $transient_key . ( $is_fisiorest ? '_fisiorest' : ( $is_bunion ? '_bunion' : ( $is_ortopas ? '_ortopas' : ( $is_nogavice ? '_nogavice' : ( $is_bokserice ? '_bokserice' : '_all' ) ) ) ) );
 
       if ( function_exists( 'get_transient' ) ) {
           $cached = get_transient( $cache_key );
@@ -828,7 +872,13 @@ endif;
           'order'   => 'DESC',
       ];
 
-      if ( $is_nogavice ) {
+      if ( $is_fisiorest ) {
+          $args['category'] = [ 'orto-fisiorest' ];
+      } elseif ( $is_bunion ) {
+          $args['category'] = [ 'orto-bunion' ];
+      } elseif ( $is_ortopas ) {
+          $args['category'] = [ 'orto-ortopas' ];
+      } elseif ( $is_nogavice ) {
           $args['category'] = [ 'kompresijske-nogavice', 'orto-kompresijske-nogavice', 'nogavice' ];
       } elseif ( $is_bokserice ) {
           $args['category'] = [ 'bokserice' ];
@@ -1075,8 +1125,8 @@ function assign_unique_avatars_first_n(array $reviews, array $avatar_pool, strin
 
   // Avatar pools based on page category
   $avatar_type = $is_bokserice_page ? 'bokserice' : 'majice';
-  // Compression socks: text-only reviews (no avatar images).
-  $avatar_pool = $is_nogavice_page ? array() : get_review_avatar_pool($avatar_type);
+  // Compression socks + belt + bunion + fisiorest: text-only reviews (no avatar images).
+  $avatar_pool = ( $is_nogavice_page || $is_ortopas_page || $is_bunion_page || $is_fisiorest_page ) ? array() : get_review_avatar_pool($avatar_type);
 
   $product_pool = get_wc_product_pool();
 
@@ -1118,8 +1168,8 @@ $auto_reviews_ship = assign_unique_avatars_first_n($auto_reviews_ship, $avatar_p
   $ship_count = count($auto_reviews_ship);
 ?>
 
-<?php if ( $is_nogavice_page ) : ?>
-<style>/* compression socks: text-only reviews, no avatar */ #reviews-section .avatar { display: none !important; }</style>
+<?php if ( $is_nogavice_page || $is_ortopas_page || $is_bunion_page || $is_fisiorest_page ) : ?>
+<style>/* socks + belt + bunion + fisiorest: text-only reviews, no avatar */ #reviews-section .avatar { display: none !important; }</style>
 <?php endif; ?>
 
 <section id="reviews-section" class="basic-reviews-section" style="margin-bottom:40px!important;padding-bottom:40px!important;">
@@ -1539,6 +1589,44 @@ $faq_list2 = get_field('faq_list_2', 'option');
 $faq_list3 = get_field('faq_list_3', 'option');
 
 $is_knc = ( function_exists('noriks_is_type') && noriks_is_type('kompresijske-nogavice') );
+$is_ortopas_faq   = ( function_exists('noriks_is_type') && noriks_is_type('ortopas') );
+$is_bunion_faq    = ( function_exists('noriks_is_type') && noriks_is_type('bunion') );
+$is_fisiorest_faq = ( function_exists('noriks_is_type') && noriks_is_type('fisiorest') );
+
+// Korektor haluksa — FAQ o izdelku (prevod, NORIKS).
+$bunion_faq = array(
+  array( 'questioon' => 'Kako hitro se bom počutil bolje?', 'answer' => 'Približno 30 minut — toliko časa je potrebno, da se ublaži nelagodje. Ob redni uporabi dva tedna boste občutili znatno olajšanje pri vsakodnevnih dejavnostih, kot so hoja, stanje ali spanje.' ),
+  array( 'questioon' => 'Kako hitro bom opazil razliko na haluksu?', 'answer' => 'Odvisno od resnosti haluksa večina kupcev opazi vidno izboljšanje po 4–8 tednih. Blag haluks: 4 tedne. Zmeren haluks: 4 tedne. Hujši haluks: 8 tednov.' ),
+  array( 'questioon' => 'Ali se lahko nosi v čevljih? Ali lahko hodim z njim?', 'answer' => 'Ne, v čevelj ne gre. Da, hodite lahko z njim. Vendar je namenjen mirovanju — ko ležite na kavču, gledate TV, berete ali spite.' ),
+  array( 'questioon' => 'Kaj če mi bo neprijetno?', 'answer' => 'To je povsem normalno! NORIKS korektor je zasnovan dovolj čvrsto, da poravna sklep palca, ustavi vnetje in zmanjša nelagodje. Morda boste potrebovali 1–2 seji, da se navadite, po tem pa se boste počutili veliko bolje!' ),
+  array( 'questioon' => 'Kako dolgo naj ga uporabljam?', 'answer' => 'Priporočamo, da začnete s 30 minutami na dan in postopoma povečujete do seje 1 do 3 ure. Ko vam bo udobno, ga lahko začnete nositi tudi med spanjem. Nosite ga med sproščanjem — na kavču, ob TV, branju ali spanju.' ),
+  array( 'questioon' => 'Ali bo pomagal pri mojem specifičnem stanju?', 'answer' => 'NORIKS korektor je idealen za: lajšanje nelagodja, ki vpliva na vsakodnevne dejavnosti, kot sta hoja ali stanje; olajšanje nelagodja zaradi haluksa med počitkom ali spanjem; obravnavo haluksa v zgodnji fazi, ki morda napreduje; haluks, ki se je vrnil po operaciji; pomoč pri hujšem haluksu, pripravljenem na operacijo; ter kot učinkovita nekirurška možnost.' ),
+  array( 'questioon' => 'Ali bo ustrezal mojemu stopalu? Ali obstajata leva in desna stran?', 'answer' => 'Ne glede na velikost stopala — od najmanjšega otroškega do velikega stopala odrasle osebe — se NORIKS korektor udobno prilega. Ni strani! Po zaslugi prilagodljive zasnove se enako zlahka prilagodi levemu ali desnemu stopalu.' ),
+);
+
+// Ortopedski pas — FAQ o izdelku (prevod, NORIKS).
+$ortopas_faq = array(
+  array( 'questioon' => 'Kako hitro občutim olajšanje bolečin?', 'answer' => 'Mnogi uporabniki občutijo opazno olajšanje išiasa in bolečin v križu takoj po namestitvi pasu NORIKS. Njegova ciljna kompresija nudi takojšnjo oporo, stabilizira hrbtenico in zmanjša pritisk na živce. Za dolgotrajen učinek priporočamo, da pas dosledno nosite po navodilih vsaj dva tedna. Sčasoma boste ob pravilni uporabi in zdravih navadah lahko občutili trajno olajšanje in boljšo gibljivost.' ),
+  array( 'questioon' => 'Kako pravilno namestiti pas?', 'answer' => 'Pas NORIKS nosite okoli bokov, malo pod linijo pasu. Nahajati se mora nad križničnim predelom (spodnji del hrbta, tik nad zadnjico) in pod grebenom medenice (zgornji del stranskih bokov). Za več informacij si oglejte navodila za uporabo.' ),
+  array( 'questioon' => 'Ali pas oslabi moje mišice?', 'answer' => 'Ne, pas NORIKS ne oslabi mišic tako kot steznik za hrbet. Le pomaga držati SI-sklepe skupaj in obnavlja normalno napetost vezi. Nosite ga lahko tedne ali mesece brez strahu pred atrofijo mišic.' ),
+  array( 'questioon' => 'Ali lahko pas nosim tudi med spanjem?', 'answer' => 'Da, pas lahko nosite tudi ponoči. Trajanje nošenja ni omejeno in daljše nošenje nima negativnih učinkov.' ),
+  array( 'questioon' => 'Kako tesno naj ga namestim?', 'answer' => 'Pas se mora tesno prilegati, a ne pretesno, da se izognete nelagodju. Brez težav se morate gibati, ne da bi pas zarezoval ali zdrsnil. Napetost je z elastičnimi trakovi enostavno nastavljiva.' ),
+  array( 'questioon' => 'Komu ga priporočate?', 'answer' => 'Vsem, ki se spopadajo z bolečinami v križu, išiasom, mišično napetostjo, kilo medvretenčne ploščice, bolečinami v kolkih ali medenici ter težavami s SI-sklepom. Ne glede na starost, spol, višino in težo.' ),
+  array( 'questioon' => 'Ali obstaja garancija vračila denarja?', 'answer' => 'Ponujamo garancijo zadovoljstva! Če s pasom NORIKS niste zadovoljni, nas kontaktirajte na info@noriks.com za vračilo in povračilo v 90 dneh. Rok se šteje od prejema pasu.' ),
+);
+
+// FisioRest — FAQ o izdelku (prevod, NORIKS).
+$fisiorest_faq = array(
+  array( 'questioon' => 'Kako NORIKS FisioRest deluje?', 'answer' => 'FisioRest združuje trakcijo, toploto in vibracijsko masažo z ergonomsko zasnovo iz spominske pene. Ta tehnologija razteza vrat pod točno pravim kotom in razbremeni vratno hrbtenico. Nato pomirjujoča topla masaža spodbudi dotok s kisikom in hranili bogate krvi v mišice ter tako pomaga pri regeneraciji tkiv.' ),
+  array( 'questioon' => 'Po čem je FisioRest boljši od drugih naprav?', 'answer' => 'NORIKS FisioRest je poseben, ker združuje <strong>tri terapije v eni</strong> — toploto, masažo in nežno trakcijo — ki sprostijo mišice in znova poravnajo vrat za dolgotrajno olajšanje. Poleg tega je <strong>brezžičen, varen za spanje in ovit v hladilno svilo</strong> za udobje, kakršnega drugje ne boste našli.' ),
+  array( 'questioon' => 'Kako se uporablja FisioRest?', 'answer' => '1. Napolnite ga s priloženim USB-C kablom in polnilnikom približno 4 do 6 ur. 2. Držite tipko za masažo ali toploto 5 sekund, dokler ne zasveti lučka. 3. S ponovnim pritiskom tipk spreminjate hitrost masaže in nastavitve toplote. 4. Uživajte v sproščujoči masaži!' ),
+  array( 'questioon' => 'Kako dolgo naj uporabljam FisioRest?', 'answer' => 'Priporočamo, da začnete s 15 minutami, da se vrat privadi. Sčasoma lahko napredujete do polne seje. Za orientacijo: cikel nežne toplote, masaže in trakcije traja 30 minut, kar je običajno idealen čas, da se vrat sprosti in povrne svojo naravno krivino.' ),
+  array( 'questioon' => 'Ali je FisioRest brezžičen?', 'answer' => 'Da! NORIKS FisioRest je popolnoma brezžičen in polnilen za vsakodnevno uporabo.' ),
+  array( 'questioon' => 'Kako se čisti FisioRest?', 'answer' => 'Tkanina je odporna na olja in prah, vendar priporočamo, da FisioRest po uporabi obrišete z razkuževalnim robčkom, saj prevleka blazine ni pralna.' ),
+  array( 'questioon' => 'Ali je varen za vse?', 'answer' => 'NORIKS FisioRest je zasnovan tako, da ustreza vsem, ne glede na starost ali spol. Vendar je vsaka situacija drugačna. Za podrobne smernice, prilagojene vašim potrebam, priporočamo posvet z zdravnikom.' ),
+  array( 'questioon' => 'Ali ga lahko vrnem, če ne vidim rezultatov?', 'answer' => 'Seveda! Nudimo polno garancijo vračila denarja v 90 dneh od dostave, če z izdelkom niste zadovoljni. Pišite nam na info@noriks.com in odgovorili bomo v 12 urah od prejema sporočila!' ),
+);
+
 // Compression-sock benefit content — replaces ONLY the product-info FAQ
 // container ("...izdelku") on sock products; delivery/returns stay.
 $knc_faq = array(
@@ -1548,8 +1636,12 @@ $knc_faq = array(
   array( 'questioon' => 'Odrevenelost in mravljinci', 'answer' => 'Preozke ali slabo prilegajoče nogavice pritiskajo na žile in povzročajo ta neprijeten občutek mravljincev. NORIKS nogavice so zasnovane iz zračne tkanine in z uravnoteženo kompresijo, ki spodbuja cirkulacijo, ne da bi prekinila pretok krvi. Vaše noge ostanejo vitalne in občutljive, brez odrevenelosti ali mravljincev.' ),
   array( 'questioon' => 'Udobje za občutljivo kožo', 'answer' => 'Že blag pritisk lahko postane neprijeten na občutljivi ali razdraženi koži. NORIKS nogavice združujejo mehko in zračno tkanino, zaščitno notranjo podlogo ob zadrgi ter zmerno kompresijo za učinkovito oporo brez drgnjenja ali draženja. Nosite jih ves dan brez skrbi.' ),
 );
-$faq_pick = function( $title, $list ) use ( $is_knc, $knc_faq ) {
-  if ( $is_knc && stripos( (string) $title, 'izdelku' ) !== false ) { return $knc_faq; }
+$faq_pick = function( $title, $list ) use ( $is_knc, $knc_faq, $is_ortopas_faq, $ortopas_faq, $is_bunion_faq, $bunion_faq, $is_fisiorest_faq, $fisiorest_faq ) {
+  $is_info = ( stripos( (string) $title, 'izdelku' ) !== false );
+  if ( $is_fisiorest_faq && $is_info ) { return $fisiorest_faq; }
+  if ( $is_bunion_faq && $is_info )    { return $bunion_faq; }
+  if ( $is_ortopas_faq && $is_info )   { return $ortopas_faq; }
+  if ( $is_knc && $is_info )           { return $knc_faq; }
   return $list;
 };
 ?>

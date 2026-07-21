@@ -41,6 +41,9 @@ function noriks_product_type_map() : array {
         // Compression socks: front category 'kompresijske-nogavice' (child of
         // nogavice) and orto category 'orto-kompresijske-nogavice'.
         'kompresijske-nogavice'   => array( 'kompresijske-nogavice', 'orto-kompresijske-nogavice' ),
+        'ortopas'                 => array( 'orto-ortopas', 'ortopas' ),
+        'bunion'                  => array( 'orto-bunion', 'bunion' ),
+        'fisiorest'               => array( 'orto-fisiorest', 'fisiorest' ),
         'singles-boxers'          => array( 'singles-boxers' ),
         'bokserice-1-komad'       => array( '1-komad-bokserice', '1-kos-boksarice' ),
         'majice-1-komad'          => array( '1-komad-majice', '1-kos-majice' ),

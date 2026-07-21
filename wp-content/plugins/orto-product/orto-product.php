@@ -509,13 +509,30 @@ function gck_render_bundle_selector() {
     }
 
     $custom_attrs = gck_get_custom_attributes_in_order( $product );
-    if ( count( $custom_attrs ) < 2 ) return;
+
+    // Special orto products that don't use the standard colour + size selectors:
+    //  - orto-bunion / orto-fisiorest : quantity-only bundle, NO colour and NO size selectors.
+    //  - orto-ortopas                 : single "Velikost" attribute, no colour (size selector only).
+    // Every other product keeps the original 2-attribute (colour + size) requirement unchanged.
+    $gck_no_attrs    = has_term( array( 'orto-bunion', 'orto-fisiorest' ), 'product_cat', $product_id );
+    $gck_single_size = has_term( 'orto-ortopas', 'product_cat', $product_id );
+
+    if ( ! $gck_no_attrs && ! $gck_single_size && count( $custom_attrs ) < 2 ) return;
 
     $split  = gck_split_attrs_color_size( $custom_attrs );
     $colors = $split['colors'];
     $sizes  = $split['sizes'];
 
-    if ( empty($colors) || empty($sizes) ) return;
+    if ( $gck_no_attrs ) {
+        // Bunion / FisioRest: quantity-only, render offers with no colour/size pickers at all.
+        $colors = array();
+        $sizes  = array();
+    } elseif ( $gck_single_size ) {
+        // Belt only needs a selectable size.
+        if ( empty($sizes) ) return;
+    } else {
+        if ( empty($colors) || empty($sizes) ) return;
+    }
 
     $attr_groups = gck_pair_color_size_groups( $colors, $sizes );
 
@@ -796,7 +813,7 @@ function gck_render_bundle_selector() {
 
     <?php
     // Your extra conditional style block (kept)
-    if (  !has_term( array( 'orto-starter', 'orto-majice', 'orto-bokserice', 'orto-kompresijske-nogavice' ), 'product_cat', $product_id )  )   :
+    if (  !has_term( array( 'orto-starter', 'orto-majice', 'orto-bokserice', 'orto-kompresijske-nogavice', 'orto-ortopas', 'orto-bunion', 'orto-fisiorest' ), 'product_cat', $product_id )  )   :
     ?>
         <style>
           .bundle-option { border: 2px solid #ededed; background: #f4f4f4b0  !important; border-radius: 4px; }
@@ -898,7 +915,7 @@ function gck_render_bundle_selector() {
     
 
     <div class="gck-benefits-box">
-        <?php if ( ! has_term( array( 'orto-kompresijske-nogavice' ), 'product_cat', $product_id ) ) : // hide benefits list for compression socks ?>
+        <?php if ( ! has_term( array( 'orto-kompresijske-nogavice', 'orto-ortopas', 'orto-bunion', 'orto-fisiorest' ), 'product_cat', $product_id ) ) : // hide benefits list for compression socks + back belt + bunion + fisiorest ?>
         <ul class="gck-benefits-list">
             <?php if ( !has_term( array( 'orto-bokserice', 'orto-bokserice2', 'starter-paketi' ), 'product_cat', $product_id ) ) : ?>
                 <li><span class="gck-check">✔</span> <strong>Popolno prileganje</strong></li>
@@ -914,7 +931,7 @@ function gck_render_bundle_selector() {
         </ul>
         <?php endif; ?>
 
-        <?php if ( ! $show_countdown && ! has_term( array( 'orto-kompresijske-nogavice' ), 'product_cat', $product_id ) ) : ?>
+        <?php if ( ! $show_countdown && ! $gck_no_attrs && ! $gck_single_size && ! has_term( array( 'orto-kompresijske-nogavice' ), 'product_cat', $product_id ) ) : ?>
         <a id="open-size-chartCustom" href="#size-chart" class="gck-size-link">
             <svg style="margin-right: 5px; width: 23px; height: 23px; display: inline-block; vertical-align: middle;" xmlns="http://www.w3.org/2000/svg" width="18" height="19" viewBox="0 0 18 19" fill="none">
                 <path d="M11.4124 2.58464L2.08525 11.9118C1.86558 12.1315 1.86558 12.4876 2.08525 12.7073L5.78977 16.4118C6.00944 16.6315 6.3656 16.6315 6.58527 16.4118L15.9124 7.08466C16.1321 6.86499 16.1321 6.50883 15.9124 6.28916L12.2079 2.58464C11.9883 2.36497 11.6321 2.36497 11.4124 2.58464Z" stroke="#111213" stroke-width="0.84375"></path>
@@ -1061,7 +1078,7 @@ function gck_render_bundle_selector() {
         </script>
     <?php endif; ?>
 
-    <?php if ( $show_countdown ) : ?>
+    <?php if ( $show_countdown && ! $gck_no_attrs && ! $gck_single_size ) : ?>
     <div class="gck-size-link-wrap" style="text-align:right; margin:0 0 8px 0;">
         <a id="open-size-chartCustom" href="#size-chart" class="gck-size-link">
             <svg style="margin-right: 5px; width: 23px; height: 23px; display: inline-block; vertical-align: middle;" xmlns="http://www.w3.org/2000/svg" width="18" height="19" viewBox="0 0 18 19" fill="none">
@@ -1073,7 +1090,32 @@ function gck_render_bundle_selector() {
     </div>
     <?php endif; ?>
 
-    <div id="bundle-selector" class="bundle-box" data-split-garments="<?php echo $gck_split_garments ? '1' : '0'; ?>">
+    <?php if ( $gck_single_size ) : ?>
+    <style>
+      /* Ortopas: dolga imena velikosti ("S/M (Obseg bokov 75–110 cm)") — cel select, en vrstica. */
+      #bundle-selector.is-single-size .bundle-pairs,
+      #bundle-selector.is-single-size .bundle-pair,
+      #bundle-selector.is-single-size .bundle-attr-row { width: 100% !important; display: block !important; }
+      #bundle-selector.is-single-size .gck-size-select {
+          display: block !important;
+          width: 50% !important;
+          max-width: 50% !important;
+          white-space: nowrap;
+          text-overflow: ellipsis;
+          overflow: hidden;
+      }
+      @media (max-width: 767px) {
+          #bundle-selector.is-single-size .gck-size-select { width: 80% !important; max-width: 80% !important; }
+      }
+    </style>
+    <?php endif; ?>
+    <?php if ( $gck_no_attrs ) : ?>
+    <style>
+      /* Bunion / FisioRest (no-attrs): ni selektorja — odstrani divider nad prazno .bundle-pairs. */
+      #bundle-selector.is-no-attrs .bundle-pairs { border-top: 0 !important; padding-top: 0 !important; margin-top: 0 !important; }
+    </style>
+    <?php endif; ?>
+    <div id="bundle-selector" class="bundle-box<?php echo $gck_single_size ? ' is-single-size' : ''; ?><?php echo $gck_no_attrs ? ' is-no-attrs' : ''; ?>" data-split-garments="<?php echo $gck_split_garments ? '1' : '0'; ?>">
         <?php
         $default_index = ( $precheck_second && count( $offers ) > 2 ) ? 2 : 0;
         $loop_index    = 0;
@@ -1202,7 +1244,7 @@ function gck_render_bundle_selector() {
                     }
                     ?>
                     <?php
-                    $gck_show_sections = ( $show_gratis && ! $show_group_titles && ( $gck_paid + $gck_free ) > 0 );
+                    $gck_show_sections = ( $show_gratis && ! $show_group_titles && ( $gck_paid + $gck_free ) > 0 && ! $gck_no_attrs );
                     ?>
                     <?php
                     // Render passes. Normal: single pass, all groups interleaved per pair.
@@ -1317,8 +1359,10 @@ function gck_render_bundle_selector() {
                     <?php endfor; ?>
                     <?php endforeach; ?>
 
+                    <?php if ( ! $gck_no_attrs ) : ?>
                     <small style="display: block; line-height: 1.3; margin-top: 14px;"><?php esc_html_e( 'Ponujamo 30 dni za vračilo denarja ali brezplačno zamenjavo izdelka – brezskrbno nakupovanje!
 ', 'gift-card-kompetentnost' ); ?></small>
+                    <?php endif; ?>
                 </div>
             </label>
         <?php
