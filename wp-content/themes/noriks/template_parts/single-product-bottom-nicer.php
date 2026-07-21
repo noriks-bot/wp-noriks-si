@@ -764,15 +764,19 @@ endif;
   $is_ortopas_page    = ( function_exists('noriks_is_type') && noriks_is_type('ortopas', $current_product_id) );
   $is_bunion_page     = ( function_exists('noriks_is_type') && noriks_is_type('bunion', $current_product_id) );
   $is_fisiorest_page  = ( function_exists('noriks_is_type') && noriks_is_type('fisiorest', $current_product_id) );
+  $is_norikshers_page = ( function_exists('noriks_is_type') && noriks_is_type('norikshers', $current_product_id) );
 
   // Fallback product name shown in review cards.
-  $rv_fallback_title = $is_fisiorest_page ? 'NORIKS | FisioRest'
+  $rv_fallback_title = $is_norikshers_page ? 'NORIKS HERS'
+                     : ( $is_fisiorest_page ? 'NORIKS | FisioRest'
                      : ( $is_bunion_page ? 'NORIKS | Korektor haluksa'
                      : ( $is_ortopas_page ? 'NORIKS | Ortopedski pas'
-                     : ( $is_nogavice_page ? 'Kompresijske nogavice z zadrgo' : 'Ena Siva Majica' ) ) );
+                     : ( $is_nogavice_page ? 'Kompresijske nogavice z zadrgo' : 'Ena Siva Majica' ) ) ) );
 
   // Include review pools (own pool per product group)
-  if ( $is_fisiorest_page ) {
+  if ( $is_norikshers_page ) {
+    include get_stylesheet_directory() . '/auto_reviews/SI_norikshers.php';
+  } elseif ( $is_fisiorest_page ) {
     include get_stylesheet_directory() . '/auto_reviews/SI_fisiorest.php';
   } elseif ( $is_bunion_page ) {
     include get_stylesheet_directory() . '/auto_reviews/SI_bunion.php';
@@ -849,15 +853,17 @@ endif;
       $is_ortopas   = false;
       $is_bunion    = false;
       $is_fisiorest = false;
+      $is_norikshers = false;
       if ( $product_id ) {
           $is_bokserice = has_term( array( 'bokserice','orto-bokserice', 'bokserice-sastavi-paket' ), 'product_cat', $product_id );
           $is_nogavice  = ( function_exists('noriks_is_type') && noriks_is_type('kompresijske-nogavice', $product_id) );
           $is_ortopas   = ( function_exists('noriks_is_type') && noriks_is_type('ortopas', $product_id) );
           $is_bunion    = ( function_exists('noriks_is_type') && noriks_is_type('bunion', $product_id) );
           $is_fisiorest = ( function_exists('noriks_is_type') && noriks_is_type('fisiorest', $product_id) );
+          $is_norikshers = ( function_exists('noriks_is_type') && noriks_is_type('norikshers', $product_id) );
       }
 
-      $cache_key = $transient_key . ( $is_fisiorest ? '_fisiorest' : ( $is_bunion ? '_bunion' : ( $is_ortopas ? '_ortopas' : ( $is_nogavice ? '_nogavice' : ( $is_bokserice ? '_bokserice' : '_all' ) ) ) ) );
+      $cache_key = $transient_key . ( $is_norikshers ? '_norikshers' : ( $is_fisiorest ? '_fisiorest' : ( $is_bunion ? '_bunion' : ( $is_ortopas ? '_ortopas' : ( $is_nogavice ? '_nogavice' : ( $is_bokserice ? '_bokserice' : '_all' ) ) ) ) ) );
 
       if ( function_exists( 'get_transient' ) ) {
           $cached = get_transient( $cache_key );
@@ -874,7 +880,9 @@ endif;
           'order'   => 'DESC',
       ];
 
-      if ( $is_fisiorest ) {
+      if ( $is_norikshers ) {
+          $args['category'] = [ 'orto-norikshers', 'orto-noriks-hers' ];
+      } elseif ( $is_fisiorest ) {
           $args['category'] = [ 'orto-fisiorest' ];
       } elseif ( $is_bunion ) {
           $args['category'] = [ 'orto-bunion' ];
@@ -1127,8 +1135,8 @@ function assign_unique_avatars_first_n(array $reviews, array $avatar_pool, strin
 
   // Avatar pools based on page category
   $avatar_type = $is_bokserice_page ? 'bokserice' : 'majice';
-  // Compression socks + belt + bunion + fisiorest: text-only reviews (no avatar images).
-  $avatar_pool = ( $is_nogavice_page || $is_ortopas_page || $is_bunion_page || $is_fisiorest_page ) ? array() : get_review_avatar_pool($avatar_type);
+  // Compression socks + belt + bunion + fisiorest + norikshers: text-only reviews (no avatar images).
+  $avatar_pool = ( $is_nogavice_page || $is_ortopas_page || $is_bunion_page || $is_fisiorest_page || $is_norikshers_page ) ? array() : get_review_avatar_pool($avatar_type);
 
   $product_pool = get_wc_product_pool();
 
@@ -1170,8 +1178,8 @@ $auto_reviews_ship = assign_unique_avatars_first_n($auto_reviews_ship, $avatar_p
   $ship_count = count($auto_reviews_ship);
 ?>
 
-<?php if ( $is_nogavice_page || $is_ortopas_page || $is_bunion_page || $is_fisiorest_page ) : ?>
-<style>/* socks + belt + bunion + fisiorest: text-only reviews, no avatar */ #reviews-section .avatar { display: none !important; }</style>
+<?php if ( $is_nogavice_page || $is_ortopas_page || $is_bunion_page || $is_fisiorest_page || $is_norikshers_page ) : ?>
+<style>/* socks + belt + bunion + fisiorest + norikshers: text-only reviews, no avatar */ #reviews-section .avatar { display: none !important; }</style>
 <?php endif; ?>
 
 <section id="reviews-section" class="basic-reviews-section" style="margin-bottom:40px!important;padding-bottom:40px!important;">
@@ -1594,6 +1602,7 @@ $is_knc = ( function_exists('noriks_is_type') && noriks_is_type('kompresijske-no
 $is_ortopas_faq   = ( function_exists('noriks_is_type') && noriks_is_type('ortopas') );
 $is_bunion_faq    = ( function_exists('noriks_is_type') && noriks_is_type('bunion') );
 $is_fisiorest_faq = ( function_exists('noriks_is_type') && noriks_is_type('fisiorest') );
+$is_norikshers_faq = ( function_exists('noriks_is_type') && noriks_is_type('norikshers') );
 
 // Korektor haluksa — FAQ o izdelku (prevod, NORIKS).
 $bunion_faq = array(
@@ -1638,8 +1647,23 @@ $knc_faq = array(
   array( 'questioon' => 'Odrevenelost in mravljinci', 'answer' => 'Preozke ali slabo prilegajoče nogavice pritiskajo na žile in povzročajo ta neprijeten občutek mravljincev. NORIKS nogavice so zasnovane iz zračne tkanine in z uravnoteženo kompresijo, ki spodbuja cirkulacijo, ne da bi prekinila pretok krvi. Vaše noge ostanejo vitalne in občutljive, brez odrevenelosti ali mravljincev.' ),
   array( 'questioon' => 'Udobje za občutljivo kožo', 'answer' => 'Že blag pritisk lahko postane neprijeten na občutljivi ali razdraženi koži. NORIKS nogavice združujejo mehko in zračno tkanino, zaščitno notranjo podlogo ob zadrgi ter zmerno kompresijo za učinkovito oporo brez drgnjenja ali draženja. Nosite jih ves dan brez skrbi.' ),
 );
-$faq_pick = function( $title, $list ) use ( $is_knc, $knc_faq, $is_ortopas_faq, $ortopas_faq, $is_bunion_faq, $bunion_faq, $is_fisiorest_faq, $fisiorest_faq ) {
+// NORIKS HERS — FAQ o izdelku (prevod, NORIKS).
+$norikshers_faq = array(
+  array( 'questioon' => 'V čem se razlikuje od običajnih obližev proti gubam ali krem za brazgotine?', 'answer' => 'Večina obližev proti gubam je iz papirja ali hidrokoloida, kreme za brazgotine pa pogosto ostanejo le na površini kože. NORIKS HERS uporablja silikon klinične kakovosti, ki mu dermatologi že leta zaupajo pri vidnem izboljšanju teksture brazgotin in prožnosti kože — zdaj pa ga uporabljajo tudi za zmanjševanje gub.' ),
+  array( 'questioon' => 'Ali lahko en sam obliž res deluje na gube in brazgotine?', 'answer' => 'Da, saj so gube in brazgotine posledica razgradnje kolagena ali slabe regeneracije kože. Silikon podpira zadrževanje vlage, obnovo kolagena in glajenje teksture kože, kar koristi obojemu.' ),
+  array( 'questioon' => 'V kolikšnem času bom videl rezultate?', 'answer' => 'Večina uporabnikov opazi vidno zglajene fine linije že po 1–3 uporabah, videz brazgotin pa se izboljša v 2–3 tednih redne uporabe. Globlje brazgotine in gube lahko trajajo dlje, a se rezultati sčasoma stopnjujejo.' ),
+  array( 'questioon' => 'Ali je varen za občutljivo ali k aknam nagnjeno kožo?', 'answer' => 'Vsekakor. NORIKS HERS je hipoalergen, brez lateksa in dovolj nežen za občutljiva območja, kot je okolica oči ali ust, celo za celeče se sledi aken. Če je vaša koža zelo reaktivna, ga vedno najprej preizkusite na majhnem predelu.' ),
+  array( 'questioon' => 'Kako dolgo ga lahko nosim?', 'answer' => 'Za najboljše rezultate priporočamo nošenje NORIKS HERS 6–8 ur, ponoči. Uporabljate ga lahko tudi podnevi — le pazite, da je koža pod njim čista in brez olj ali serumov.' ),
+  array( 'questioon' => 'Kako dolgo zdrži en zvitek?', 'answer' => 'Odvisno od tega, kako pogosto in kje ga uporabljate, en zvitek zdrži 3–6 tednov. Ker je za večkratno uporabo, je precej bolj varčen kot obliži ali kreme za enkratno uporabo.' ),
+  array( 'questioon' => 'Ali ostane na mestu, medtem ko spim?', 'answer' => 'Da! NORIKS HERS je izdelan iz koži prijaznega, obstojnega lepila, ki sledi vašim gibom. Diha in ostane na mestu, tudi pri tistih, ki spijo na boku.' ),
+  array( 'questioon' => 'Na katerih predelih ga lahko uporabljam?', 'answer' => 'Kjer koli! Večina kupcev NORIKS HERS uporablja na: gubah na čelu, gubah med obrvmi, mimičnih gubah, gubah na vratu, sledeh po aknah, brazgotinah po carskem rezu, strijah ter kirurških ali poškodbenih brazgotinah.' ),
+  array( 'questioon' => 'Zakaj je NORIKS HERS boljši od poceni spletnih obližev?', 'answer' => 'Mnogi obliži, ki se prodajajo na spletu, so slabe kakovosti, tanki ali imajo slabo lepilo. NORIKS HERS uporablja vrhunski silikon, laboratorijsko preizkušen glede varnosti in obstojnosti, ter ostane na mestu vso noč. Poleg tega nudimo predano podporo strankam in hitrejšo zamenjavo, če potrebujete pomoč.' ),
+  array( 'questioon' => 'Ali obstaja garancija vračila denarja?', 'answer' => 'Da, ponujamo 30-dnevno garancijo brez tveganja. Če niste zadovoljni, nas preprosto kontaktirajte in bomo uredili.' ),
+);
+
+$faq_pick = function( $title, $list ) use ( $is_knc, $knc_faq, $is_ortopas_faq, $ortopas_faq, $is_bunion_faq, $bunion_faq, $is_fisiorest_faq, $fisiorest_faq, $is_norikshers_faq, $norikshers_faq ) {
   $is_info = ( stripos( (string) $title, 'izdelku' ) !== false );
+  if ( $is_norikshers_faq && $is_info ) { return $norikshers_faq; }
   if ( $is_fisiorest_faq && $is_info ) { return $fisiorest_faq; }
   if ( $is_bunion_faq && $is_info )    { return $bunion_faq; }
   if ( $is_ortopas_faq && $is_info )   { return $ortopas_faq; }

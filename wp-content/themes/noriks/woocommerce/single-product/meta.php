@@ -420,6 +420,7 @@ $is_mixed_bundle = has_term( array( 'black-friday', 'majice-in-boksarice-paketi'
  <div class="accordion">
 
 
+    <?php if ( ! ( function_exists('noriks_is_type') && noriks_is_type('norikshers', $current_product_id) ) ) : // skrij detajle na norikshers ?>
     <!-- 1 - detajli -->
     <div class="accordion-item">
       <div class="accordion-header" onclick="toggleAccordion(this)">
@@ -470,12 +471,13 @@ $is_mixed_bundle = has_term( array( 'black-friday', 'majice-in-boksarice-paketi'
         
       </div>
     </div>
-    
-    
-    
-     
+    <?php endif; // /skrij detajle na norikshers ?>
+
+
+
+
      <!-- 2 - slika tablica velicina -->
-     <?php if ( ! ( function_exists('noriks_is_type') && ( noriks_is_type('bunion', $current_product_id) || noriks_is_type('fisiorest', $current_product_id) ) ) ) : // ni tabele velikosti za bunion + fisiorest ?>
+     <?php if ( ! ( function_exists('noriks_is_type') && ( noriks_is_type('bunion', $current_product_id) || noriks_is_type('fisiorest', $current_product_id) || noriks_is_type('norikshers', $current_product_id) ) ) ) : // ni tabele velikosti za bunion + fisiorest + norikshers ?>
      <div class="accordion-item">
       <div class="accordion-header" onclick="toggleAccordion(this)">
         <h3>Tabela velikosti</h3>
@@ -532,7 +534,7 @@ $is_mixed_bundle = has_term( array( 'black-friday', 'majice-in-boksarice-paketi'
 
 
     <!-- 3 - savjeti za pranje-->
-    <?php if ( ! ( function_exists('noriks_is_type') && ( noriks_is_type('ortopas', $current_product_id) || noriks_is_type('bunion', $current_product_id) || noriks_is_type('fisiorest', $current_product_id) ) ) ) : // ni nasvetov za pranje za pas/bunion/fisiorest ?>
+    <?php if ( ! ( function_exists('noriks_is_type') && ( noriks_is_type('ortopas', $current_product_id) || noriks_is_type('bunion', $current_product_id) || noriks_is_type('fisiorest', $current_product_id) || noriks_is_type('norikshers', $current_product_id) ) ) ) : // ni nasvetov za pranje za pas/bunion/fisiorest + norikshers ?>
     <div class="accordion-item">
       <div class="accordion-header" onclick="toggleAccordion(this)">
         <h3><?php echo get_field("singlepp_acc_h_2","options"); ?></h3>
