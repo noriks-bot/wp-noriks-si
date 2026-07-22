@@ -52,7 +52,7 @@
 	// TODO(SI): replace with the Slovenian footer list ID (Klaviyo -> Lists
 	// & Segments -> Settings -> List ID). Left as placeholder so signups are
 	// NOT sent to another market's list until the SI list is set.
-	$nf_klaviyo_list = 'REPLACE_LIST_ID';
+	$nf_klaviyo_list = 'TPQpPt';
 
 	$nf_social  = get_field( 'social_list', 'options' );
 	$nf_col2_h  = get_field( 'footer_midle_col2_header', 'option' );
