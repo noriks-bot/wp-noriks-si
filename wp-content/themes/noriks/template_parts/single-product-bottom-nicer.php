@@ -271,7 +271,7 @@ Ali prvi korak je ovaj — najmanji rizik, najčišći dojam.
 
 
 <?php 
-if (  has_term( array( 'majice', 'orto-majice' ), 'product_cat', get_the_id() )  ||  has_term( 'black-friday', 'product_cat', get_the_id() )) : 
+if (  has_term( array( 'majice', 'orto-majice', 'orto-majica-darila' ), 'product_cat', get_the_id() )  ||  has_term( 'black-friday', 'product_cat', get_the_id() )) : 
 ?>
 
 
