@@ -835,7 +835,7 @@ function gck_render_bundle_selector() {
         </style>
     <?php endif; ?>
 
-    <?php if ( has_term( array( 'orto-kompresijske-nogavice' ), 'product_cat', $product_id ) ) : // wider size select for compression socks ?>
+    <?php if ( has_term( array( 'orto-kompresijske-carape' ), 'product_cat', $product_id ) ) : // wider size select for compression socks ?>
         <style>
           .bundle-box select { max-width: 195px !important; min-width: 92px !important; padding-right: 26px !important; }
         </style>
