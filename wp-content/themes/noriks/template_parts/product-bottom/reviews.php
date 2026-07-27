@@ -92,6 +92,10 @@
 
           Niste edini v iskanju ostrejše silhuete in boljše drže.
 
+          <?php elseif ( function_exists('noriks_is_type') && noriks_is_type('ortopedski-jastuk') ): ?>
+
+          Niste edini v iskanju sedenja brez bolečin.
+
           <?php elseif ( function_exists('noriks_is_type') && noriks_is_type('kidsnest') ): ?>
 
           Niste edini v iskanju mirnega otroškega spanca.
@@ -108,7 +112,7 @@
 
 
           </h1>
-    <p class="note" style="color: black; margin-top: 0px; margin-bottom: 5px;"><?php if ( function_exists('noriks_is_type') && noriks_is_type('fisiorest') ): ?>Tisoči ljudi že uporabljajo NORIKS FisioRest za manj bolečin in napetosti v vratu – trakcija, vibracija in toplota v eni napravi.<?php elseif ( function_exists('noriks_is_type') && noriks_is_type('bunion') ): ?>Tisoči ljudi že uporabljajo NORIKS korektor haluksa za manj bolečin in bolj pravilno lego palca – doma, med gledanjem TV ali med spanjem.<?php elseif ( function_exists('noriks_is_type') && noriks_is_type('ortopas') ): ?>Tisoči ljudi že nosijo NORIKS ortopedski pas za manj bolečin in stabilnejši hrbet – med delom, pri dvigovanju in dolgotrajnem sedenju.<?php elseif ( function_exists('noriks_is_type') && noriks_is_type('kompresijske-nogavice') ): ?>Tisoče moških že nosi NORIKS kompresijske nogavice za lažje in bolj spočite noge – v službi, na potovanjih in pri treningu.<?php elseif ( function_exists('noriks_is_type') && noriks_is_type('norikshers') ): ?>Tisoče žensk že uporablja HERS silikonske kolagenske trakove za gladko, čvrstejšo in mlajše videti kožo.<?php elseif ( function_exists('noriks_is_type') && noriks_is_type('leakboxers') ): ?>Tisoče moških že nosi NORIKS vpojne boksarice za suhost in samozavest – brez vložkov in plenic.<?php elseif ( function_exists('noriks_is_type') && noriks_is_type('kompresijske-majice') ): ?>Tisoče moških že nosi NORIKS kompresijsko majico za zglajen trebuh, boljšo držo in več samozavesti.<?php elseif ( function_exists('noriks_is_type') && noriks_is_type('kidsnest') ): ?>Tisoče staršev je običajni vzglavnik že zamenjalo z NORIKS KidsNestom – tišje noči, dihanje skozi nos in spanec, ki zares odpočije.<?php else: ?><?php echo get_field("singlepp_content_standard_reviews_t3","options"); ?><?php endif; ?></p>
+    <p class="note" style="color: black; margin-top: 0px; margin-bottom: 5px;"><?php if ( function_exists('noriks_is_type') && noriks_is_type('fisiorest') ): ?>Tisoči ljudi že uporabljajo NORIKS FisioRest za manj bolečin in napetosti v vratu – trakcija, vibracija in toplota v eni napravi.<?php elseif ( function_exists('noriks_is_type') && noriks_is_type('bunion') ): ?>Tisoči ljudi že uporabljajo NORIKS korektor haluksa za manj bolečin in bolj pravilno lego palca – doma, med gledanjem TV ali med spanjem.<?php elseif ( function_exists('noriks_is_type') && noriks_is_type('ortopas') ): ?>Tisoči ljudi že nosijo NORIKS ortopedski pas za manj bolečin in stabilnejši hrbet – med delom, pri dvigovanju in dolgotrajnem sedenju.<?php elseif ( function_exists('noriks_is_type') && noriks_is_type('kompresijske-nogavice') ): ?>Tisoče moških že nosi NORIKS kompresijske nogavice za lažje in bolj spočite noge – v službi, na potovanjih in pri treningu.<?php elseif ( function_exists('noriks_is_type') && noriks_is_type('norikshers') ): ?>Tisoče žensk že uporablja HERS silikonske kolagenske trakove za gladko, čvrstejšo in mlajše videti kožo.<?php elseif ( function_exists('noriks_is_type') && noriks_is_type('leakboxers') ): ?>Tisoče moških že nosi NORIKS vpojne boksarice za suhost in samozavest – brez vložkov in plenic.<?php elseif ( function_exists('noriks_is_type') && noriks_is_type('kompresijske-majice') ): ?>Tisoče moških že nosi NORIKS kompresijsko majico za zglajen trebuh, boljšo držo in več samozavesti.<?php elseif ( function_exists('noriks_is_type') && noriks_is_type('ortopedski-jastuk') ): ?>Tisoče kupcev že uporablja NORIKS ErgoSit ortopedsko blazino za sedenje brez bolečin v trtici, hrbtu in kolkih – v avtu, pisarni in doma.<?php elseif ( function_exists('noriks_is_type') && noriks_is_type('kidsnest') ): ?>Tisoče staršev je običajni vzglavnik že zamenjalo z NORIKS KidsNestom – tišje noči, dihanje skozi nos in spanec, ki zares odpočije.<?php else: ?><?php echo get_field("singlepp_content_standard_reviews_t3","options"); ?><?php endif; ?></p>
     </div>
   </section>
   </div>
@@ -185,23 +189,27 @@
   $is_norikshers_page = ( function_exists('noriks_is_type') && noriks_is_type('norikshers', $current_product_id) );
   $is_leakboxers_page = ( function_exists('noriks_is_type') && noriks_is_type('leakboxers', $current_product_id) );
   $is_kompmajice_page = ( function_exists('noriks_is_type') && noriks_is_type('kompresijske-majice', $current_product_id) );
+  $is_jastuk_page     = ( function_exists('noriks_is_type') && noriks_is_type('ortopedski-jastuk', $current_product_id) );
   $is_kidsnest_page   = ( function_exists('noriks_is_type') && noriks_is_type('kidsnest', $current_product_id) );
-  // Leak boxers / kompresijske majice / kidsnest take precedence even if they still carry the socks category.
-  if ( $is_leakboxers_page || $is_kompmajice_page || $is_kidsnest_page ) { $is_nogavice_page = false; }
+  // Leak boxers / kompresijske majice / ortopedski jastuk / kidsnest take precedence even if they still carry the socks category.
+  if ( $is_leakboxers_page || $is_kompmajice_page || $is_jastuk_page || $is_kidsnest_page ) { $is_nogavice_page = false; }
 
   // Fallback product name shown in review cards.
   $rv_fallback_title = $is_kidsnest_page ? 'NORIKS KidsNest vzglavnik'
+                     : ( $is_jastuk_page ? 'NORIKS ErgoSit ortopedska blazina'
                      : ( $is_leakboxers_page ? 'NORIKS vpojne boksarice'
                      : ( $is_kompmajice_page ? 'NORIKS FIT kompresijska majica'
                      : ( $is_norikshers_page ? 'NORIKS HERS'
                      : ( $is_fisiorest_page ? 'NORIKS | FisioRest'
                      : ( $is_bunion_page ? 'NORIKS | Korektor haluksa'
                      : ( $is_ortopas_page ? 'NORIKS | Ortopedski pas'
-                     : ( $is_nogavice_page ? 'Kompresijske nogavice z zadrgo' : 'Ena Siva Majica' ) ) ) ) ) ) );
+                     : ( $is_nogavice_page ? 'Kompresijske nogavice z zadrgo' : 'Ena Siva Majica' ) ) ) ) ) ) ) );
 
   // Include review pools (own pool per product group)
   if ( $is_kidsnest_page ) {
     include get_stylesheet_directory() . '/auto_reviews/SI_kidsnest.php';
+  } elseif ( $is_jastuk_page ) {
+    include get_stylesheet_directory() . '/auto_reviews/SI_ortopedski_jastuk.php';
   } elseif ( $is_leakboxers_page ) {
     include get_stylesheet_directory() . '/auto_reviews/SI_leakboxers.php';
   } elseif ( $is_kompmajice_page ) {
@@ -288,6 +296,7 @@
       $is_norikshers = false;
       $is_leakboxers = false;
       $is_kompmajice = false;
+      $is_jastuk    = false;
       $is_kidsnest  = false;
       if ( $product_id ) {
           $is_bokserice = has_term( array( 'bokserice','orto-bokserice', 'bokserice-sastavi-paket' ), 'product_cat', $product_id );
@@ -298,11 +307,12 @@
           $is_norikshers = ( function_exists('noriks_is_type') && noriks_is_type('norikshers', $product_id) );
           $is_leakboxers = ( function_exists('noriks_is_type') && noriks_is_type('leakboxers', $product_id) );
           $is_kompmajice = ( function_exists('noriks_is_type') && noriks_is_type('kompresijske-majice', $product_id) );
+          $is_jastuk    = ( function_exists('noriks_is_type') && noriks_is_type('ortopedski-jastuk', $product_id) );
           $is_kidsnest  = ( function_exists('noriks_is_type') && noriks_is_type('kidsnest', $product_id) );
-          if ( $is_leakboxers || $is_kompmajice || $is_kidsnest ) { $is_nogavice = false; }
+          if ( $is_leakboxers || $is_kompmajice || $is_jastuk || $is_kidsnest ) { $is_nogavice = false; }
       }
 
-      $cache_key = $transient_key . ( $is_kidsnest ? '_kidsnest' : ( $is_leakboxers ? '_leakboxers' : ( $is_kompmajice ? '_kompmajice' : ( $is_norikshers ? '_norikshers' : ( $is_fisiorest ? '_fisiorest' : ( $is_bunion ? '_bunion' : ( $is_ortopas ? '_ortopas' : ( $is_nogavice ? '_nogavice' : ( $is_bokserice ? '_bokserice' : '_all' ) ) ) ) ) ) ) ) );
+      $cache_key = $transient_key . ( $is_kidsnest ? '_kidsnest' : ( $is_jastuk ? '_jastuk' : ( $is_leakboxers ? '_leakboxers' : ( $is_kompmajice ? '_kompmajice' : ( $is_norikshers ? '_norikshers' : ( $is_fisiorest ? '_fisiorest' : ( $is_bunion ? '_bunion' : ( $is_ortopas ? '_ortopas' : ( $is_nogavice ? '_nogavice' : ( $is_bokserice ? '_bokserice' : '_all' ) ) ) ) ) ) ) ) ) );
 
       if ( function_exists( 'get_transient' ) ) {
           $cached = get_transient( $cache_key );
@@ -321,6 +331,8 @@
 
       if ( $is_kidsnest ) {
           $args['category'] = [ 'orto-kidsnest' ];
+      } elseif ( $is_jastuk ) {
+          $args['category'] = [ 'orto-ortopedski-jastuk' ];
       } elseif ( $is_leakboxers ) {
           $args['category'] = [ 'orto-leak-boxers' ];
       } elseif ( $is_kompmajice ) {
@@ -580,8 +592,8 @@ function assign_unique_avatars_first_n(array $reviews, array $avatar_pool, strin
 
   // Avatar pools based on page category
   $avatar_type = $is_bokserice_page ? 'bokserice' : 'majice';
-  // Compression socks + belt + bunion + fisiorest + norikshers + leak boxers + kompresijske majice + kidsnest: text-only reviews (no avatar images).
-  $avatar_pool = ( $is_nogavice_page || $is_ortopas_page || $is_bunion_page || $is_fisiorest_page || $is_norikshers_page || $is_leakboxers_page || $is_kompmajice_page || $is_kidsnest_page ) ? array() : get_review_avatar_pool($avatar_type);
+  // Compression socks + belt + bunion + fisiorest + norikshers + leak boxers + kompresijske majice + ortopedski jastuk + kidsnest: text-only reviews (no avatar images).
+  $avatar_pool = ( $is_nogavice_page || $is_ortopas_page || $is_bunion_page || $is_fisiorest_page || $is_norikshers_page || $is_leakboxers_page || $is_kompmajice_page || $is_jastuk_page || $is_kidsnest_page ) ? array() : get_review_avatar_pool($avatar_type);
 
   // On single-product landing pages (leak boxers / kompresijske majice) the cards should
   // reference THIS product (via $rv_fallback_title), not random pool products.
@@ -625,8 +637,8 @@ $auto_reviews_ship = assign_unique_avatars_first_n($auto_reviews_ship, $avatar_p
   $ship_count = count($auto_reviews_ship);
 ?>
 
-<?php if ( $is_nogavice_page || $is_ortopas_page || $is_bunion_page || $is_fisiorest_page || $is_norikshers_page || $is_leakboxers_page || $is_kompmajice_page || $is_kidsnest_page ) : ?>
-<style>/* socks + belt + bunion + fisiorest + norikshers + leak boxers + kompresijske majice + kidsnest: text-only reviews, no avatar */ #reviews-section .avatar { display: none !important; }</style>
+<?php if ( $is_nogavice_page || $is_ortopas_page || $is_bunion_page || $is_fisiorest_page || $is_norikshers_page || $is_leakboxers_page || $is_kompmajice_page || $is_jastuk_page || $is_kidsnest_page ) : ?>
+<style>/* socks + belt + bunion + fisiorest + norikshers + leak boxers + kompresijske majice + ortopedski jastuk + kidsnest: text-only reviews, no avatar */ #reviews-section .avatar { display: none !important; }</style>
 <?php endif; ?>
 
 <section id="reviews-section" class="basic-reviews-section" style="margin-bottom:40px!important;padding-bottom:40px!important;">
@@ -1052,8 +1064,9 @@ $is_fisiorest_faq = ( function_exists('noriks_is_type') && noriks_is_type('fisio
 $is_norikshers_faq = ( function_exists('noriks_is_type') && noriks_is_type('norikshers') );
 $is_leakboxers_faq = ( function_exists('noriks_is_type') && noriks_is_type('leakboxers') );
 $is_kompmajice_faq = ( function_exists('noriks_is_type') && noriks_is_type('kompresijske-majice') );
+$is_jastuk_faq     = ( function_exists('noriks_is_type') && noriks_is_type('ortopedski-jastuk') );
 $is_kidsnest_faq   = ( function_exists('noriks_is_type') && noriks_is_type('kidsnest') );
-if ( $is_leakboxers_faq || $is_kompmajice_faq || $is_kidsnest_faq ) { $is_knc = false; } // carry sock cat but are NOT socks
+if ( $is_leakboxers_faq || $is_kompmajice_faq || $is_jastuk_faq || $is_kidsnest_faq ) { $is_knc = false; } // carry sock cat but are NOT socks
 
 // NORIKS FIT (kompresijska/oblikovalna majica) — product FAQ, replaces ONLY the
 // "Informacije o izdelku" container. (Prevod z reference, NORIKS FIT.)
@@ -1107,6 +1120,17 @@ $leakboxers_faq = array(
     'questioon' => 'Iz česa so izdelane?',
     'answer'    => 'Zunanji sloj iz bambusovega vlakna z elastanom, 7-slojno vpojno jedro iz tehničnih mikrovlaken ter vodoodbojna zračna membrana.'
   ),
+);
+
+// ErgoSit ortopedska blazina — product FAQ (NORIKS).
+$jastuk_faq = array(
+  array( 'questioon' => 'Kako NORIKS ErgoSit blaži bolečine pri sedenju?', 'answer' => 'ErgoSit ima izrez za trtico, ki odpravi neposreden pritisk na trtično kost in išiadični živec, anatomska oblika iz spominske pene visoke gostote pa enakomerno porazdeli težo po kolkih in stegnih. Tako se razbremenijo občutljive točke in podpira zdrava, vzravnana drža.' ),
+  array( 'questioon' => 'Kje vse lahko uporabljam blazino?', 'answer' => 'Kjer koli sedite — v avtomobilu, na pisarniškem stolu, jedilnem stolu, invalidskem vozičku ali doma. Stabilna nedrseča baza jo drži na mestu, zato gre udobje z vami ves dan.' ),
+  array( 'questioon' => 'Ali se pena sčasoma splošči?', 'answer' => 'Ne. ErgoSit uporablja spominsko peno visoke gostote, ki ohrani obliko in čvrstost tudi po dolgotrajni vsakodnevni uporabi — za razliko od poceni blazin, ki se hitro sploščijo.' ),
+  array( 'questioon' => 'Ali se prevleka lahko pere?', 'answer' => 'Da. Prevleka se sname in lahko pere v pralnem stroju, zato blazina ostane sveža in čista. Tkanina je zračna, hipoalergena in OEKO-TEX® certificirana.' ),
+  array( 'questioon' => 'Ali ustreza mojemu stolu ali sedežu?', 'answer' => 'ErgoSit je univerzalne oblike in se prilega večini avtosedežev, pisarniških in kuhinjskih stolov ter invalidskih vozičkov. Velikosti ni — en model ustreza vsem.' ),
+  array( 'questioon' => 'V kolikšnem času občutim razliko?', 'answer' => 'Večina uporabnikov občuti manj pritiska na trtico in udobnejše sedenje že od prvega dne. Za boljšo držo in manj bolečin v hrbtu se učinek dodatno stopnjuje z redno uporabo.' ),
+  array( 'questioon' => 'Ali obstaja garancija vračila denarja?', 'answer' => 'Da, vsaki NORIKS ErgoSit je priložena 60-dnevna garancija udobja. Če ne občutite manj bolečin in več udobja, nas kontaktirajte in bomo uredili.' ),
 );
 
 // KidsNest otroski vzglavnik — product FAQ (NORIKS, ublazene trditve).
@@ -1176,9 +1200,10 @@ $norikshers_faq = array(
   array( 'questioon' => 'Ali obstaja garancija vračila denarja?', 'answer' => 'Da, ponujamo 30-dnevno garancijo brez tveganja. Če niste zadovoljni, nas preprosto kontaktirajte in bomo uredili.' ),
 );
 
-$faq_pick = function( $title, $list ) use ( $is_knc, $knc_faq, $is_ortopas_faq, $ortopas_faq, $is_bunion_faq, $bunion_faq, $is_fisiorest_faq, $fisiorest_faq, $is_norikshers_faq, $norikshers_faq, $is_leakboxers_faq, $leakboxers_faq, $is_kompmajice_faq, $kompmajice_faq, $is_kidsnest_faq, $kidsnest_faq ) {
+$faq_pick = function( $title, $list ) use ( $is_knc, $knc_faq, $is_ortopas_faq, $ortopas_faq, $is_bunion_faq, $bunion_faq, $is_fisiorest_faq, $fisiorest_faq, $is_norikshers_faq, $norikshers_faq, $is_leakboxers_faq, $leakboxers_faq, $is_kompmajice_faq, $kompmajice_faq, $is_jastuk_faq, $jastuk_faq, $is_kidsnest_faq, $kidsnest_faq ) {
   $is_info = ( stripos( (string) $title, 'izdelku' ) !== false );
   if ( $is_kidsnest_faq && $is_info )   { return $kidsnest_faq; }
+  if ( $is_jastuk_faq && $is_info )     { return $jastuk_faq; }
   if ( $is_leakboxers_faq && $is_info ) { return $leakboxers_faq; }
   if ( $is_kompmajice_faq && $is_info ) { return $kompmajice_faq; }
   if ( $is_norikshers_faq && $is_info ) { return $norikshers_faq; }

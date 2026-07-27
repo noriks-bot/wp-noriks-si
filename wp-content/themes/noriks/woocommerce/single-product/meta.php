@@ -459,7 +459,37 @@ $is_mixed_bundle = has_term( array( 'black-friday', 'majice-in-boksarice-paketi'
     <?php endif; ?>
 
 
-    <?php if ( ! ( function_exists('noriks_is_type') && noriks_is_type('norikshers', $current_product_id) ) ) : // skrij detajle na norikshers ?>
+    <!-- ErgoSit ortopedska blazina: prvi dve accordion mesti (kopija originala, SI) -->
+    <?php if ( function_exists('noriks_is_type') && noriks_is_type( 'ortopedski-jastuk', $current_product_id ) ) : ?>
+    <div class="accordion-item">
+      <div class="accordion-header" onclick="toggleAccordion(this)">
+        <h3>Specifikacije izdelka</h3>
+        <div class="toggle">+</div>
+      </div>
+      <div class="accordion-content">
+        <ul style="margin:8px 0 12px; padding-left:18px;">
+          <li style="margin:0 0 8px;"><strong>Zunanja prevleka:</strong> Zračna pletenina, snemljiva in pralna v pralnem stroju, hipoalergena</li>
+          <li style="margin:0 0 8px;"><strong>Jedro:</strong> Adaptivna pena OrthoFlex™ | Netoksična, OEKO-TEX® certificirana | Zasnovana za razbremenitev pritiska + poravnavo drže</li>
+        </ul>
+      </div>
+    </div>
+    <div class="accordion-item">
+      <div class="accordion-header" onclick="toggleAccordion(this)">
+        <h3>Zakaj je tako posebna?</h3>
+        <div class="toggle">+</div>
+      </div>
+      <div class="accordion-content">
+        <ul style="margin:8px 0 12px; padding-left:18px;">
+          <li style="margin:0 0 10px;"><strong>Spominska pena OrthoFlex™:</strong> Pena visoke gostote, ki razbremeni pritisk in se prilagaja, ne da bi se sploščila — podpira trtico, kolke in hrbtenico za celodnevno udobje.</li>
+          <li style="margin:0 0 10px;"><strong>Prevleka BreatheEase™:</strong> Mehka, zračna in nežna do kože. Sname se in opere v pralnem stroju, da blazina vedno ostane sveža.</li>
+          <li style="margin:0 0 10px;"><strong>Uravnotežena opora:</strong> Ne premehko, ne pretrdo. Zasnovano, da poravna držo in ublaži boleče točke po dolgih urah sedenja.</li>
+        </ul>
+      </div>
+    </div>
+    <?php endif; ?>
+
+
+    <?php if ( ! ( function_exists('noriks_is_type') && ( noriks_is_type('norikshers', $current_product_id) || noriks_is_type('ortopedski-jastuk', $current_product_id) ) ) ) : // skrij detajle na norikshers + ortopedski jastuk ?>
     <!-- 1 - detajli -->
     <div class="accordion-item">
       <div class="accordion-header" onclick="toggleAccordion(this)">
@@ -528,7 +558,7 @@ $is_mixed_bundle = has_term( array( 'black-friday', 'majice-in-boksarice-paketi'
 
 
      <!-- 2 - slika tablica velicina -->
-     <?php if ( ! ( function_exists('noriks_is_type') && ( noriks_is_type('bunion', $current_product_id) || noriks_is_type('fisiorest', $current_product_id) || noriks_is_type('norikshers', $current_product_id) ) ) ) : // ni tabele velikosti za bunion + fisiorest + norikshers ?>
+     <?php if ( ! ( function_exists('noriks_is_type') && ( noriks_is_type('bunion', $current_product_id) || noriks_is_type('fisiorest', $current_product_id) || noriks_is_type('norikshers', $current_product_id) || noriks_is_type('ortopedski-jastuk', $current_product_id) ) ) ) : // ni tabele velikosti za bunion + fisiorest + norikshers + ortopedski jastuk ?>
      <div class="accordion-item">
       <div class="accordion-header" onclick="toggleAccordion(this)">
         <h3>Tabela velikosti</h3>
@@ -659,7 +689,7 @@ $is_mixed_bundle = has_term( array( 'black-friday', 'majice-in-boksarice-paketi'
 
 
     <!-- 3 - savjeti za pranje--> <!-- skrito tudi na kidsnest -->
-    <?php if ( ! ( function_exists('noriks_is_type') && ( noriks_is_type('ortopas', $current_product_id) || noriks_is_type('bunion', $current_product_id) || noriks_is_type('fisiorest', $current_product_id) || noriks_is_type('norikshers', $current_product_id) || noriks_is_type('kidsnest', $current_product_id) ) ) ) : // ni nasvetov za pranje za pas/bunion/fisiorest + norikshers + kidsnest ?>
+    <?php if ( ! ( function_exists('noriks_is_type') && ( noriks_is_type('ortopas', $current_product_id) || noriks_is_type('bunion', $current_product_id) || noriks_is_type('fisiorest', $current_product_id) || noriks_is_type('norikshers', $current_product_id) || noriks_is_type('ortopedski-jastuk', $current_product_id) || noriks_is_type('kidsnest', $current_product_id) ) ) ) : // ni nasvetov za pranje za pas/bunion/fisiorest + norikshers + ortopedski jastuk + kidsnest ?>
     <div class="accordion-item">
       <div class="accordion-header" onclick="toggleAccordion(this)">
         <h3><?php echo get_field("singlepp_acc_h_2","options"); ?></h3>

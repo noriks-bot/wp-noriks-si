@@ -45,6 +45,8 @@ function noriks_product_type_map() : array {
         'bunion'                  => array( 'orto-bunion', 'bunion' ),
         'fisiorest'               => array( 'orto-fisiorest', 'fisiorest' ),
         'norikshers'              => array( 'orto-norikshers', 'orto-noriks-hers', 'norikshers' ),
+        // ErgoSit orthopedic seat pillow — no colour/size, quantity-only bundle (universal slug across markets).
+        'ortopedski-jastuk'       => array( 'orto-ortopedski-jastuk', 'ortopedski-jastuk' ),
         // KidsNest: otroski vzglavnik za pravilno dihanje (universal slug across markets).
         'kidsnest'                => array( 'orto-kidsnest', 'kidsnest' ),
         'leakboxers'              => array( 'orto-leak-boxers', 'leak-boxers' ),
