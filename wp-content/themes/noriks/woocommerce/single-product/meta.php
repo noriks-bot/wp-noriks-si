@@ -420,6 +420,45 @@ $is_mixed_bundle = has_term( array( 'black-friday', 'majice-in-boksarice-paketi'
  <div class="accordion">
 
 
+    <!-- KidsNest: prvi dve accordion mesti (dolga vsebina iz summary-ja) -->
+    <?php if ( function_exists('noriks_is_type') && noriks_is_type( 'kidsnest', $current_product_id ) ) : ?>
+    <div class="accordion-item">
+      <div class="accordion-header" onclick="toggleAccordion(this)">
+        <h3>Obraz vašega otroka se oblikuje prav zdaj — čas pa imate do 9. leta</h3>
+        <div class="toggle">+</div>
+      </div>
+      <div class="accordion-content">
+        <p>Raziskovalci dihalnih poti in pediatrični zobozdravniki že leta opozarjajo na isti vzorec — večina staršev pa zanj še nikoli ni slišala. Imenuje se <strong>sindrom podolgovatega obraza</strong> (adenoidni obraz).</p>
+        <p>Vsako noč, ko otrok spi z odprtimi usti na napačnem vzglavniku, se zgodijo štiri stvari hkrati: jezik pade nazaj, čeljust se umakne, nebo se zoži v visok lok, obraz pa začne rasti navpično namesto vodoravno. Po tisočih takšnih noči med 3. in 9. letom se spremembe utrdijo.</p>
+        <p>Zato se 9-letniki danes pri ortodontu pojavljajo z umaknjeno brado, podočnjaki, nagnetenimi zobmi — in dragim računom za zobni aparat. Način, kako otrok diha med 3. in 9. letom, močno vpliva na obraz, ki ga bo nosil vse življenje.</p>
+        <p>NORIKS <strong>KidsNest</strong> je zasnovan tako, da deluje na temeljni vzrok — napačen položaj glave in čeljusti med 9 urami spanja — s <strong>3-consko ergonomsko strukturo</strong>, ki glavo, vrat in čeljust drži v pravilni poravnavi od prve noči.</p>
+        <p><strong>Kaj boste videli pri svojem otroku:</strong></p>
+        <ul style="margin:6px 0 12px;padding-left:18px;">
+          <li style="margin:0 0 7px;"><strong>Manj dihanja skozi usta:</strong> ustnice zaprte čez noč, vrnitev dihanja skozi nos, konec suhih ust zjutraj.</li>
+          <li style="margin:0 0 7px;"><strong>Tišje noči:</strong> smrčanje se pri večini otrok umiri v 1–2 tednih.</li>
+          <li style="margin:0 0 7px;"><strong>Podpora razvijajoči se čeljusti:</strong> pravilen položaj noč za nočjo, v letih, ko je to najpomembneje.</li>
+          <li style="margin:0 0 7px;"><strong>Pametna preventiva:</strong> en vzglavnik danes — namesto dragih korekcij jutri.</li>
+        </ul>
+        <p><strong>En vzglavnik nocoj. Ali tisoči kasneje.</strong></p>
+      </div>
+    </div>
+    <div class="accordion-item">
+      <div class="accordion-header" onclick="toggleAccordion(this)">
+        <h3>Starejši od 9? Okno se oži. Škoda se ne ustavi.</h3>
+        <div class="toggle">+</div>
+      </div>
+      <div class="accordion-content">
+        <p>Nasvet, ki ste ga slišali, je le napol resničen. Da, zgornje nebo se utrdi okoli 9. leta. Ampak obraz se razvija do 20., spodnja čeljust raste do 17., dihalne poti pa se nenehno prilagajajo.</p>
+        <p>Zato vsaka noč dihanja skozi usta po 9. letu nalaga novo škodo na staro: škrtanje z zobmi, glavoboli, spanec, ki ne odpočije, upad koncentracije — in utrujenost, ki jo vsi zamenjujejo z lenobo. Vaš najstnik ni len. Vsako noč šest ur komaj diha.</p>
+        <p>KidsNest v velikosti <strong>9–18 let</strong> je izdelan za starejšo glavo, vrat in ramena. Drugačna kontura, druga višina, druga podpora. Isti temeljni mehanizem: pravilna poravnava glave, vratu in čeljusti, vso noč, na telesu, ki še raste.</p>
+        <p>Kaj opažajo starši: smrčanje se umiri v 7 do 14 nočeh, vrne se prava jutranja energija, glavoboli zbledijo, fokus se povrne.</p>
+        <p>Najboljše okno je še vedno od 3. do 9. leta. Močno okno je od 8. do 18. Nobeno ni popolnoma zaprto — a vsaka noč čakanja dodaja pritisk telesu, ki si poskuša opomoči.</p>
+        <p><strong>Včeraj je minilo. Nocoj je še vedno vaš.</strong></p>
+      </div>
+    </div>
+    <?php endif; ?>
+
+
     <?php if ( ! ( function_exists('noriks_is_type') && noriks_is_type('norikshers', $current_product_id) ) ) : // skrij detajle na norikshers ?>
     <!-- 1 - detajli -->
     <div class="accordion-item">
@@ -428,11 +467,23 @@ $is_mixed_bundle = has_term( array( 'black-friday', 'majice-in-boksarice-paketi'
         <div class="toggle">+</div>
       </div>
       <div class="accordion-content">
-          
-         <?php if( !$is_boxers &&  !$is_carape &&   !$is_mixed_bundle && ! ( function_exists('noriks_is_type') && noriks_is_type('kompresijske-nogavice', $current_product_id) ) ): ?>
-         
-         
-         
+
+         <?php if( function_exists('noriks_is_type') && noriks_is_type( 'kidsnest', $current_product_id ) ): ?>
+
+                NORIKS KidsNest je izdelan iz hipoalergene, OEKO-TEX® certificirane spominske pene — brez formaldehida, težkih kovin in BPA — z zračno, pralno prevleko, ki se preprosto sname.<br><br>Njegova 3-conska ergonomska struktura nežno sprejme glavo, podpira vrat in pomaga ohranjati hrbtenico v naravni poravnavi — tudi ko se otrok ponoči veliko obrača. Tako spodbuja dihanje skozi nos ter mirnejši, globlji spanec.<br><br>Na voljo v treh velikostih (1–3, 3–9 in 9–18 let) raste z vašim otrokom in nudi pravo višino podpore v vsaki fazi razvoja.
+
+         <?php elseif( function_exists('noriks_is_type') && noriks_is_type( 'leakboxers', $current_product_id ) ): ?>
+
+                NORIKS inkontinenčne boksarice so izdelane iz mehkega antibakterijskega bambusovega vlakna z vodoodbojnim zunanjim slojem. V sredini je 7-slojno jedro PureDry™, ki trenutno vpije in zaklene do 300 ml tekočine, zato koža ostane suha, uhajanje pa ostane znotraj.<br><br>Kroj je tanek in diskreten — izgleda in se občuti kot običajno perilo, brez okornosti in brez občutka „plenice“. Zaščita ob nogah preprečuje stransko uhajanje, nadzor vonja pa ohranja svežino ves dan.<br><br>Pralne so in za večkratno uporabo — vpojno moč ohranijo skozi stotine pranj, kot okolju prijazna in varčna alternativa vložkom za enkratno uporabo in plenicam.
+
+         <?php elseif( function_exists('noriks_is_type') && noriks_is_type( 'kompresijske-majice', $current_product_id ) ): ?>
+
+                NORIKS FIT je izdelan iz napredne ionske kompresijske tkanine, ki nudi oprijet, podporni kroj. Ciljna kompresija enakomerno stisne trebuh in boke, zgladi silhueto in podpira vzravnano držo — brez stiskanja, ki bi omejevalo dihanje ali gibanje.<br><br>Mikro-tkana vlakna spodbujajo cirkulacijo in vam pomagajo, da čez dan stojite bolj vzravnano in se počutite bolj samozavestno. Tkanina je lahka, zračna in odvaja vlago, zato ostanete suhi in vam je prijetno.<br><br>Tanek in diskreten kroj jo naredi nevidno pod katerokoli srajco, hkrati pa lahko služi tudi kot športna majica. Rezultat: ostrejši videz, boljša drža in samozavest — takoj ko jo oblečete.
+
+         <?php elseif( !$is_boxers &&  !$is_carape &&   !$is_mixed_bundle && ! ( function_exists('noriks_is_type') && noriks_is_type('kompresijske-nogavice', $current_product_id) ) ): ?>
+
+
+
         <?php echo get_field("singlepp_acc_t_1","options"); ?>
         
         
@@ -485,7 +536,81 @@ $is_mixed_bundle = has_term( array( 'black-friday', 'majice-in-boksarice-paketi'
       </div>
       <div class="accordion-content">
 
-           <?php if( function_exists('noriks_is_type') && noriks_is_type('ortopas', $current_product_id) ): ?>
+           <?php if( function_exists('noriks_is_type') && noriks_is_type( 'kidsnest', $current_product_id ) ): ?>
+
+          <div class="kn-size">
+            <img src="<?php echo get_template_directory_uri(); ?>/img/kidsnest/tablica-velicine.webp" alt="KidsNest velikosti po starosti" style="width:100%;height:auto;border-radius:10px;display:block;margin:0 0 12px;" loading="lazy">
+            <p style="margin:0;line-height:1.6;"><strong>Otrok je med dvema velikostma?</strong> Vedno izberite večjo. Vzglavnik je zasnovan tako, da podpira zdravo poravnavo, medtem ko otrok raste — večja velikost daje več prostora in daljše obdobje uporabe.</p>
+          </div>
+
+        <?php elseif( function_exists('noriks_is_type') && noriks_is_type( 'leakboxers', $current_product_id ) ): ?>
+
+          <div class="lbx-size">
+            <p style="margin:0 0 6px;font-weight:700;">Kako izmeriti boke</p>
+            <p style="margin:0 0 14px;line-height:1.6;">Merilni trak ovijte okoli najširšega dela bokov (čez zadnjico), brez zategovanja. Stojte sproščeno in vzravnano ter si zapišite mero v centimetrih.</p>
+            <table style="width:100%;border-collapse:collapse;font-size:14px;">
+              <thead>
+                <tr style="background:#12233b;color:#fff;">
+                  <th style="padding:8px 10px;text-align:left;background:#e9e9e9 !important;color:#111 !important;">Velikost</th>
+                  <th style="padding:8px 10px;text-align:left;background:#e9e9e9 !important;color:#111 !important;">Boki (cm)</th>
+                </tr>
+              </thead>
+              <tbody>
+                <?php
+                $lbx_sizes = array(
+                  array('S','do 76 cm','do 30"'),
+                  array('M','77 – 85 cm','30 – 33"'),
+                  array('L','86 – 94 cm','34 – 37"'),
+                  array('XL','95 – 102 cm','37 – 40"'),
+                  array('2XL','103 – 114 cm','41 – 45"'),
+                  array('3XL','115 – 121 cm','45 – 48"'),
+                  array('4XL','122 – 129 cm','48 – 51"'),
+                  array('5XL','130 – 137 cm','51 – 54"'),
+                  array('6XL','138 – 145 cm','54 – 57"'),
+                  array('7XL','146 – 153 cm','57 – 60"'),
+                  array('8XL','154 cm in več','61" in več'),
+                );
+                foreach ( $lbx_sizes as $i => $r ) :
+                  $bg = ( $i % 2 ) ? '#f7fafb' : '#fff'; ?>
+                  <tr style="background:<?php echo $bg; ?>;border-bottom:1px solid #eee;">
+                    <td style="padding:8px 10px;font-weight:700;"><?php echo esc_html($r[0]); ?></td>
+                    <td style="padding:8px 10px;"><?php echo esc_html($r[1]); ?></td>
+                  </tr>
+                <?php endforeach; ?>
+              </tbody>
+            </table>
+            <p style="margin:14px 0 0;line-height:1.6;"><strong>Med dvema velikostma?</strong> Vedno priporočamo večjo številko za optimalno udobje in maksimalno vpojnost.</p>
+          </div>
+
+        <?php elseif( function_exists('noriks_is_type') && noriks_is_type( 'kompresijske-majice', $current_product_id ) ): ?>
+
+          <div class="kmf-size">
+            <table style="width:100%;border-collapse:collapse;font-size:15px;">
+              <thead>
+                <tr style="background:#111;color:#fff;">
+                  <th style="padding:9px 12px;text-align:left;background:#e9e9e9 !important;color:#111 !important;">Velikost</th>
+                  <th style="padding:9px 12px;text-align:left;background:#e9e9e9 !important;color:#111 !important;">Ustrezna teža</th>
+                </tr>
+              </thead>
+              <tbody>
+                <?php
+                $kmf_sizes = array(
+                  array('S','50 – 70 kg'), array('M','70 – 90 kg'), array('L','90 – 110 kg'), array('XL','110 – 130 kg'),
+                  array('2XL','130 – 150 kg'), array('3XL','150 – 170 kg'), array('4XL','170 – 190 kg'), array('5XL','190 – 210 kg'),
+                );
+                foreach ( $kmf_sizes as $i => $r ) :
+                  $bg = ( $i % 2 ) ? '#f4f4f4' : '#fff'; ?>
+                  <tr style="background:<?php echo $bg; ?>;border-bottom:1px solid #eaeaea;">
+                    <td style="padding:9px 12px;font-weight:800;"><?php echo esc_html($r[0]); ?></td>
+                    <td style="padding:9px 12px;font-weight:700;"><?php echo esc_html($r[1]); ?></td>
+                  </tr>
+                <?php endforeach; ?>
+              </tbody>
+            </table>
+            <p style="margin:12px 0 0;line-height:1.6;">Velikost izberite glede na svojo težo. Med dvema velikostma? Za močnejšo kompresijo izberite manjšo številko.</p>
+          </div>
+
+        <?php elseif( function_exists('noriks_is_type') && noriks_is_type('ortopas', $current_product_id) ): ?>
 
           <div style="line-height:1.9;">
             <strong>S/M</strong> : obseg bokov 75–110 cm<br>
@@ -533,15 +658,23 @@ $is_mixed_bundle = has_term( array( 'black-friday', 'majice-in-boksarice-paketi'
     <?php endif; // /ni tabele velikosti za bunion + fisiorest ?>
 
 
-    <!-- 3 - savjeti za pranje-->
-    <?php if ( ! ( function_exists('noriks_is_type') && ( noriks_is_type('ortopas', $current_product_id) || noriks_is_type('bunion', $current_product_id) || noriks_is_type('fisiorest', $current_product_id) || noriks_is_type('norikshers', $current_product_id) ) ) ) : // ni nasvetov za pranje za pas/bunion/fisiorest + norikshers ?>
+    <!-- 3 - savjeti za pranje--> <!-- skrito tudi na kidsnest -->
+    <?php if ( ! ( function_exists('noriks_is_type') && ( noriks_is_type('ortopas', $current_product_id) || noriks_is_type('bunion', $current_product_id) || noriks_is_type('fisiorest', $current_product_id) || noriks_is_type('norikshers', $current_product_id) || noriks_is_type('kidsnest', $current_product_id) ) ) ) : // ni nasvetov za pranje za pas/bunion/fisiorest + norikshers + kidsnest ?>
     <div class="accordion-item">
       <div class="accordion-header" onclick="toggleAccordion(this)">
         <h3><?php echo get_field("singlepp_acc_h_2","options"); ?></h3>
         <div class="toggle">+</div>
       </div>
       <div class="accordion-content">
-             <?php if( !$is_boxers &&  !$is_carape &&   !$is_mixed_bundle && ! ( function_exists('noriks_is_type') && noriks_is_type('kompresijske-nogavice', $current_product_id) ) ): ?>
+             <?php if( function_exists('noriks_is_type') && noriks_is_type( 'leakboxers', $current_product_id ) ): ?>
+
+                Perite na 30–40 °C, na programu za občutljivo perilo. Brez mehčalca in belila. Sušite na zraku. Vpojno moč ohranijo skozi stotine pranj.
+
+             <?php elseif( function_exists('noriks_is_type') && noriks_is_type( 'kompresijske-majice', $current_product_id ) ): ?>
+
+                Strojno pranje na hladnem, nežnem programu. Brez belila in mehčalca. Ne sušite v sušilnem stroju — sušite na zraku, da ohranite kompresijo in obliko.
+
+             <?php elseif( !$is_boxers &&  !$is_carape &&   !$is_mixed_bundle && ! ( function_exists('noriks_is_type') && noriks_is_type('kompresijske-nogavice', $current_product_id) ) ): ?>
         <?php echo get_field("singlepp_acc_t_2","options"); ?>
         
          
