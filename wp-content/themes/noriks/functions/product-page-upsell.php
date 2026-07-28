@@ -41,6 +41,14 @@ function noriks_pp_upsell_register_fields() {
 				'instructions' => 'Doda okvir "Kupite skupaj in prihranite" takoj pod gumb Dodaj v košarico. Kupec izbere velikost, 4 kosi se dodajo po upsell ceni. Velja samo za ta izdelek.',
 				'ui'           => 1,
 			),
+			array(
+				'key'          => 'field_noriks_pp_upsell2',
+				'label'        => 'Prikaži upsell #2 pod gumbom (2 majici: črna + siva)',
+				'name'         => 'noriks_pp_upsell2',
+				'type'         => 'true_false',
+				'instructions' => 'Drugi upsell okvir: paket dveh majic (1 črna + 1 siva), kupec izbere eno velikost za obe. Neodvisen od prvega stikala — vklopljena sta lahko oba.',
+				'ui'           => 1,
+			),
 		),
 		'location'   => array(
 			array(
