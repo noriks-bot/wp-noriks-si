@@ -284,12 +284,22 @@ function noriks_pp_upsell_render() {
 	.npu-wrap .npu-size:focus { outline: 2px solid var(--npu-accent); outline-offset: 1px; }
 
 	@media (max-width: 560px) {
+		/* mobitel: slika samo uz tekst (1. red), a red s kvacicom ide preko cijele sirine,
+		   pa izbornik velicine vise ne pada u novi red */
+		.npu-wrap .npu-box { padding: 8px; }
 		.npu-wrap .npu-grid { column-gap: 10px; row-gap: 10px; }
-		.npu-wrap .npu-img-wrap { width: clamp(100px, 30vw, 128px); }
-		.npu-wrap .npu-title { font-size: 16px !important; }
-		.npu-wrap .npu-desc { font-size: 14px !important; }
-		.npu-wrap .npu-price { font-size: 16px !important; }
-		.npu-wrap .npu-actions { gap: 10px; }
+		.npu-wrap .npu-img-wrap { grid-row: 1 / 2; align-self: start; width: clamp(92px, 28vw, 118px); }
+		.npu-wrap .npu-info { grid-column: 2 / -1; }
+		.npu-wrap .npu-actions { grid-column: 1 / -1; justify-content: space-between; gap: 10px; flex-wrap: nowrap; }
+		.npu-wrap .npu-title { font-size: 15px !important; line-height: 1.25 !important; }
+		.npu-wrap .npu-desc { font-size: 13.5px !important; line-height: 1.4 !important; }
+		.npu-wrap .npu-prices { margin-top: 8px; gap: 8px; }
+		.npu-wrap .npu-price { font-size: 16px !important; padding: 5px 10px 4px; }
+		.npu-wrap .npu-price-old { font-size: 15px !important; }
+		.npu-wrap .npu-box-mark { width: 26px; height: 26px; flex: 0 0 26px; border-radius: 6px; }
+		.npu-wrap .npu-check { gap: 8px; }
+		.npu-wrap .npu-check-text { font-size: 15px !important; }
+		.npu-wrap .npu-size { height: 30px; min-width: 76px; font-size: 15px !important; padding: 0 26px 0 10px; }
 	}
 	</style>
 
