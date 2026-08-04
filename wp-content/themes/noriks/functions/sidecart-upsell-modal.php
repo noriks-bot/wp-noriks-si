@@ -621,3 +621,20 @@ add_action( 'woocommerce_checkout_create_order_line_item', function( $item, $car
         $item->add_meta_data( '_noriks_upsell', sanitize_text_field( $values['_noriks_upsell'] ), true );
     }
 }, 10, 4 );
+
+
+/**
+ * Sidecart "Izdelki, ki bi vam lahko bili všeč" — fiksni vrstni red.
+ *
+ * Vtičnik izdelke poišče z `orderby => 'rand'`, zato se vrstni red ob vsakem
+ * odprtju spremeni. S `post__in` ohranimo točno tisti vrstni red, kot so
+ * ID-ji vpisani v nastavitvah vtičnika (Suggested products → Product IDs).
+ */
+add_filter( 'xoo_wsc_suggested_product_args', 'noriks_sidecart_suggested_order', 20 );
+function noriks_sidecart_suggested_order( $args ) {
+    if ( ! empty( $args['post__in'] ) ) {
+        $args['orderby'] = 'post__in';
+        unset( $args['order'] );
+    }
+    return $args;
+}
