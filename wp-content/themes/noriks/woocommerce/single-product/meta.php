@@ -579,7 +579,7 @@ $is_mixed_bundle = has_term( array( 'black-friday', 'majice-in-boksarice-paketi'
            <?php if( function_exists('noriks_is_type') && noriks_is_type( 'kidsnest', $current_product_id ) ): ?>
 
           <div class="kn-size">
-            <img src="<?php echo get_template_directory_uri(); ?>/img/kidsnest/tablica-velicine.webp" alt="KidsNest velikosti po starosti" style="width:100%;height:auto;border-radius:10px;display:block;margin:0 0 12px;" loading="lazy">
+            <img src="<?php echo get_template_directory_uri(); ?>/img/kidsnest/tablica-velicine-si.webp" alt="KidsNest velikosti po starosti" style="width:100%;height:auto;border-radius:10px;display:block;margin:0 0 12px;" loading="lazy">
             <p style="margin:0;line-height:1.6;"><strong>Otrok je med dvema velikostma?</strong> Vedno izberite večjo. Vzglavnik je zasnovan tako, da podpira zdravo poravnavo, medtem ko otrok raste — večja velikost daje več prostora in daljše obdobje uporabe.</p>
           </div>
 

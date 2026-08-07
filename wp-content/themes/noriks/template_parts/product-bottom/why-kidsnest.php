@@ -23,7 +23,7 @@ $kn = get_template_directory_uri() . '/img/kidsnest/';
 <!-- ============ 2) Zacnite nocoj — slika LEVO, tekst DESNO ============ -->
 <section class="kn-sec">
   <div class="kn-wrap kn-row2">
-    <div class="kn-media"><img src="<?php echo esc_url( $kn.'01-poravnan.webp' ); ?>" alt="Popolnoma poravnano — glava, vrat in hrbtenica med spanjem" loading="lazy" onerror="this.style.display='none'"></div>
+    <div class="kn-media"><img src="<?php echo esc_url( $kn.'01-poravnan-si.webp' ); ?>" alt="Popolnoma poravnano — glava, vrat in hrbtenica med spanjem" loading="lazy" onerror="this.style.display='none'"></div>
     <div class="kn-copy">
       <p class="kn-eyebrow">Razvito z zobozdravniki za otroške dihalne poti</p>
       <h2 class="kn-h2 kn-h2-blue">Začnite nocoj popravljati skrito škodo.</h2>
