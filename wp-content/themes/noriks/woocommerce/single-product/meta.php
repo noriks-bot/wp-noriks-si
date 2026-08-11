@@ -499,7 +499,7 @@ $is_mixed_bundle = has_term( array( 'black-friday', 'majice-in-boksarice-paketi'
     <?php endif; ?>
 
 
-    <?php if ( ! ( function_exists('noriks_is_type') && ( noriks_is_type('norikshers', $current_product_id) || noriks_is_type('ortopedski-jastuk', $current_product_id) ) ) ) : // skrij detajle na norikshers + ortopedski jastuk ?>
+    <?php if ( ! ( function_exists('noriks_is_type') && ( noriks_is_type('norikshers', $current_product_id) || noriks_is_type('ortopedski-jastuk', $current_product_id) ) )  && ! ( function_exists('noriks_is_type') && noriks_is_type('kneefix', $current_product_id) )) : // skrij detajle na norikshers + ortopedski jastuk ?>
     <!-- 1 - detajli -->
     <div class="accordion-item">
       <div class="accordion-header" onclick="toggleAccordion(this)">
@@ -511,6 +511,10 @@ $is_mixed_bundle = has_term( array( 'black-friday', 'majice-in-boksarice-paketi'
          <?php if( function_exists('noriks_is_type') && noriks_is_type( 'kidsnest', $current_product_id ) ): ?>
 
                 NORIKS KidsNest je izdelan iz hipoalergene, OEKO-TEX® certificirane spominske pene — brez formaldehida, težkih kovin in BPA — z zračno, pralno prevleko, ki se preprosto sname.<br><br>Njegova 3-conska ergonomska struktura nežno sprejme glavo, podpira vrat in pomaga ohranjati hrbtenico v naravni poravnavi — tudi ko se otrok ponoči veliko obrača. Tako spodbuja dihanje skozi nos ter mirnejši, globlji spanec.<br><br>Na voljo v treh velikostih (1–3, 3–9 in 9–18 let) raste z vašim otrokom in nudi pravo višino podpore v vsaki fazi razvoja.
+
+         <?php elseif( function_exists('noriks_is_type') && noriks_is_type('kneefix', $current_product_id) ): ?>
+
+                NORIKS KneeFix je prilagodljiva opornica za koleno, ki združuje štiri funkcije v enem sistemu opore: nastavljivo kompresijo prek natančnega kolesca, dvojna stranska stabilizatorja, gelno blazinico, ki razbremeni pogačico, in silikonski nedrseči rob, ki opornico drži na mestu.<br><br>Za razliko od togih ortoz KneeFix kolena ne ukleni — podpira ga med naravnim gibanjem. Kompresijo nastavite v sekundi: zjutraj tesneje, popoldne bolj sproščeno, odvisno od tega, koliko ste na nogah. Koleno tako dobi stabilnost pri vstajanju, na stopnicah, med hojo in pri daljšem stanju.<br><br>Tkanina je lahka, zračna in odvaja vlago, zato lahko opornico nosite ure brez potenja in brez zarezovanja. Je tanka in diskretna — pod hlačami se je skoraj ne opazi.<br><br>Na voljo je v velikostih od S do 2XL glede na telesno težo ter v izvedbi za levo in desno koleno, zato je prileganje natančno.
 
          <?php elseif( function_exists('noriks_is_type') && noriks_is_type( 'leakboxers', $current_product_id ) ): ?>
 
@@ -699,7 +703,7 @@ $is_mixed_bundle = has_term( array( 'black-friday', 'majice-in-boksarice-paketi'
 
 
     <!-- 3 - savjeti za pranje--> <!-- skrito tudi na kidsnest -->
-    <?php if ( ! ( function_exists('noriks_is_type') && ( noriks_is_type('ortopas', $current_product_id) || noriks_is_type('bunion', $current_product_id) || noriks_is_type('fisiorest', $current_product_id) || noriks_is_type('norikshers', $current_product_id) || noriks_is_type('ortopedski-jastuk', $current_product_id) || noriks_is_type('kidsnest', $current_product_id) ) ) ) : // ni nasvetov za pranje za pas/bunion/fisiorest + norikshers + ortopedski jastuk + kidsnest ?>
+    <?php if ( ! ( function_exists('noriks_is_type') && ( noriks_is_type('ortopas', $current_product_id) || noriks_is_type('bunion', $current_product_id) || noriks_is_type('fisiorest', $current_product_id) || noriks_is_type('norikshers', $current_product_id) || noriks_is_type('ortopedski-jastuk', $current_product_id) || noriks_is_type('kidsnest', $current_product_id) ) )  && ! ( function_exists('noriks_is_type') && noriks_is_type('kneefix', $current_product_id) )) : // ni nasvetov za pranje za pas/bunion/fisiorest + norikshers + ortopedski jastuk + kidsnest ?>
     <div class="accordion-item">
       <div class="accordion-header" onclick="toggleAccordion(this)">
         <h3><?php echo get_field("singlepp_acc_h_2","options"); ?></h3>
