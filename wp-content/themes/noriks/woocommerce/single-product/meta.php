@@ -499,7 +499,7 @@ $is_mixed_bundle = has_term( array( 'black-friday', 'majice-in-boksarice-paketi'
     <?php endif; ?>
 
 
-    <?php if ( ! ( function_exists('noriks_is_type') && ( noriks_is_type('norikshers', $current_product_id) || noriks_is_type('ortopedski-jastuk', $current_product_id) ) )  && ! ( function_exists('noriks_is_type') && noriks_is_type('kneefix', $current_product_id) )) : // skrij detajle na norikshers + ortopedski jastuk ?>
+    <?php if ( ! ( function_exists('noriks_is_type') && ( noriks_is_type('norikshers', $current_product_id) || noriks_is_type('ortopedski-jastuk', $current_product_id) ) ) ) : // skrij detajle na norikshers + ortopedski jastuk ?>
     <!-- 1 - detajli -->
     <div class="accordion-item">
       <div class="accordion-header" onclick="toggleAccordion(this)">
@@ -572,7 +572,7 @@ $is_mixed_bundle = has_term( array( 'black-friday', 'majice-in-boksarice-paketi'
 
 
      <!-- 2 - slika tablica velicina -->
-     <?php if ( ! ( function_exists('noriks_is_type') && ( noriks_is_type('bunion', $current_product_id) || noriks_is_type('fisiorest', $current_product_id) || noriks_is_type('norikshers', $current_product_id) || noriks_is_type('ortopedski-jastuk', $current_product_id) ) ) ) : // ni tabele velikosti za bunion + fisiorest + norikshers + ortopedski jastuk ?>
+     <?php if ( ! ( function_exists('noriks_is_type') && ( noriks_is_type('bunion', $current_product_id) || noriks_is_type('fisiorest', $current_product_id) || noriks_is_type('norikshers', $current_product_id) || noriks_is_type('ortopedski-jastuk', $current_product_id) ) )  && ! ( function_exists('noriks_is_type') && noriks_is_type('kneefix', $current_product_id) )) : // ni tabele velikosti za bunion + fisiorest + norikshers + ortopedski jastuk ?>
      <div class="accordion-item">
       <div class="accordion-header" onclick="toggleAccordion(this)">
         <h3>Tabela velikosti</h3>
