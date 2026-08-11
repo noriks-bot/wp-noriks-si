@@ -42,6 +42,8 @@ function noriks_product_type_map() : array {
         // nogavice) and orto category 'orto-kompresijske-carape' (universal slug across markets).
         'kompresijske-nogavice'   => array( 'kompresijske-nogavice', 'orto-kompresijske-nogavice', 'orto-kompresijske-carape' ),
         'ortopas'                 => array( 'orto-ortopas', 'ortopas' ),
+        // KneeFix ortopedska steznica za koljeno.
+        'kneefix'                 => array( 'orto-kneefix' ),
         'bunion'                  => array( 'orto-bunion', 'bunion' ),
         'fisiorest'               => array( 'orto-fisiorest', 'fisiorest' ),
         'norikshers'              => array( 'orto-norikshers', 'orto-noriks-hers', 'norikshers' ),
