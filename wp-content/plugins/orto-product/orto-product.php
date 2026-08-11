@@ -1755,34 +1755,6 @@ function gck_render_bundle_selector() {
                                                    value="">
                                         </div>
                                     <?php endif; ?>
-                                    <?php if ( ! empty($color_values) && $target_color_field_key !== '' ) : ?>
-                                        <div class="color-swatches"
-                                             data-attr-key="<?php echo esc_attr($target_color_attr_key); ?>"
-                                             data-name="pairs[<?php echo esc_attr( $offer_id ); ?>][<?php echo $i; ?>][<?php echo esc_attr( $target_color_field_key ); ?>]">
-
-                                            <?php foreach ( $color_values as $val ) :
-                                                $slug = sanitize_title( $val );
-                                                $hex = gck_get_color_hex( $val );
-                                                $inline = '';
-                                                if ( $hex ) {
-                                                    $inline = 'background:' . esc_attr($hex) . ';';
-                                                    if ( strtolower(trim($hex)) === '#fff' || strtolower(trim($hex)) === '#ffffff' ) {
-                                                        $inline .= 'border:1px solid #ccc;';
-                                                    }
-                                                }
-                                            ?>
-                                                <div class="swatch" data-value="<?php echo esc_attr( $val ); ?>" title="<?php echo esc_attr( $val ); ?>">
-                                                    <span class="swatch-circle color-<?php echo esc_attr( $slug ); ?>"<?php if ($inline) echo ' style="' . $inline . '"'; ?>></span>
-                                                </div>
-                                            <?php endforeach; ?>
-
-                                            <input type="hidden"
-                                                   class="swatch-input"
-                                                   data-attr-key="<?php echo esc_attr($target_color_attr_key); ?>"
-                                                   name="pairs[<?php echo esc_attr( $offer_id ); ?>][<?php echo $i; ?>][<?php echo esc_attr( $target_color_field_key ); ?>]"
-                                                   value="">
-                                        </div>
-                                    <?php endif; ?>
 
                                     <?php if ( ! empty($size_values) && $target_size_field_key !== '' ) : ?>
                                         <select
