@@ -96,7 +96,11 @@
 
           Niste edini v iskanju sedenja brez bolečin.
 
-          <?php elseif ( function_exists('noriks_is_type') && noriks_is_type('kidsnest') ): ?>
+          <?php elseif ( function_exists('noriks_is_type') && noriks_is_type('kneefix') ): ?>
+
+           Niste edini, ki išče stabilnejše koleno.
+
+          <?php elseif ( function_exists('noriks_is_type') && noriks_is_type('kneefix') ): ?>Tisoče kupcev že nosi opornico NORIKS KneeFix za stabilnejše koleno – na stopnicah, na sprehodu in med dolgim stanjem.<?php elseif ( function_exists('noriks_is_type') && noriks_is_type('kidsnest') ): ?>
 
           Niste edini v iskanju mirnega otroškega spanca.
 
@@ -191,11 +195,13 @@
   $is_kompmajice_page = ( function_exists('noriks_is_type') && noriks_is_type('kompresijske-majice', $current_product_id) );
   $is_jastuk_page     = ( function_exists('noriks_is_type') && noriks_is_type('ortopedski-jastuk', $current_product_id) );
   $is_kidsnest_page   = ( function_exists('noriks_is_type') && noriks_is_type('kidsnest', $current_product_id) );
+  $is_kneefix_page    = ( function_exists('noriks_is_type') && noriks_is_type('kneefix', $current_product_id) );
   // Leak boxers / kompresijske majice / ortopedski jastuk / kidsnest take precedence even if they still carry the socks category.
-  if ( $is_leakboxers_page || $is_kompmajice_page || $is_jastuk_page || $is_kidsnest_page ) { $is_nogavice_page = false; }
+  if ( $is_leakboxers_page || $is_kompmajice_page || $is_jastuk_page || $is_kidsnest_page || $is_kneefix_page ) { $is_nogavice_page = false; }
 
   // Fallback product name shown in review cards.
-  $rv_fallback_title = $is_kidsnest_page ? 'NORIKS KidsNest vzglavnik'
+  $rv_fallback_title = $is_kneefix_page ? 'NORIKS KneeFix opornica za koleno'
+                     : ( $is_kidsnest_page ? 'NORIKS KidsNest vzglavnik'
                      : ( $is_jastuk_page ? 'NORIKS ErgoSit ortopedska blazina'
                      : ( $is_leakboxers_page ? 'NORIKS vpojne boksarice'
                      : ( $is_kompmajice_page ? 'NORIKS FIT kompresijska majica'
@@ -203,10 +209,12 @@
                      : ( $is_fisiorest_page ? 'NORIKS | FisioRest'
                      : ( $is_bunion_page ? 'NORIKS | Korektor haluksa'
                      : ( $is_ortopas_page ? 'NORIKS | Ortopedski pas'
-                     : ( $is_nogavice_page ? 'Kompresijske nogavice z zadrgo' : 'Ena Siva Majica' ) ) ) ) ) ) ) );
+                     : ( $is_nogavice_page ? 'Kompresijske nogavice z zadrgo' : 'Ena Siva Majica' ) ) ) ) ) ) ) ) );
 
   // Include review pools (own pool per product group)
-  if ( $is_kidsnest_page ) {
+  if ( $is_kneefix_page ) {
+    include get_stylesheet_directory() . '/auto_reviews/SI_kneefix.php';
+  } elseif ( $is_kidsnest_page ) {
     include get_stylesheet_directory() . '/auto_reviews/SI_kidsnest.php';
   } elseif ( $is_jastuk_page ) {
     include get_stylesheet_directory() . '/auto_reviews/SI_ortopedski_jastuk.php';
@@ -593,7 +601,7 @@ function assign_unique_avatars_first_n(array $reviews, array $avatar_pool, strin
   // Avatar pools based on page category
   $avatar_type = $is_bokserice_page ? 'bokserice' : 'majice';
   // Compression socks + belt + bunion + fisiorest + norikshers + leak boxers + kompresijske majice + ortopedski jastuk + kidsnest: text-only reviews (no avatar images).
-  $avatar_pool = ( $is_nogavice_page || $is_ortopas_page || $is_bunion_page || $is_fisiorest_page || $is_norikshers_page || $is_leakboxers_page || $is_kompmajice_page || $is_jastuk_page || $is_kidsnest_page ) ? array() : get_review_avatar_pool($avatar_type);
+  $avatar_pool = ( $is_nogavice_page || $is_ortopas_page || $is_bunion_page || $is_fisiorest_page || $is_norikshers_page || $is_leakboxers_page || $is_kompmajice_page || $is_jastuk_page || $is_kidsnest_page || $is_kneefix_page ) ? array() : get_review_avatar_pool($avatar_type);
 
   // On single-product landing pages (leak boxers / kompresijske majice) the cards should
   // reference THIS product (via $rv_fallback_title), not random pool products.
@@ -637,7 +645,7 @@ $auto_reviews_ship = assign_unique_avatars_first_n($auto_reviews_ship, $avatar_p
   $ship_count = count($auto_reviews_ship);
 ?>
 
-<?php if ( $is_nogavice_page || $is_ortopas_page || $is_bunion_page || $is_fisiorest_page || $is_norikshers_page || $is_leakboxers_page || $is_kompmajice_page || $is_jastuk_page || $is_kidsnest_page ) : ?>
+<?php if ( $is_nogavice_page || $is_ortopas_page || $is_bunion_page || $is_fisiorest_page || $is_norikshers_page || $is_leakboxers_page || $is_kompmajice_page || $is_jastuk_page || $is_kidsnest_page || $is_kneefix_page ) : ?>
 <style>/* socks + belt + bunion + fisiorest + norikshers + leak boxers + kompresijske majice + ortopedski jastuk + kidsnest: text-only reviews, no avatar */ #reviews-section .avatar { display: none !important; }</style>
 <?php endif; ?>
 
@@ -1066,7 +1074,8 @@ $is_leakboxers_faq = ( function_exists('noriks_is_type') && noriks_is_type('leak
 $is_kompmajice_faq = ( function_exists('noriks_is_type') && noriks_is_type('kompresijske-majice') );
 $is_jastuk_faq     = ( function_exists('noriks_is_type') && noriks_is_type('ortopedski-jastuk') );
 $is_kidsnest_faq   = ( function_exists('noriks_is_type') && noriks_is_type('kidsnest') );
-if ( $is_leakboxers_faq || $is_kompmajice_faq || $is_jastuk_faq || $is_kidsnest_faq ) { $is_knc = false; } // carry sock cat but are NOT socks
+$is_kneefix_faq   = ( function_exists('noriks_is_type') && noriks_is_type('kneefix') );
+if ( $is_leakboxers_faq || $is_kompmajice_faq || $is_jastuk_faq || $is_kidsnest_faq || $is_kneefix_faq ) { $is_knc = false; } // carry sock cat but are NOT socks
 
 // NORIKS FIT (kompresijska/oblikovalna majica) — product FAQ, replaces ONLY the
 // "Informacije o izdelku" container. (Prevod z reference, NORIKS FIT.)
@@ -1134,6 +1143,37 @@ $jastuk_faq = array(
 );
 
 // KidsNest otroski vzglavnik — product FAQ (NORIKS, ublazene trditve).
+$kneefix_faq = array(
+  array(
+    'questioon' => 'Je KneeFix primeren za vsakodnevno uporabo?',
+    'answer'    => 'Da. NORIKS KneeFix je razvit prav za vsakodnevne gibe — hojo, delo, hojo po stopnicah ali daljše stanje.',
+  ),
+  array(
+    'questioon' => 'Ali lahko kompresijo nastavim sam?',
+    'answer'    => 'Da. Z vgrajenim natančnim kolescem kompresijo nastavite sami — toliko opore, kolikor vam je prijetno.',
+  ),
+  array(
+    'questioon' => 'Ali opornica med hojo zdrsava?',
+    'answer'    => 'KneeFix ima protizdrsni silikonski rob, ki pomaga zmanjšati zdrsavanje in zvijanje opornice med nošenjem.',
+  ),
+  array(
+    'questioon' => 'Ali lahko opornico nosim pod oblačili?',
+    'answer'    => 'Da. Prilagodljiv in tanek kroj omogoča prijetno nošenje pod večino vsakodnevnih oblačil.',
+  ),
+  array(
+    'questioon' => 'Ali opornica ustreza obema kolenoma?',
+    'answer'    => 'Ob naročilu izberete stran (levo ali desno), zato se opornica prilega prav tistemu kolenu, ki ga želite podpreti.',
+  ),
+  array(
+    'questioon' => 'Ali lahko opornico nosim dlje časa?',
+    'answer'    => 'Opornica je razvita za vsakodnevno uporabo. Mnogi kupci jo nosijo v službi, na sprehodu in pri vsakodnevnih opravilih.',
+  ),
+  array(
+    'questioon' => 'Kako izberem velikost?',
+    'answer'    => 'Velikosti so določene po telesni teži: S (50–60 kg), M (61–75 kg), L (76–90 kg), XL (91–110 kg) in 2XL (110 kg+).',
+  ),
+);
+
 $kidsnest_faq = array(
   array( 'questioon' => 'Kako hitro bom videl(a), da dihanje skozi usta preneha?', 'answer' => 'Večina staršev opazi tišje dihanje in manj prebujanj z odprtimi usti v prvih 5–7 nočeh. Do 14. noči se pri večini otrok smrčanje umiri, ustnice pa ostanejo zaprte. Polno razliko — vidno boljši položaj in mirnejši spanec — starši najpogosteje opisujejo okoli 21. do 30. dneva. Uporabljajte ga vsako noč.' ),
   array( 'questioon' => 'Za katero starost je KidsNest namenjen?', 'answer' => 'KidsNest je na voljo v treh velikostih: 1–3, 3–9 in 9–18 let. Najpomembnejše okno je med 3. in 9. letom, ko se nebo in čeljust najintenzivneje razvijata — a vsaka starost ima svojo velikost in svojo korist.' ),
@@ -1200,8 +1240,9 @@ $norikshers_faq = array(
   array( 'questioon' => 'Ali obstaja garancija vračila denarja?', 'answer' => 'Da, ponujamo 30-dnevno garancijo brez tveganja. Če niste zadovoljni, nas preprosto kontaktirajte in bomo uredili.' ),
 );
 
-$faq_pick = function( $title, $list ) use ( $is_knc, $knc_faq, $is_ortopas_faq, $ortopas_faq, $is_bunion_faq, $bunion_faq, $is_fisiorest_faq, $fisiorest_faq, $is_norikshers_faq, $norikshers_faq, $is_leakboxers_faq, $leakboxers_faq, $is_kompmajice_faq, $kompmajice_faq, $is_jastuk_faq, $jastuk_faq, $is_kidsnest_faq, $kidsnest_faq ) {
+$faq_pick = function( $title, $list ) use ( $is_knc, $knc_faq, $is_ortopas_faq, $ortopas_faq, $is_bunion_faq, $bunion_faq, $is_fisiorest_faq, $fisiorest_faq, $is_norikshers_faq, $norikshers_faq, $is_leakboxers_faq, $leakboxers_faq, $is_kompmajice_faq, $kompmajice_faq, $is_jastuk_faq, $jastuk_faq, $is_kidsnest_faq, $kidsnest_faq, $is_kneefix_faq, $kneefix_faq ) {
   $is_info = ( stripos( (string) $title, 'izdelku' ) !== false );
+  if ( $is_kneefix_faq && $is_info )    { return $kneefix_faq; }
   if ( $is_kidsnest_faq && $is_info )   { return $kidsnest_faq; }
   if ( $is_jastuk_faq && $is_info )     { return $jastuk_faq; }
   if ( $is_leakboxers_faq && $is_info ) { return $leakboxers_faq; }
