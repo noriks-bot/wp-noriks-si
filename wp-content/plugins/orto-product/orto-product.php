@@ -727,6 +727,12 @@ function gck_render_bundle_selector() {
       .color-smeda { background: #9f6f4e; }
       .color-zelena { background: #65633c; }
       .color-tamnoplava { background: #2a3262; }
+      /* SLOVENSKI nazivi barv — vrednosti atributov na SI trgu (brez tega je krogec prazen). */
+      .color-rdeca      { background: #ba212f; }
+      .color-rjava      { background: #9f6f4e; }
+      .color-temnomodra { background: #2a3262; }
+      .color-crne       { background: #000; }
+      .color-bele       { background: #fff; border: 1px solid #ccc; }
 
       .bundle-option input[type="radio"] {
           -webkit-appearance: none;
