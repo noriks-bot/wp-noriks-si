@@ -1170,7 +1170,7 @@ $kneefix_faq = array(
   ),
   array(
     'questioon' => 'Kako izberem velikost?',
-    'answer'    => 'Velikosti so določene po telesni teži: S (50–60 kg), M (61–75 kg), L (76–90 kg), XL (91–110 kg) in 2XL (110 kg+).',
+    'answer'    => 'Velikosti so določene po telesni teži: M (50–75 kg), L (76–90 kg), XL (91–110 kg) in 2XL (110 kg+).',
   ),
 );
 
