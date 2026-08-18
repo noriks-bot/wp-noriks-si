@@ -43,7 +43,7 @@ $kn = get_template_directory_uri() . '/img/kidsnest/';
       <p>Ergonomski otroški vzglavnik drži <strong>glavo in vrat v naravni poravnavi ter pomaga preprečiti nagibanje glave</strong> med nočjo. Tako hrbtenica ostane pravilno poravnana — tudi če se otrok med spanjem veliko obrača.</p>
       <p><strong>Rezultat sta mirnejši spanec in boljša regeneracija.</strong></p>
     </div>
-    <div class="kn-media"><img src="<?php echo esc_url( $kn.'02-san.jpg' ); ?>" alt="Otrok mirno spi na vzglavniku KidsNest" loading="lazy" onerror="this.style.display='none'"></div>
+    <div class="kn-media"><img src="<?php echo esc_url( $kn.'kn-si-2.webp' ); ?>" alt="Otrok mirno spi na vzglavniku KidsNest" loading="lazy" onerror="this.style.display='none'"></div>
   </div>
 </section>
 
@@ -92,7 +92,7 @@ $kn = get_template_directory_uri() . '/img/kidsnest/';
 <!-- ============ 6) Kakovost materialov — slika LEVO, tekst DESNO ============ -->
 <section class="kn-sec">
   <div class="kn-wrap kn-row2">
-    <div class="kn-media"><img src="<?php echo esc_url( $kn.'03-detalj.webp' ); ?>" alt="KidsNest — 3-conska struktura in zračna tkanina od blizu" loading="lazy" onerror="this.style.display='none'"></div>
+    <div class="kn-media"><img src="<?php echo esc_url( $kn.'kn-si-6.webp' ); ?>" alt="KidsNest — 3-conska struktura in zračna tkanina od blizu" loading="lazy" onerror="this.style.display='none'"></div>
     <div class="kn-copy">
       <h2 class="kn-h2 kn-h2-blue">Kakovost, ki se občuti — noč za nočjo.</h2>
       <p>Gosta, zračna pletenina in skrbno oblikovana površina nista tu zaradi videza — <strong>vsaka cona ima svojo vlogo</strong>. Sredina nežno sprejme glavo, robovi podpirajo vrat, struktura pa ohrani obliko tudi po mesecih vsakodnevne uporabe.</p>
