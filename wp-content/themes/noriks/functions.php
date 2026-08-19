@@ -7,6 +7,7 @@
 
 include(get_template_directory() . '/functions/product-type.php'); // central product-type resolver (load first)
 include(get_template_directory() . '/functions/pack-switcher.php'); // izbira velikosti paketa + druge kombinacije barv (X-paket izdelki)
+include(get_template_directory() . '/functions/flash-deals-banner.php'); // traka sezonske rasprodaje
 include(get_template_directory() . '/functions/checkout_mods.php');
 include(get_template_directory() . '/functions/thankyou_upsell.php');
 include(get_template_directory() . '/functions/product-page-upsell.php'); // upsell okvir ispod gumba na stranici proizvoda (ACF prekidac)
