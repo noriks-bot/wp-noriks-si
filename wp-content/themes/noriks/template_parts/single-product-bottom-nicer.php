@@ -820,7 +820,7 @@ endif;
    * Build/caches a pool of products: [['title'=>..., 'url'=>...], ...]
    */
   function get_wc_product_pool(
-      $transient_key = 'reviews_product_pool_cache_v2',
+      $transient_key = 'reviews_product_pool_cache_v3',
       $ttl = 12 * HOUR_IN_SECONDS
   ) {
       if ( ! function_exists( 'wc_get_products' ) ) {
@@ -891,14 +891,10 @@ endif;
       } elseif ( $is_bokserice ) {
           $args['category'] = [ 'bokserice' ];
       } else {
-          $args['tax_query'] = [
-              [
-                  'taxonomy' => 'product_cat',
-                  'field'    => 'slug',
-                  'terms'    => [ 'bokserice' ],
-                  'operator' => 'NOT IN',
-              ],
-          ];
+          // Stranice majic: bazen SAMO iz kategorije majic (s podkategorijami).
+          // Prej je jemal vse razen boksaric, zato so se mnenja o majicah
+          // pripisovala orto izdelkom (KidsNest, ErgoSit, HERS…).
+          $args['category'] = [ 'majice' ];
       }
 
       $ids = wc_get_products( $args );
