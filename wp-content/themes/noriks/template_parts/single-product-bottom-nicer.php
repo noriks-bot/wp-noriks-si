@@ -1145,8 +1145,8 @@ function assign_unique_avatars_first_n(array $reviews, array $avatar_pool, strin
   // Avatar pools based on page category
   $avatar_type = $is_bokserice_page ? 'bokserice' : 'majice';
   // Compression socks + belt + bunion + fisiorest + norikshers: text-only reviews (no avatar images).
-  $avatar_pool = ( $is_bokserice_page || ( function_exists('noriks_is_type') && ( noriks_is_type('majice') || noriks_is_type('majica-darila') || noriks_is_type('starter') ) ) )
-      ? get_review_avatar_pool($avatar_type) : array();  // fotografije samo na majicah in boksaricah
+  $avatar_pool = ( function_exists('noriks_is_type') && noriks_is_type('orto') )
+      ? array() : get_review_avatar_pool($avatar_type);  // brez fotografija na orto proizvodima
 
   // LEAKBOX in FIT: kartice naj se sklicujejo na TA izdelek (prek $rv_fallback_title), ne na nakljucne izdelke.
 
