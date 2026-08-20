@@ -612,7 +612,13 @@ endif;
       <!--<h4 style="" class="highlight"><?php echo get_field("singlepp_content_standard_reviews_t1","options"); ?></h4>-->
       <h1 style="color:black;     margin-bottom: 4px;">
           
-          <?php if ( function_exists('noriks_is_type') && noriks_is_type('kneefix') ): ?>
+          <?php if ( function_exists('noriks_is_type') && noriks_is_type('norikshers') ): ?>
+          
+          
+          
+          Nisi sama v iskanju gladke kože brez gubic.
+          
+          <?php elseif ( function_exists('noriks_is_type') && noriks_is_type('kneefix') ): ?>
           
           
           
@@ -668,7 +674,7 @@ endif;
 
 
           </h1>
-    <p class="note" style="color: black; margin-top: 0px; margin-bottom: 5px;"><?php if ( function_exists('noriks_is_type') && noriks_is_type('fisiorest') ): ?>Tisoči ljudi že uporabljajo NORIKS FisioRest za manj bolečin in napetosti v vratu – trakcija, vibracija in toplota v eni napravi.<?php elseif ( function_exists('noriks_is_type') && noriks_is_type('bunion') ): ?>Tisoči ljudi že uporabljajo NORIKS korektor haluksa za manj bolečin in bolj pravilno lego palca – doma, med gledanjem TV ali med spanjem.<?php elseif ( function_exists('noriks_is_type') && noriks_is_type('ortopas') ): ?>Tisoči ljudi že nosijo NORIKS ortopedski pas za manj bolečin in stabilnejši hrbet – med delom, pri dvigovanju in dolgotrajnem sedenju.<?php elseif ( function_exists('noriks_is_type') && noriks_is_type('kompresijske-nogavice') ): ?>Tisoče moških že nosi NORIKS kompresijske nogavice za lažje in bolj spočite noge – v službi, na potovanjih in pri treningu.<?php else: ?><?php echo get_field("singlepp_content_standard_reviews_t3","options"); ?><?php endif; ?></p>
+    <p class="note" style="color: black; margin-top: 0px; margin-bottom: 5px;"><?php if ( function_exists('noriks_is_type') && noriks_is_type('norikshers') ): ?>Tisoče žensk že uporablja silikonske kolagenske trakove NORIKS HERS za bolj gladko in čvrsto kožo.<?php elseif ( function_exists('noriks_is_type') && noriks_is_type('fisiorest') ): ?>Tisoči ljudi že uporabljajo NORIKS FisioRest za manj bolečin in napetosti v vratu – trakcija, vibracija in toplota v eni napravi.<?php elseif ( function_exists('noriks_is_type') && noriks_is_type('bunion') ): ?>Tisoči ljudi že uporabljajo NORIKS korektor haluksa za manj bolečin in bolj pravilno lego palca – doma, med gledanjem TV ali med spanjem.<?php elseif ( function_exists('noriks_is_type') && noriks_is_type('ortopas') ): ?>Tisoči ljudi že nosijo NORIKS ortopedski pas za manj bolečin in stabilnejši hrbet – med delom, pri dvigovanju in dolgotrajnem sedenju.<?php elseif ( function_exists('noriks_is_type') && noriks_is_type('kompresijske-nogavice') ): ?>Tisoče moških že nosi NORIKS kompresijske nogavice za lažje in bolj spočite noge – v službi, na potovanjih in pri treningu.<?php else: ?><?php echo get_field("singlepp_content_standard_reviews_t3","options"); ?><?php endif; ?></p>
     </div>
   </section>
   </div>
@@ -737,7 +743,7 @@ endif;
 
   // Detect if current product belongs to bokserice group
   $current_product_id = (function_exists('is_product') && is_product()) ? get_queried_object_id() : get_the_id();
-  $is_bokserice_page  = has_term( array( 'bokserice','orto-bokserice', 'bokserice-sastavi-paket' ), 'product_cat', $current_product_id );
+  $is_bokserice_page = ( function_exists('noriks_is_type') && noriks_is_type('bokserice') );
   $is_nogavice_page   = ( function_exists('noriks_is_type') && noriks_is_type('kompresijske-nogavice', $current_product_id) );
   $is_ortopas_page    = ( function_exists('noriks_is_type') && noriks_is_type('ortopas', $current_product_id) );
   $is_bunion_page     = ( function_exists('noriks_is_type') && noriks_is_type('bunion', $current_product_id) );
@@ -858,7 +864,7 @@ endif;
       $is_jastuk = false;
       $is_kidsnest = false;
       if ( $product_id ) {
-          $is_bokserice = has_term( array( 'bokserice','orto-bokserice', 'bokserice-sastavi-paket' ), 'product_cat', $product_id );
+          $is_bokserice = ( function_exists('noriks_is_type') && noriks_is_type('bokserice', $product_id) );
           $is_nogavice  = ( function_exists('noriks_is_type') && noriks_is_type('kompresijske-nogavice', $product_id) );
           $is_ortopas   = ( function_exists('noriks_is_type') && noriks_is_type('ortopas', $product_id) );
           $is_bunion    = ( function_exists('noriks_is_type') && noriks_is_type('bunion', $product_id) );
