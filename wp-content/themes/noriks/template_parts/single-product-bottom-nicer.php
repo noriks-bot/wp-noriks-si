@@ -911,6 +911,8 @@ endif;
           $args['category'] = [ 'kompresijske-nogavice', 'orto-kompresijske-nogavice', 'nogavice' ];
       } elseif ( $is_bokserice ) {
           $args['category'] = [ 'bokserice' ];
+      } elseif ( function_exists('noriks_is_type') && noriks_is_type('kneefix', $product_id) ) {
+          $args['category'] = [ 'orto-kneefix' ];
       } else {
           // Stranice majic: bazen SAMO iz kategorije majic (s podkategorijami).
           // Prej je jemal vse razen boksaric, zato so se mnenja o majicah
