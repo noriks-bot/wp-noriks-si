@@ -612,7 +612,19 @@ endif;
       <!--<h4 style="" class="highlight"><?php echo get_field("singlepp_content_standard_reviews_t1","options"); ?></h4>-->
       <h1 style="color:black;     margin-bottom: 4px;">
           
-          <?php if ( function_exists('noriks_is_type') && noriks_is_type('fisiorest') ): ?>
+          <?php if ( function_exists('noriks_is_type') && noriks_is_type('kneefix') ): ?>
+          
+          
+          
+          Nisi sam v iskanju stabilnejšega kolena.
+          
+          <?php elseif ( function_exists('noriks_is_type') && noriks_is_type('bokserice') ): ?>
+          
+          
+          
+          Nisi sam v iskanju popolnih boksaric.
+          
+          <?php elseif ( function_exists('noriks_is_type') && noriks_is_type('fisiorest') ): ?>
 
           Nisi sam v boju proti napetosti v vratu.
 
@@ -739,7 +751,8 @@ endif;
   if ( $is_leakboxers_page || $is_kompmajice_page || $is_jastuk_page || $is_kidsnest_page ) { $is_nogavice_page = false; }
 
   // Fallback product name shown in review cards.
-  $rv_fallback_title = $is_kidsnest_page ? 'NORIKS KidsNest vzglavnik'
+  $rv_fallback_title = ( function_exists('noriks_is_type') && noriks_is_type('kneefix') ) ? 'NORIKS KneeFix opornica za koleno'
+                     : ( $is_kidsnest_page ? 'NORIKS KidsNest vzglavnik'
                      : ( $is_jastuk_page ? 'NORIKS ErgoSit ortopedska blazina'
                      : ( $is_leakboxers_page ? 'NORIKS vpojne boksarice'
                      : ( $is_kompmajice_page ? 'NORIKS FIT kompresijska majica'
@@ -747,10 +760,12 @@ endif;
                      : ( $is_fisiorest_page ? 'NORIKS | FisioRest'
                      : ( $is_bunion_page ? 'NORIKS | Korektor haluksa'
                      : ( $is_ortopas_page ? 'NORIKS | Ortopedski pas'
-                     : ( $is_nogavice_page ? 'Kompresijske nogavice z zadrgo' : 'Ena Siva Majica' ) ) ) ) ) ) ) );
+                     : ( $is_nogavice_page ? 'Kompresijske nogavice z zadrgo' : 'Ena Siva Majica' ) ) ) ) ) ) ) ) );
 
   // Include review pools (own pool per product group)
-  if ( $is_kidsnest_page ) {
+  if ( ( function_exists('noriks_is_type') && noriks_is_type('kneefix') ) ) {
+    include get_stylesheet_directory() . '/auto_reviews/SI_kneefix.php';
+  } elseif ( $is_kidsnest_page ) {
     include get_stylesheet_directory() . '/auto_reviews/SI_kidsnest.php';
   } elseif ( $is_jastuk_page ) {
     include get_stylesheet_directory() . '/auto_reviews/SI_ortopedski_jastuk.php';
@@ -1130,7 +1145,8 @@ function assign_unique_avatars_first_n(array $reviews, array $avatar_pool, strin
   // Avatar pools based on page category
   $avatar_type = $is_bokserice_page ? 'bokserice' : 'majice';
   // Compression socks + belt + bunion + fisiorest + norikshers: text-only reviews (no avatar images).
-  $avatar_pool = ( $is_nogavice_page || $is_ortopas_page || $is_bunion_page || $is_fisiorest_page || $is_norikshers_page || $is_leakboxers_page || $is_kompmajice_page || $is_jastuk_page || $is_kidsnest_page ) ? array() : get_review_avatar_pool($avatar_type);
+  $avatar_pool = ( $is_bokserice_page || ( function_exists('noriks_is_type') && ( noriks_is_type('majice') || noriks_is_type('majica-darila') || noriks_is_type('starter') ) ) )
+      ? get_review_avatar_pool($avatar_type) : array();  // fotografije samo na majicah in boksaricah
 
   // LEAKBOX in FIT: kartice naj se sklicujejo na TA izdelek (prek $rv_fallback_title), ne na nakljucne izdelke.
 
