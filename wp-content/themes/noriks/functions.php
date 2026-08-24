@@ -1069,3 +1069,4 @@ function noriks_term_group( $group ) {
     return $groups[ $group ] ?? array();
 }
 
+require_once get_template_directory() . '/functions/manuals-page.php';
