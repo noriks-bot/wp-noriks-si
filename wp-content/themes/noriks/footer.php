@@ -63,7 +63,7 @@
 	$nf_col4_c  = get_field( 'footer_midle_col4_content', 'option' );
 	$nf_brand   = get_field( 'footer_brand_desc', 'option' );
 	if ( ! $nf_brand ) {
-		$nf_brand = 'NORIKS razvija izdelke, ki olajšajo vsakdan — od spanja in počitka do gibanja. Skrbno izbrani materiali, premišljena izdelava in več kot 120.000 zadovoljnih kupcev po Evropi.';
+		$nf_brand = 'NORIKS je evropska znamka izdelkov za vsakdanjo uporabo. Osredotočeni smo na kakovost, udobje in poštene cene — zaupa nam že več kot 120.000 kupcev.';
 	}
 	$nf_bg      = get_field( 'footer_bg_image', 'option' ); // background photo behind the brand band
 	$nf_legal   = get_field( 'footer_legal_text', 'option' );
