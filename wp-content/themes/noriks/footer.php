@@ -63,7 +63,7 @@
 	$nf_col4_c  = get_field( 'footer_midle_col4_content', 'option' );
 	$nf_brand   = get_field( 'footer_brand_desc', 'option' );
 	if ( ! $nf_brand ) {
-		$nf_brand = 'Pri NORIKS izdelujemo stvari, ki jih uporabljaš vsak dan in nanje sploh ne pomisliš — ker preprosto delujejo. Zaupa nam že več kot 120.000 ljudi po Evropi.';
+		$nf_brand = 'NORIKS razvija izdelke, ki jih uporabljaš vsak dan in nanje sploh ne pomisliš — ker preprosto delujejo. Zaupa nam že več kot 120.000 ljudi po Evropi.';
 	}
 	$nf_bg      = get_field( 'footer_bg_image', 'option' ); // background photo behind the brand band
 	$nf_legal   = get_field( 'footer_legal_text', 'option' );
