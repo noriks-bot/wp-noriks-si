@@ -173,13 +173,13 @@ $oj_img = function( $file, $alt ) use ( $oj ) {
   </div>
 </section>
 
-<!-- ============ 11) Preizkusite 60 dni — TEMNA, značka LEVO, tekst DESNO ============ -->
+<!-- ============ 11) Preizkusite 30 dni — TEMNA, značka LEVO, tekst DESNO ============ -->
 <section class="oj-sec oj-guar-sec">
   <div class="oj-wrap">
   <div class="oj-guarantee oj-row2">
     <div class="oj-guar-badge"><?php echo $oj_img('15_znacka_30_dana.png','30-dnevna garancija vračila denarja'); ?></div>
     <div class="oj-guar-copy">
-      <h2 class="oj-h2 oj-h2-light">Preizkusite <em class="oj-pink-i">60 dni</em>, brez skrbi</h2>
+      <h2 class="oj-h2 oj-h2-light">Preizkusite <em class="oj-pink-i">30 dni</em>, brez skrbi</h2>
       <p>Najti pravo blazino ni lahko — mnoge se sploščijo ali preprosto ne prinesejo pravega olajšanja. Zato je vsaki NORIKS <strong>ErgoSit</strong> priložena naša <strong>30-dnevna garancija udobja</strong>.</p>
       <p>Vzemite jo v pisarno, v avto ali za dolge ure doma. Če ne občutite manj bolečin in več udobja pri vsakodnevnem sedenju, bo naša ekipa poskrbela, da bo, kot mora biti.</p>
       <p>Kajti ko gre za vaše zdravje in udobje, verjamemo, da morate razliko <strong>občutiti</strong>, ne le upati nanjo.</p>

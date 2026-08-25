@@ -7887,7 +7887,7 @@ setDeliveryDate();
 <!-- Payment and delivery features (styles in auto shared resourse "Cart CSS") -->
 <div class="paydel-features">
 	<div class="paydel-features__item">
-		<strong class="paydel-features__text" style="margin-inline: auto;">90-dnevna mo&#x17E;nost vra&#x10D;ila kupnine</strong>
+		<strong class="paydel-features__text" style="margin-inline: auto;">30-dnevna mo&#x17E;nost vra&#x10D;ila kupnine</strong>
 	</div>
 	<hr style="display: block; margin: 0.5rem 0; background-color: #dbdbdb; border: none; height: 0.0625rem;">
 

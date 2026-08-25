@@ -750,7 +750,7 @@ $is_mixed_bundle = has_term( array( 'black-friday', 'majice-in-boksarice-paketi'
       </div>
       <div class="accordion-content">
        <p></p>
-       Tako smo prepričani, da boste NORIKS obožali, da imate <b data-stringify-type="bold">30 dni</b> za vračilo ali brezplačno zamenjavo.
+       Tako smo prepričani, da boste NORIKS obožali, da imate <b data-stringify-type="bold">30 dni</b> za vračilo ali zamenjavo.
 Brez papirologije, brez stresa – rešimo vse v par klikih. </p>
 
 <p>
