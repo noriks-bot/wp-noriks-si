@@ -25,7 +25,7 @@ $bun_results = array(
 
 // Zakaj izbrati nas — primerjava (isti stil kot knc-table na nogavicah z zadrgo)
 $bun_cmp = array(
-    '90-dnevna garancija vračila denarja',
+    '30-dnevna garancija vračila denarja',
     'Blaži nelagodje',
     'Preprečuje rast haluksa',
     'Sčasoma izboljša stanje haluksa',
@@ -116,7 +116,7 @@ $bun_steps = array(
         <li><strong>Nastavljiva</strong> intenzivnost raztezanja</li>
         <li>Zasnovan in priporočen s strani <strong>medicinskih strokovnjakov</strong></li>
         <li><strong>Preprost za uporabo</strong> in prenosen</li>
-        <li><strong>90-dnevna garancija vračila denarja</strong> („rezultati ali polno vračilo"), ker smo tako prepričani v svoj izdelek in vemo, da vam bo pomagal</li>
+        <li><strong>30-dnevna garancija vračila denarja</strong> („rezultati ali polno vračilo"), ker smo tako prepričani v svoj izdelek in vemo, da vam bo pomagal</li>
       </ul>
     </div>
     <div class="bun-col bun-media">

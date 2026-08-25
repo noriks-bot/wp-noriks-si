@@ -46,7 +46,7 @@ $opz_cmp_rows = array(
     array( 'Ugodna cena',                    true,  false ),
     array( 'Takojšnja sprostitev',           true,  false ),
     array( 'Brez čakanja',                   true,  false ),
-    array( '60-dnevna garancija vračila denarja', true, false ),
+    array( '30-dnevna garancija vračila denarja', true, false ),
     array( 'Dolgoročni stroški',             false, true  ),
 );
 /* Mnenja s sliko — 8) sekcija */

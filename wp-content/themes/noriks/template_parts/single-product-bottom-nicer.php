@@ -1674,7 +1674,7 @@ $ortopas_faq = array(
   array( 'questioon' => 'Ali lahko pas nosim tudi med spanjem?', 'answer' => 'Da, pas lahko nosite tudi ponoči. Trajanje nošenja ni omejeno in daljše nošenje nima negativnih učinkov.' ),
   array( 'questioon' => 'Kako tesno naj ga namestim?', 'answer' => 'Pas se mora tesno prilegati, a ne pretesno, da se izognete nelagodju. Brez težav se morate gibati, ne da bi pas zarezoval ali zdrsnil. Napetost je z elastičnimi trakovi enostavno nastavljiva.' ),
   array( 'questioon' => 'Komu ga priporočate?', 'answer' => 'Vsem, ki se spopadajo z bolečinami v križu, išiasom, mišično napetostjo, kilo medvretenčne ploščice, bolečinami v kolkih ali medenici ter težavami s SI-sklepom. Ne glede na starost, spol, višino in težo.' ),
-  array( 'questioon' => 'Ali obstaja garancija vračila denarja?', 'answer' => 'Ponujamo garancijo zadovoljstva! Če s pasom NORIKS niste zadovoljni, nas kontaktirajte na info@noriks.com za vračilo in povračilo v 90 dneh. Rok se šteje od prejema pasu.' ),
+  array( 'questioon' => 'Ali obstaja garancija vračila denarja?', 'answer' => 'Ponujamo garancijo zadovoljstva! Če s pasom NORIKS niste zadovoljni, nas kontaktirajte na info@noriks.com za vračilo in povračilo v 30 dneh. Rok se šteje od prejema pasu.' ),
 );
 
 // FisioRest — FAQ o izdelku (prevod, NORIKS).
@@ -1686,7 +1686,7 @@ $fisiorest_faq = array(
   array( 'questioon' => 'Ali je FisioRest brezžičen?', 'answer' => 'Da! NORIKS FisioRest je popolnoma brezžičen in polnilen za vsakodnevno uporabo.' ),
   array( 'questioon' => 'Kako se čisti FisioRest?', 'answer' => 'Tkanina je odporna na olja in prah, vendar priporočamo, da FisioRest po uporabi obrišete z razkuževalnim robčkom, saj prevleka blazine ni pralna.' ),
   array( 'questioon' => 'Ali je varen za vse?', 'answer' => 'NORIKS FisioRest je zasnovan tako, da ustreza vsem, ne glede na starost ali spol. Vendar je vsaka situacija drugačna. Za podrobne smernice, prilagojene vašim potrebam, priporočamo posvet z zdravnikom.' ),
-  array( 'questioon' => 'Ali ga lahko vrnem, če ne vidim rezultatov?', 'answer' => 'Seveda! Nudimo polno garancijo vračila denarja v 90 dneh od dostave, če z izdelkom niste zadovoljni. Pišite nam na info@noriks.com in odgovorili bomo v 12 urah od prejema sporočila!' ),
+  array( 'questioon' => 'Ali ga lahko vrnem, če ne vidim rezultatov?', 'answer' => 'Seveda! Nudimo polno garancijo vračila denarja v 30 dneh od dostave, če z izdelkom niste zadovoljni. Pišite nam na info@noriks.com in odgovorili bomo v 12 urah od prejema sporočila!' ),
 );
 
 // Compression-sock benefit content — replaces ONLY the product-info FAQ
@@ -1776,7 +1776,7 @@ $jastuk_faq = array(
   array( 'questioon' => 'Ali se prevleka lahko pere?', 'answer' => 'Da. Prevleka se sname in lahko pere v pralnem stroju, zato blazina ostane sveža in čista. Tkanina je zračna, hipoalergena in OEKO-TEX® certificirana.' ),
   array( 'questioon' => 'Ali ustreza mojemu stolu ali sedežu?', 'answer' => 'ErgoSit je univerzalne oblike in se prilega večini avtosedežev, pisarniških in kuhinjskih stolov ter invalidskih vozičkov. Velikosti ni — en model ustreza vsem.' ),
   array( 'questioon' => 'V kolikšnem času občutim razliko?', 'answer' => 'Večina uporabnikov občuti manj pritiska na trtico in udobnejše sedenje že od prvega dne. Za boljšo držo in manj bolečin v hrbtu se učinek dodatno stopnjuje z redno uporabo.' ),
-  array( 'questioon' => 'Ali obstaja garancija vračila denarja?', 'answer' => 'Da, vsaki NORIKS ErgoSit je priložena 60-dnevna garancija udobja. Če ne občutite manj bolečin in več udobja, nas kontaktirajte in bomo uredili.' ),
+  array( 'questioon' => 'Ali obstaja garancija vračila denarja?', 'answer' => 'Da, vsaki NORIKS ErgoSit je priložena 30-dnevna garancija udobja. Če ne občutite manj bolečin in več udobja, nas kontaktirajte in bomo uredili.' ),
 );
 
 $kidsnest_faq = array(
