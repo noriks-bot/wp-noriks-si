@@ -105,9 +105,8 @@
 			<div class="nf-wrap nf-main-grid">
 
 				<div class="nf-brand-col">
-					<p class="nf-brand-tagline">Udobje, ki postane samoumevno.</p>
 					<p class="nf-brand-desc"><?php echo esc_html( $nf_brand ); ?></p>
-					<a class="nf-btn nf-btn-outline" href="/si/shop">Poglej kolekcijo</a>
+					<a class="nf-btn nf-btn-outline" href="/si/shop">Nakupuj zdaj</a>
 				</div>
 
 				<nav class="nf-links">
