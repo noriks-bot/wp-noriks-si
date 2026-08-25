@@ -146,7 +146,7 @@ $nh = get_template_directory_uri() . '/img/norikshers/';
           <p><?php echo wp_kses_post($s['t']); ?></p>
         </div>
       <?php endforeach; ?>
-      <a class="nhs-cta nhs-cta-solid" href="#bundle-selector">Preizkusite brez tveganja 30 dni</a>
+      <a class="nhs-cta nhs-cta-solid" href="#bundle-selector">Preizkusite brez tveganja 14 dni</a>
       <p class="nhs-cta-note"><em>Niste navdušeni? Polno vračilo!</em></p>
     </div>
   </div>

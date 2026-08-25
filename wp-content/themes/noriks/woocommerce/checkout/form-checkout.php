@@ -91,7 +91,7 @@ if ( WC()->cart->is_empty() ) return;
     <img decoding="async" src="https://images.vigo-shop.com/general/guarantee_money_back/satisfaction_icon_hr.png">
   </div>
   <div class="flex__item--autosize f--m checkout-warranty__text">
-    <strong>Nakupujte brez skrbi </strong><br>Vračilo denarja je mogoče v roku 90 dni
+    <strong>Nakupujte brez skrbi </strong><br>Vračilo denarja je mogoče v roku 14 dni
   </div>
 </div>
 

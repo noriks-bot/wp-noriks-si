@@ -52,15 +52,15 @@
   <div class="marquee">
     <div class="marquee-content">
       <span><a href="/si/shop"><?php echo $mq_ico_truck; ?>Brezplačna dostava za naročila nad 70 €</a></span>
-      <span><a href="/si/shop"><?php echo $mq_ico_shield; ?>30 dni brez tveganja – preizkusi brez skrbi</a></span>
+      <span><a href="/si/shop"><?php echo $mq_ico_shield; ?>14 dni brez tveganja – preizkusi brez skrbi</a></span>
 
       <!-- DUPLICATED for seamless infinite loop -->
       <span><a href="/si/shop"><?php echo $mq_ico_truck; ?>Brezplačna dostava za naročila nad 70 €</a></span>
-      <span><a href="/si/shop"><?php echo $mq_ico_shield; ?>30 dni brez tveganja – preizkusi brez skrbi</a></span>
+      <span><a href="/si/shop"><?php echo $mq_ico_shield; ?>14 dni brez tveganja – preizkusi brez skrbi</a></span>
 
        <!-- DUPLICATED for seamless infinite loop -->
       <span><a href="/si/shop"><?php echo $mq_ico_truck; ?>Brezplačna dostava za naročila nad 70 €</a></span>
-      <span><a href="/si/shop"><?php echo $mq_ico_shield; ?>30 dni brez tveganja – preizkusi brez skrbi</a></span>
+      <span><a href="/si/shop"><?php echo $mq_ico_shield; ?>14 dni brez tveganja – preizkusi brez skrbi</a></span>
     </div>
   </div>
 </div>
