@@ -276,21 +276,6 @@ Preizkusi NORIKS po boljši vstopni ceni.
       </div>
     </a>
 
-    <!-- Card 4 - Nogavice (compression socks) -->
-    <a class="collection-card" href="/si/product-category/nogavice/">
-      <div class="collection-card__media">
-        <img src="https://devhr.noriks.com/wp-content/uploads/2025/11/stumfi_beli-crni_10paket-683x1024.jpg" alt="Nogavice" />
-      </div>
-      <div class="collection-card__body">
-        <div class="collection-card__text">
-          <div class="collection-card__topline">
-            <h3 class="collection-card__name">Nogavice</h3>
-          </div>
-          <p class="collection-card__desc">Za lažje in bolj spočite noge.</p>
-        </div>
-        <span class="collection-card__arrow" aria-hidden="true">›</span>
-      </div>
-    </a>
 
 
   </div>
