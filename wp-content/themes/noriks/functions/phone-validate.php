@@ -78,7 +78,7 @@ function noriks_tel_intl( $raw ) {
 
 /* Primer stevilke — enak, kot ga ze izrisemo pod poljem
    (css/checkout.css, #billing_phone_field::after). */
-define( 'NORIKS_TEL_EXAMPLE', '040 688 722' );
+define( 'NORIKS_TEL_EXAMPLE', '031234567' );
 
 /** Sporocilo ob napacni stevilki — eno samo mesto za vse trge. */
 function noriks_tel_message() {
