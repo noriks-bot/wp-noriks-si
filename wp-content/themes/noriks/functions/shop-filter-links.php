@@ -3,84 +3,123 @@
  * NORIKS — filtri kategorij brez vticnika YITH.
  *
  * Nadomesti [yith_wcan_filters slug="..."] v woocommerce/archive-product.php.
+ * Filtri so v praksi le povezave na (pod)kategorije, zato jih izrisemo sami.
  *
- * Filtri so bili v praksi le povezave na kategorije, zato jih izrisemo sami:
- *   - na strani trgovine  -> izbrane vrhnje kategorije
- *   - v kategoriji z otroki -> njeni otroci
- *   - v kategoriji brez otrok -> sorojenci (da lahko kupec preklaplja)
+ * ZAKAJ SEZNAM SPODAJ IN NE SAMODEJNO BRANJE KATEGORIJ:
+ * napisi v vticniku NISO imena kategorij (kategorija "3-paket majic" se prikaze
+ * kot "3-paket", "Barve" kot "Barvne"), vrstni red pa ni abecedni (1, 3, 6, 9,
+ * 12, 15 — abecedno bi bilo 1, 12, 15, 3, 6, 9). Seznam je zato posnet z ZIVE
+ * strani pred izklopom vticnika, da napisi in vrstni red ostanejo isti.
+ *
+ * Ce stran ni na seznamu, koda samodejno izrise podkategorije (rezerva).
  *
  * Povezave so DIREKTNE na kategorijo (get_term_link), brez ?yith_wcan= parametrov.
- *
- * Razredi so namenoma enaki kot pri vticniku, da ostane videz nespremenjen;
- * potreben del sloga je prenesen v noriks_shop_filter_links_css().
  */
 
 if ( ! defined( 'ABSPATH' ) ) exit;
 
 /**
- * Katere vrhnje kategorije naj se pokazejo na strani trgovine.
- * Po trgih se slugi razlikujejo, zato pustimo filter za popravke.
+ * Posneto z zive strani. Kljuc je slug starsevske kategorije,
+ * "__shop__" pa je stran trgovine. Vrstni red vpisov = vrstni red na strani.
  */
-function noriks_shop_filter_root_slugs() {
-	return apply_filters( 'noriks_shop_filter_root_slugs', array(
-		'bestsellers',
-		'zacetni-paketi',
-		'veliki-paketi',
+function noriks_shop_filter_map() {
+	return apply_filters( 'noriks_shop_filter_map', array(
+		'__shop__' => array(
+			'bestsellers' => 'Bestsellers',
+			'zacetni-paketi' => 'Starter paketi',
+			'veliki-paketi' => 'Veliki paketi',
+		),
+		'boksarice' => array(
+			'1-kos-boksarice' => '1 kos',
+			'3-paket-boksarice' => '3-paket',
+			'5-paket-boksarice' => '5-paket',
+			'7-paket-boksarice' => '7-paket',
+			'10-paket-boksarice' => '10-paket',
+			'15-paket-boksarice' => '15-paket',
+			'crne' => 'Črne',
+			'barve-boksarice' => 'Barvne',
+		),
+		'bundles' => array(
+			'bestsellers' => 'Bestsellers',
+			'zacetni-paketi' => 'Starter paketi',
+			'veliki-paketi' => 'Veliki paketi',
+		),
+		'kompleti' => array(
+			'komplet-2-5' => 'Komplet: 2+5',
+			'komplet-4-10' => 'Komplet: 4+10',
+			'komplet-5-5' => 'Komplet: 5+5',
+		),
+		'majice' => array(
+			'1-kos-majice' => '1 kos',
+			'3-paket-majic' => '3-paket',
+			'6-paket-majic' => '6-paket',
+			'9-paket-majic' => '9-paket',
+			'12-paket-majic' => '12-paket',
+			'15-paket-majic' => '15-paket',
+			'crne-majice' => 'Črne',
+			'barve-majice' => 'Barvne',
+		),
+		'nogavice' => array(
+			'crne-nogavice' => 'Črne',
+			'bele' => 'Bele',
+		)
 	) );
 }
 
 /**
- * Vrne seznam terminov (WP_Term), ki naj se izrisejo na trenutni strani.
+ * Vrne pare slug => napis za trenutno stran.
  */
-function noriks_shop_filter_terms() {
+function noriks_shop_filter_items() {
 
-	$args = array(
-		'taxonomy'   => 'product_cat',
-		'hide_empty' => true,
-		'orderby'    => 'name',
-		'order'      => 'ASC',
-	);
+	$map = noriks_shop_filter_map();
 
-	// Stran trgovine -> vnaprej dolocene vrhnje kategorije, v zapisanem vrstnem redu.
 	if ( is_shop() ) {
-		$out = array();
-		foreach ( noriks_shop_filter_root_slugs() as $slug ) {
-			$t = get_term_by( 'slug', $slug, 'product_cat' );
-			if ( $t && ! is_wp_error( $t ) && $t->count > 0 ) $out[] = $t;
-		}
-		return $out;
+		return isset( $map['__shop__'] ) ? $map['__shop__'] : array();
 	}
 
 	if ( ! is_product_category() ) return array();
 
-	$current = get_queried_object();
-	if ( ! $current || ! isset( $current->term_id ) ) return array();
+	$term = get_queried_object();
+	if ( ! $term || ! isset( $term->slug ) ) return array();
 
-	// Kategorija z otroki -> pokazi otroke.
-	$children = get_terms( array_merge( $args, array( 'parent' => $current->term_id ) ) );
-	if ( ! is_wp_error( $children ) && ! empty( $children ) ) return $children;
+	// Kategorija je na seznamu -> uporabi posnete napise in vrstni red.
+	if ( isset( $map[ $term->slug ] ) ) return $map[ $term->slug ];
 
-	// Brez otrok -> pokazi sorojence, da se da preklapljati znotraj iste skupine.
-	if ( $current->parent ) {
-		$siblings = get_terms( array_merge( $args, array( 'parent' => $current->parent ) ) );
-		if ( ! is_wp_error( $siblings ) && ! empty( $siblings ) ) return $siblings;
+	// Podkategorija (npr. /majice/3-paket-majic) -> pokazi seznam starsa,
+	// tako kot je delal vticnik.
+	if ( $term->parent ) {
+		$parent = get_term( $term->parent, 'product_cat' );
+		if ( $parent && ! is_wp_error( $parent ) && isset( $map[ $parent->slug ] ) ) {
+			return $map[ $parent->slug ];
+		}
 	}
 
-	return array();
+	// Rezerva: samodejno izrisi podkategorije z izdelki.
+	$children = get_terms( array(
+		'taxonomy'   => 'product_cat',
+		'parent'     => $term->term_id,
+		'hide_empty' => true,
+		'orderby'    => 'name',
+	) );
+	$out = array();
+	if ( ! is_wp_error( $children ) ) {
+		foreach ( $children as $c ) $out[ $c->slug ] = $c->name;
+	}
+	return $out;
 }
 
 /**
- * Izris. Klici v archive-product.php: <?php noriks_shop_filter_links(); ?>
+ * Izris. Klic v archive-product.php: noriks_shop_filter_links();
  */
 function noriks_shop_filter_links() {
 
-	$terms = noriks_shop_filter_terms();
-	if ( empty( $terms ) ) return;
+	$items = noriks_shop_filter_items();
+	if ( empty( $items ) ) return;
 
-	$current_id = 0;
+	$current = '';
 	if ( is_product_category() ) {
 		$q = get_queried_object();
-		if ( $q && isset( $q->term_id ) ) $current_id = (int) $q->term_id;
+		if ( $q && isset( $q->slug ) ) $current = $q->slug;
 	}
 
 	echo '<div class="yith-wcan-filters no-title noriks-filters">';
@@ -89,21 +128,23 @@ function noriks_shop_filter_links() {
 	echo '<div class="filter-content">';
 	echo '<ul class="filter-items filter-label level-0">';
 
-	foreach ( $terms as $t ) {
-		$link = get_term_link( $t );
-		if ( is_wp_error( $link ) ) continue;
+	foreach ( $items as $slug => $label ) {
 
-		$active = ( (int) $t->term_id === $current_id ) ? ' active' : '';
+		$term = get_term_by( 'slug', $slug, 'product_cat' );
+		if ( ! $term || is_wp_error( $term ) ) continue;   // kategorije ni vec -> preskoci
+
+		$link = get_term_link( $term );
+		if ( is_wp_error( $link ) ) continue;
 
 		printf(
 			'<li class="filter-item label level-0 no-image label-right%1$s">'
 			. '<a href="%2$s" role="button" data-term-id="%3$d" data-term-slug="%4$s">'
 			. '<span class="term-label">%5$s</span></a></li>',
-			esc_attr( $active ),
+			( $slug === $current ) ? ' active' : '',
 			esc_url( $link ),
-			(int) $t->term_id,
-			esc_attr( $t->slug ),
-			esc_html( $t->name )
+			(int) $term->term_id,
+			esc_attr( $slug ),
+			esc_html( $label )
 		);
 	}
 
@@ -111,18 +152,15 @@ function noriks_shop_filter_links() {
 }
 
 /**
- * Slog. Prenesen iz vticnikovega shortcodes.css (samo pravila za te "cipe")
- * in iz njegovega inline sloga (barvne spremenljivke), da videz ostane isti
- * tudi po izklopu vticnika.
+ * Slog: prenesen iz vticnikovega shortcodes.css (samo pravila za te "cipe")
+ * in iz njegovega vgrajenega sloga (barvne spremenljivke), da videz po izklopu
+ * vticnika ostane nespremenjen.
  */
 function noriks_shop_filter_links_css() {
 	if ( ! is_shop() && ! is_product_category() ) return;
 	?>
 <style id="noriks-filter-links-css">
 :root{
-	--yith-wcan-filters_colors_titles: #333333;
-	--yith-wcan-filters_colors_background: #FFFFFF;
-	--yith-wcan-filters_colors_accent: rgb(222,222,222);
 	--yith-wcan-labels_style_background: #FFFFFF;
 	--yith-wcan-labels_style_background_hover: rgb(222,222,222);
 	--yith-wcan-labels_style_background_active: rgb(222,222,222);
@@ -130,8 +168,7 @@ function noriks_shop_filter_links_css() {
 	--yith-wcan-labels_style_text_hover: rgb(0,0,0);
 	--yith-wcan-labels_style_text_active: rgb(0,0,0);
 }
-.yith-wcan-filters .yith-wcan-filter .filter-items { float: none; list-style: none; padding-left: 0; }
-.yith-wcan-filters .yith-wcan-filter .filter-items.level-0 { margin: 0; padding: 0; }
+.yith-wcan-filters .yith-wcan-filter .filter-items { float: none; list-style: none; padding-left: 0; margin: 0; }
 .yith-wcan-filters .yith-wcan-filter .filter-items.filter-label { font-size: 0; margin: 0 -5px; }
 .yith-wcan-filters .yith-wcan-filter.label-design .filter-items { font-size: 0; }
 .yith-wcan-filters .yith-wcan-filter .filter-item.label { display: inline-block; margin: 0 5px 10px; vertical-align: top; }
