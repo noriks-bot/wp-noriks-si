@@ -83,12 +83,25 @@
       
      
       
-    <img
-    
-    style="margin-top: 70px;margin-bottom: 70px;"
-    
-      src="https://noriks.com/si/wp-content/uploads/2026/04/bokserice_si.jpg"
-      alt="Size Guide">
+    <div class="size-chart-titlebar" style="padding:14px 16px;border-bottom:1px solid #eee;"><h2 style="margin:0;font-size:18px;">Tabela velikosti</h2></div>
+<div style="padding:16px;width:100%;">
+<div class="noriks-bx-wrap">
+          <table class="noriks-bx-t">
+            <thead>
+              <tr><th>Velikost</th><th>S</th><th>M</th><th>L</th><th>XL</th><th>2XL</th><th>3XL</th><th>4XL</th></tr>
+            </thead>
+            <tbody>
+              <tr><th>a</th><td>32</td><td>34</td><td>36</td><td>38</td><td>40</td><td>42</td><td>44</td></tr>
+              <tr><th>b</th><td>33,5</td><td>34,5</td><td>35,5</td><td>36,5</td><td>37,5</td><td>38,5</td><td>39,5</td></tr>
+              <tr><th>c</th><td>21</td><td>22</td><td>23</td><td>24</td><td>25</td><td>26</td><td>27</td></tr>
+              <tr><th>d</th><td>29</td><td>30</td><td>31</td><td>32</td><td>33</td><td>34</td><td>35</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <img class="noriks-bx-fig" src="<?php echo esc_url( get_template_directory_uri() . '/img/boxers-measure.webp' ); ?>"
+             alt="Mere boksaric: a, b, c, d" loading="lazy">
+        <p class="noriks-bx-note"><strong>Izberite isto številko, kot jo običajno nosite.</strong><br>Mere so v centimetrih. Velikosti lahko odstopajo &plusmn;1&ndash;2 cm. Če ste med dvema velikostma, izberite manjšo &mdash; material je raztegljiv.</p>
+</div>
       
       
       
