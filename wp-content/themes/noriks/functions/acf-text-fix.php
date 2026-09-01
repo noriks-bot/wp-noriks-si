@@ -26,12 +26,10 @@ if ( ! function_exists( 'noriks_no_free_exchange' ) ) {
 }
 
 if ( ! function_exists( 'noriks_strip_free' ) ) {
-    /** Zdruzljivost s prejsnjo razlicico. */
     function noriks_strip_free( $txt ) { return noriks_no_free_exchange( $txt ); }
 }
 
 if ( ! function_exists( 'noriks_fix_days' ) ) {
-    /** Popravi zastarel rok dostave v ACF besedilu. */
     function noriks_fix_days( $txt ) {
         if ( ! is_string( $txt ) || $txt === '' ) { return $txt; }
         return $txt;
