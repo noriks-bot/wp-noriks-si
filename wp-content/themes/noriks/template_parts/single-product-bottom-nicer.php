@@ -1824,7 +1824,7 @@ $faq_pick = function( $title, $list ) use ( $is_knc, $knc_faq, $is_ortopas_faq, 
               ?>
                     <div class="faq-item">
                       <button class="faq-question">
-                         <?php echo $faq_item["questioon"]; ?>
+                         <?php echo function_exists('noriks_no_free_exchange') ? noriks_no_free_exchange( $faq_item["questioon"] ) : $faq_item["questioon"]; ?>
                         <span class="arrow">&#9660;</span>
                       </button>
                       <div class="faq-answer">
@@ -1851,7 +1851,7 @@ $faq_pick = function( $title, $list ) use ( $is_knc, $knc_faq, $is_ortopas_faq, 
               ?>
                     <div class="faq-item">
                       <button class="faq-question">
-                         <?php echo $faq_item["questioon"]; ?>
+                         <?php echo function_exists('noriks_no_free_exchange') ? noriks_no_free_exchange( $faq_item["questioon"] ) : $faq_item["questioon"]; ?>
                         <span class="arrow">&#9660;</span>
                       </button>
                       <div class="faq-answer">
@@ -1878,7 +1878,7 @@ $faq_pick = function( $title, $list ) use ( $is_knc, $knc_faq, $is_ortopas_faq, 
               ?>
                     <div class="faq-item">
                       <button class="faq-question">
-                         <?php echo $faq_item["questioon"]; ?>
+                         <?php echo function_exists('noriks_no_free_exchange') ? noriks_no_free_exchange( $faq_item["questioon"] ) : $faq_item["questioon"]; ?>
                         <span class="arrow">&#9660;</span>
                       </button>
                       <div class="faq-answer">
