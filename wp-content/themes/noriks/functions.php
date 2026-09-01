@@ -8,6 +8,7 @@
 include(get_template_directory() . '/functions/product-type.php'); // central product-type resolver (load first)
 include(get_template_directory() . '/functions/pack-switcher.php'); // izbira velikosti paketa + druge kombinacije barv (X-paket izdelki)
 include(get_template_directory() . '/functions/flash-deals-banner.php'); // traka sezonske rasprodaje
+include(get_template_directory() . '/functions/size-chart-once.php'); // tabela velikosti samo enkrat
 include(get_template_directory() . '/functions/checkout_mods.php');
 include(get_template_directory() . '/functions/acf-text-fix.php'); // popravki besedil iz ACF nastavitev
 include(get_template_directory() . '/functions/out-of-stock-notice.php'); // obvestilo ni na zalogi
@@ -859,7 +860,7 @@ function add_second_product_thumbnail() {
 /* Slick/Glide carousel assets removed */
 
 add_action( 'woocommerce_before_variations_form', function() {
-    get_template_part( 'template_parts/size-chart-modal' );
+    noriks_size_chart_once();
 });
 
 add_filter('woocommerce_get_image_size_thumbnail', 'custom_large_shop_thumbnail');
