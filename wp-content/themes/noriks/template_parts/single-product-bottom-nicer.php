@@ -18,6 +18,8 @@ if ( function_exists( 'noriks_is_type' ) ) {
         get_template_part( 'template_parts/product-bottom/why-ortopedski-jastuk' );
     } elseif ( noriks_is_type( 'kneefix' ) ) {
         get_template_part( 'template_parts/product-bottom/why-kneefix' );
+    } elseif ( noriks_is_type( 'controlpro' ) ) {
+        get_template_part( 'template_parts/product-bottom/why-controlpro' );
     } elseif ( noriks_is_type( 'kidsnest' ) ) {
         get_template_part( 'template_parts/product-bottom/why-kidsnest' );
     } elseif ( noriks_is_type( 'leakboxers' ) ) {
@@ -618,6 +620,7 @@ endif;
           
           Nisi sama v iskanju gladke kože brez gubic.
           
+          <?php elseif ( function_exists('noriks_is_type') && noriks_is_type('controlpro') ): ?>Niste edini, ki mu Keglove vaje niso prinesle rezultata.
           <?php elseif ( function_exists('noriks_is_type') && noriks_is_type('kneefix') ): ?>
           
           
@@ -767,9 +770,12 @@ endif;
                      : ( $is_bunion_page ? 'NORIKS | Korektor haluksa'
                      : ( $is_ortopas_page ? 'NORIKS | Ortopedski pas'
                      : ( $is_nogavice_page ? 'Kompresijske nogavice z zadrgo' : 'Ena Siva Majica' ) ) ) ) ) ) ) ) );
+  if ( function_exists('noriks_is_type') && noriks_is_type('controlpro') ) { $rv_fallback_title = 'NORIKS ControlPro trener medeničnega dna'; }
 
   // Include review pools (own pool per product group)
-  if ( ( function_exists('noriks_is_type') && noriks_is_type('kneefix') ) ) {
+  if ( ( function_exists('noriks_is_type') && noriks_is_type('controlpro') ) ) {
+    include get_stylesheet_directory() . '/auto_reviews/SI_controlpro.php';
+  } elseif ( ( function_exists('noriks_is_type') && noriks_is_type('kneefix') ) ) {
     include get_stylesheet_directory() . '/auto_reviews/SI_kneefix.php';
   } elseif ( $is_kidsnest_page ) {
     include get_stylesheet_directory() . '/auto_reviews/SI_kidsnest.php';
@@ -921,6 +927,8 @@ endif;
           $args['category'] = [ 'bokserice' ];
       } elseif ( function_exists('noriks_is_type') && noriks_is_type('kneefix', $product_id) ) {
           $args['category'] = [ 'orto-kneefix' ];
+        } elseif ( function_exists('noriks_is_type') && noriks_is_type('controlpro', $product_id) ) {
+          $args['category'] = [ 'orto-controlpro' ];
       } else {
           // Stranice majic: bazen SAMO iz kategorije majic (s podkategorijami).
           // Prej je jemal vse razen boksaric, zato so se mnenja o majicah
@@ -1650,6 +1658,7 @@ $faq_list2 = get_field('faq_list_2', 'option');
 $faq_list3 = get_field('faq_list_3', 'option');
 
 $is_knc = ( function_exists('noriks_is_type') && noriks_is_type('kompresijske-nogavice') );
+$is_controlpro_faq = ( function_exists('noriks_is_type') && noriks_is_type('controlpro') );
 $is_ortopas_faq   = ( function_exists('noriks_is_type') && noriks_is_type('ortopas') );
 $is_bunion_faq    = ( function_exists('noriks_is_type') && noriks_is_type('bunion') );
 $is_fisiorest_faq = ( function_exists('noriks_is_type') && noriks_is_type('fisiorest') );
@@ -1717,7 +1726,7 @@ $is_kompmajice_faq = ( function_exists('noriks_is_type') && noriks_is_type('komp
 $is_jastuk_faq     = ( function_exists('noriks_is_type') && noriks_is_type('ortopedski-jastuk') );
 $is_kidsnest_faq   = ( function_exists('noriks_is_type') && noriks_is_type('kidsnest') );
 // Ti izdelki lahko nosijo kategorijo nogavic, a to niso nogavice.
-if ( $is_leakboxers_faq || $is_kompmajice_faq || $is_jastuk_faq || $is_kidsnest_faq ) { $is_knc = false; }
+if ( $is_controlpro_faq || $is_leakboxers_faq || $is_kompmajice_faq || $is_jastuk_faq || $is_kidsnest_faq ) { $is_knc = false; }
 
 $leakboxers_faq = array(
   array(
@@ -1788,8 +1797,21 @@ $kidsnest_faq = array(
   array( 'questioon' => 'Kaj pa, če mojemu otroku ne pomaga?', 'answer' => 'Naj otrok spi na KidsNestu 30 noči. Če ne vidite razlike — manj dihanja skozi usta, tišje noči, mirnejši spanec — nam pišite in vrnemo denar. Brez vprašanj in brez drobnega tiska.' ),
 );
 
-$faq_pick = function( $title, $list ) use ( $is_knc, $knc_faq, $is_ortopas_faq, $ortopas_faq, $is_bunion_faq, $bunion_faq, $is_fisiorest_faq, $fisiorest_faq, $is_norikshers_faq, $norikshers_faq, $is_leakboxers_faq, $leakboxers_faq, $is_kompmajice_faq, $kompmajice_faq, $is_jastuk_faq, $jastuk_faq, $is_kidsnest_faq, $kidsnest_faq ) {
+$controlpro_faq = array(
+  array( 'questioon' => 'Kako se uporablja?', 'answer' => 'Sedite na stol, napravo postavite <strong>med kolena</strong> in stiskate proti uporu. Priporočene so <strong>3 serije po 10 ponovitev na dan</strong>, kar traja približno pet minut.' ),
+  array( 'questioon' => 'Ali je treba kaj vstavljati?', 'answer' => 'Ne. Brez sond, brez vstavljanja. Naprava deluje <strong>zunaj telesa</strong>, po istem načelu kot vsaka druga naprava za vadbo z uporom.' ),
+  array( 'questioon' => 'Kdaj lahko pričakujem rezultate?', 'answer' => 'Večina uporabnikov poroča o prvih spremembah po <strong>3 do 6 tednih</strong> redne vadbe. Kot pri vsaki mišici je ključna doslednost.' ),
+  array( 'questioon' => 'Ali potrebuje baterije ali aplikacijo?', 'answer' => 'Ne. Naprava je popolnoma mehanska — brez baterij, brez kablov, brez aplikacije. Vgrajen je le <strong>števec ponovitev</strong>.' ),
+  array( 'questioon' => 'V čem se razlikuje od EMS naprav?', 'answer' => 'EMS naprave mišico skrčijo namesto vas. ControlPro zahteva, da <strong>delo opravite sami</strong> proti pravemu uporu — tako se gradi resnična moč in povezava možgani–mišica.' ),
+  array( 'questioon' => 'Ali je primeren po operaciji prostate?', 'answer' => 'Da, veliko uporabnikov ga uporablja prav po operaciji prostate. Če ste v okrevanju, se pred začetkom posvetujte s svojim zdravnikom.' ),
+  array( 'questioon' => 'Kako se čisti?', 'answer' => 'Obrišite z vlažno krpo in blagim čistilom. Naprave ne potapljajte v vodo.' ),
+  array( 'questioon' => 'Kakšna je dostava?', 'answer' => 'Dostava je <strong>diskretna</strong>, v nevtralni škatli brez oznak vsebine.' ),
+  array( 'questioon' => 'Ali ga lahko vrnem?', 'answer' => 'Da, imate <strong>30 dni</strong> za vračilo kupnine. Dovolj je e-pošta, brez obrazcev.' ),
+);
+
+$faq_pick = function( $title, $list ) use ( $is_controlpro_faq, $controlpro_faq, $is_knc, $knc_faq, $is_ortopas_faq, $ortopas_faq, $is_bunion_faq, $bunion_faq, $is_fisiorest_faq, $fisiorest_faq, $is_norikshers_faq, $norikshers_faq, $is_leakboxers_faq, $leakboxers_faq, $is_kompmajice_faq, $kompmajice_faq, $is_jastuk_faq, $jastuk_faq, $is_kidsnest_faq, $kidsnest_faq ) {
   $is_info = ( stripos( (string) $title, 'izdelku' ) !== false );
+  if ( $is_controlpro_faq && $is_info ) { return $controlpro_faq; }
   if ( $is_kidsnest_faq && $is_info ) { return $kidsnest_faq; }
   if ( $is_jastuk_faq && $is_info ) { return $jastuk_faq; }
   if ( $is_leakboxers_faq && $is_info ) { return $leakboxers_faq; }
