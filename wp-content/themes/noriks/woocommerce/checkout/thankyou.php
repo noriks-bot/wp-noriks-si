@@ -424,6 +424,10 @@ body.woocommerce-order-received .woocommerce {
 .tyu1-trust__row:nth-child(2) { color:#e02020; }
 .tyu1-trust__ico { margin-right:5px; }
 .tyu1-body { padding:10px 16px 18px; }
+.tyu1-qty__head { display:flex; align-items:baseline; justify-content:space-between; gap:10px;
+  flex-wrap:wrap; margin-bottom:7px; }
+.tyu1-qty__lab { font-size:14px; font-weight:700; color:#111; }
+.tyu1-qty__hint { font-size:12.5px; font-weight:600; color:#1a8f3c; }
 .tyu1-qty { display:flex; gap:8px; margin-bottom:14px; }
 .tyu1-qty__btn { flex:1; text-align:center; padding:10px 0; border:2px solid #ddd; border-radius:5px;
   font-weight:700; font-size:14px; cursor:pointer; background:#fff; color:#000; }
@@ -673,6 +677,10 @@ body.woocommerce-order-received .woocommerce {
                 <div class="tyu1-body">
 
                     <!-- izbira kolicine -->
+                    <div class="tyu1-qty__head">
+                        <span class="tyu1-qty__lab">Izberite količino</span>
+                        <span class="tyu1-qty__hint">Večja količina — večji prihranek</span>
+                    </div>
                     <div class="tyu1-qty">
                         <?php $qty_keys = array_keys($upsell_qty_prices); foreach ($qty_keys as $i => $q) : ?>
                         <label class="tyu1-qty__btn<?php echo $i === 0 ? ' is-active' : ''; ?>">
