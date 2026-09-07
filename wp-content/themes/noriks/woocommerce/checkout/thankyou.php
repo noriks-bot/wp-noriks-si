@@ -575,11 +575,34 @@ body.woocommerce-order-received .woocommerce {
   .tyu1-title { font-size:19px; }
   .tyu1-card__img { flex-basis:104px; width:104px; height:104px; }
   .tyu1-btn--pass { flex-basis:38%; }
-  .tyu2-grid { grid-template-columns:1fr 1fr; gap:14px; }
-  .tyu2-card__name { font-size:13.5px; min-height:36px; }
+
+  /* korak 2 na mobilcu: glava cez celo sirino, belo ozadje, vidnejse kartice */
+  .ty-container.grid-active { padding:0 !important; margin:0 !important; }
+  .tyu2 { border-radius:0; background:#fff; }
+  .tyu2-bar { border-radius:0; }
+  .tyu2-head { padding:18px 16px 22px; }
+  .tyu2-grid { grid-template-columns:1fr 1fr; gap:12px; padding:24px 12px 96px; background:#fff; }
+  .tyu2-card { background:#fff; border:1px solid #e6e6e6; border-radius:8px; padding:10px 10px 12px;
+    box-shadow:0 1px 3px rgba(0,0,0,.06); }
+  .tyu2-card__imgwrap { background:#f6f6f6; }
+  .tyu2-card__name { font-size:13.5px; min-height:36px; margin:10px 0 8px; }
   .tyu2-card__new { font-size:18px; }
-  .tyu2-cartbar__inner { flex-direction:column; gap:12px; }
-  .tyu2-cartbar__cta { width:100%; padding:15px 20px; }
+  .tyu2-card__old { font-size:12.5px; }
+  .tyu2-field { grid-template-columns:54px 1fr; gap:6px; }
+  .tyu2-field__lab { font-size:12px; }
+  .tyu2-select { height:38px; font-size:12.5px; padding:0 8px; }
+  .tyu2-btn { height:42px; font-size:13px; }
+
+  /* vrstica z zakljuckom je pripeta na dno zaslona */
+  .tyu2-cartbar { position:fixed; left:0; right:0; bottom:0; z-index:9999;
+    background:#fff; border-top:1px solid #e2e2e2; box-shadow:0 -4px 16px rgba(0,0,0,.12);
+    padding:10px 14px calc(10px + env(safe-area-inset-bottom)); }
+  .tyu2-cartbar__inner { flex-direction:row; gap:12px; justify-content:space-between; flex-wrap:nowrap; }
+  .tyu2-cartbar__left { gap:9px; }
+  .tyu2-cartbar__save { font-size:12px; }
+  .tyu2-cartbar__total { font-size:15px; }
+  .tyu2-cartbar__cta { flex:1; max-width:56%; padding:14px 12px; font-size:15px; }
+  .tyu2-cartbar__note { display:none; }
 }
     /* Blur everything except upsell when visible */
     .ty-container.upsell-active .ty-success,
