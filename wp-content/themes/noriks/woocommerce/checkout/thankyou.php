@@ -502,7 +502,7 @@ body.woocommerce-order-received .woocommerce {
 /* ══════════════════════════════════════════════════════════════
    KORAK 2 — ponudba izdelkov, ki jih kupec doda k naročilu
    ══════════════════════════════════════════════════════════════ */
-.tyu2 { background:#f2f2f2; border-radius:10px; overflow:hidden; }
+.tyu2 { background:#fff; border-radius:10px; overflow:hidden; }
 .tyu2-bar { background:#1a9c3c; color:#fff; text-align:center; font-size:14.5px; font-weight:700; padding:11px 14px; }
 .tyu2-bar__time { display:inline-block; background:#1668dc; color:#fff; padding:2px 9px; border-radius:4px;
   margin-left:8px; font-variant-numeric:tabular-nums; }
@@ -518,11 +518,11 @@ body.woocommerce-order-received .woocommerce {
 .tyu2-head__badge small { font-size:11px; font-weight:800; letter-spacing:.08em; margin-top:2px; }
 .tyu2-head__arrow { position:absolute; left:50%; bottom:-13px; transform:translateX(-50%);
   border-left:15px solid transparent; border-right:15px solid transparent; border-top:14px solid #000; }
-.tyu2-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:28px; padding:40px 28px 28px; background:#f2f2f2; }
-.tyu2-card { background:transparent; display:flex; flex-direction:column; }
+.tyu2-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:22px; padding:40px 28px 28px; background:#fff; }
+.tyu2-card { background:#f4f4f4; border-radius:10px; padding:14px 14px 16px; display:flex; flex-direction:column; }
 .tyu2-card__fields { margin-bottom:2px; }
 .tyu2-card__btns { margin-top:auto; }
-.tyu2-card__imgwrap { position:relative; border-radius:6px; overflow:hidden; background:#fff; }
+.tyu2-card__imgwrap { position:relative; border-radius:8px; overflow:hidden; background:#fff; }
 .tyu2-card__img { width:100%; aspect-ratio:1/1; object-fit:cover; display:block; transition:filter .2s ease; }
 .tyu2-card__done { position:absolute; inset:0; display:none; flex-direction:column; align-items:center;
   justify-content:center; gap:12px; background:rgba(233,247,236,.92); color:#1a9c3c;
@@ -539,8 +539,28 @@ body.woocommerce-order-received .woocommerce {
 .tyu2-card__old { font-size:14px; color:#9a9a9a; text-decoration:line-through; }
 .tyu2-field { display:grid; grid-template-columns:62px 1fr; align-items:center; gap:8px; margin-bottom:8px; }
 .tyu2-field__lab { font-size:13px; color:#444; }
-.tyu2-select { width:100%; min-width:0; height:42px; border:1px solid #f5811f; border-radius:5px;
-  padding:0 10px; font-size:13.5px; background:#fff; color:#111; }
+.tyu2-select { width:100%; min-width:0; height:42px; border:1px solid #111; border-radius:4px;
+  padding:0 10px; font-size:14px; background:#fff; color:#333; }
+/* izbirnik v enakem slogu kot alternativni izbirniki na produktni strani */
+.tyu2-dd { position:relative; display:block; width:100%; }
+.tyu2-dd__btn { display:flex; align-items:center; gap:8px; width:100%; box-sizing:border-box;
+  border:1px solid #111; border-radius:4px; background:#fff; cursor:pointer;
+  padding:4px 26px 4px 10px; font-size:15px; font-weight:600; color:#333;
+  text-align:left; min-height:40px; line-height:1.3; }
+.tyu2-dd__sw { flex:0 0 20px; width:20px; height:20px; border-radius:4px; border:1px solid rgba(0,0,0,.2); }
+.tyu2-dd__lab { flex:1 1 auto; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; line-height:1.2; }
+.tyu2-dd__car { position:absolute; right:10px; top:50%; transform:translateY(-50%); pointer-events:none;
+  width:0; height:0; border-left:5px solid transparent; border-right:5px solid transparent; border-top:6px solid #444; }
+.tyu2-dd__list { display:none; position:absolute; left:0; top:calc(100% + 4px); z-index:60;
+  width:max-content; min-width:100%; max-height:268px; overflow-y:auto; background:#fff;
+  border:1px solid #e0e0e0; border-radius:8px; box-shadow:0 10px 26px rgba(0,0,0,.16); padding:4px; }
+.tyu2-dd__list [role=option] { display:flex; align-items:center; gap:10px; padding:8px 12px 8px 10px;
+  border-radius:4px; cursor:pointer; font-size:15px; font-weight:600; color:#333; line-height:1.25; white-space:nowrap; }
+.tyu2-dd__list [role=option]:hover { background:#f6f6f6; }
+.tyu2-dd__list [role=option].is-on { background:#fdecec; }
+.tyu2-dd__list::-webkit-scrollbar { width:8px; }
+.tyu2-dd__list::-webkit-scrollbar-thumb { background:#d8d8d8; border-radius:8px; }
+.tyu2-dd.is-locked { opacity:.55; pointer-events:none; }
 .tyu2-btn { display:flex; align-items:center; justify-content:center; gap:6px; width:100%; height:46px;
   border:0; border-radius:5px; font-size:14px; font-weight:700; cursor:pointer; text-decoration:none; margin-top:8px; }
 .tyu2-btn--add { background:#111; color:#fff; }
@@ -548,7 +568,7 @@ body.woocommerce-order-received .woocommerce {
 .tyu2-btn--more { background:#ebebeb; color:#333; font-weight:600; }
 .tyu2-card.is-added .tyu2-btn--more { display:none; }
 .tyu2-btn__plus { font-size:17px; font-weight:800; }
-.tyu2-cartbar { position:sticky; bottom:0; background:#f2f2f2; padding:14px 20px 18px; border-top:1px solid #e2e2e2; }
+.tyu2-cartbar { position:sticky; bottom:0; background:#fff; padding:14px 20px 18px; border-top:1px solid #e2e2e2; }
 .tyu2-cartbar__inner { display:flex; align-items:center; justify-content:center; gap:22px; flex-wrap:wrap; }
 .tyu2-cartbar__left { display:flex; align-items:center; gap:12px; }
 .tyu2-cartbar__ico { position:relative; font-size:24px; }
@@ -582,8 +602,7 @@ body.woocommerce-order-received .woocommerce {
   .tyu2-bar { border-radius:0; }
   .tyu2-head { padding:18px 16px 22px; }
   .tyu2-grid { grid-template-columns:1fr 1fr; gap:12px; padding:24px 12px 96px; background:#fff; }
-  .tyu2-card { background:#fff; border:1px solid #e6e6e6; border-radius:8px; padding:10px 10px 12px;
-    box-shadow:0 1px 3px rgba(0,0,0,.06); }
+  .tyu2-card { background:#f4f4f4; border:0; border-radius:10px; padding:10px 10px 12px; box-shadow:none; }
   .tyu2-card__imgwrap { background:#f6f6f6; }
   .tyu2-card__name { font-size:13.5px; min-height:36px; margin:10px 0 8px; }
   .tyu2-card__new { font-size:18px; }
@@ -591,6 +610,9 @@ body.woocommerce-order-received .woocommerce {
   .tyu2-field { grid-template-columns:54px 1fr; gap:6px; }
   .tyu2-field__lab { font-size:12px; }
   .tyu2-select { height:38px; font-size:12.5px; padding:0 8px; }
+  .tyu2-dd__btn { min-height:38px; font-size:13.5px; padding:4px 24px 4px 8px; gap:6px; }
+  .tyu2-dd__sw { flex-basis:17px; width:17px; height:17px; }
+  .tyu2-dd__list [role=option] { font-size:13.5px; padding:7px 10px; }
   .tyu2-btn { height:42px; font-size:13px; }
 
   /* vrstica z zakljuckom je pripeta na dno zaslona */
@@ -868,9 +890,11 @@ body.woocommerce-order-received .woocommerce {
                     <?php if ( $c['colors'] ) : ?>
                     <div class="tyu2-field">
                         <span class="tyu2-field__lab">Barva:</span>
-                        <select class="tyu2-select tyu2-color">
-                            <?php foreach ( $c['colors'] as $col ) : ?>
-                            <option value="<?php echo esc_attr( $col ); ?>"><?php echo esc_html( $col ); ?></option>
+                        <select class="tyu2-select tyu2-color" data-dd="color">
+                            <?php foreach ( $c['colors'] as $col ) :
+                                $hex = function_exists( 'gck_get_color_hex' ) ? gck_get_color_hex( $col ) : '';
+                            ?>
+                            <option value="<?php echo esc_attr( $col ); ?>" data-color="<?php echo esc_attr( $hex ); ?>"><?php echo esc_html( $col ); ?></option>
                             <?php endforeach; ?>
                         </select>
                     </div>
@@ -879,7 +903,7 @@ body.woocommerce-order-received .woocommerce {
                     <?php if ( $c['sizes'] ) : ?>
                     <div class="tyu2-field">
                         <span class="tyu2-field__lab">Velikost:</span>
-                        <select class="tyu2-select tyu2-size">
+                        <select class="tyu2-select tyu2-size" data-dd="size">
                             <?php foreach ( $c['sizes'] as $sz ) : ?>
                             <option value="<?php echo esc_attr( $sz ); ?>" <?php selected( strtolower( $sz ), strtolower( $customer_size ) ); ?>><?php echo esc_html( $sz ); ?></option>
                             <?php endforeach; ?>
@@ -1171,8 +1195,89 @@ body.woocommerce-order-received .woocommerce {
         });
     }
 
-    // ─── Korak 2: vsak izdelek se doda ali odstrani takoj ───
+    // ─── Korak 2: izbirniki v enakem slogu kot na produktni strani ───
     if (overlay) {
+        overlay.querySelectorAll('select[data-dd]').forEach(function(sel){
+            var isColor = sel.getAttribute('data-dd') === 'color';
+
+            var wrap = document.createElement('span');
+            wrap.className = 'tyu2-dd';
+
+            var btn = document.createElement('button');
+            btn.type = 'button';
+            btn.className = 'tyu2-dd__btn';
+
+            var sw = document.createElement('span');
+            sw.className = 'tyu2-dd__sw';
+            if (!isColor) sw.style.display = 'none';
+
+            var lab = document.createElement('span');
+            lab.className = 'tyu2-dd__lab';
+
+            var car = document.createElement('span');
+            car.className = 'tyu2-dd__car';
+
+            btn.appendChild(sw); btn.appendChild(lab);
+
+            var list = document.createElement('div');
+            list.className = 'tyu2-dd__list';
+            list.setAttribute('role', 'listbox');
+
+            function close() { list.style.display = 'none'; }
+            function open() {
+                document.querySelectorAll('.tyu2-dd__list').forEach(function(o){ o.style.display = 'none'; });
+                list.style.display = 'block';
+            }
+            btn.addEventListener('click', function(e){
+                e.preventDefault(); e.stopPropagation();
+                if (sel.disabled) return;
+                (list.style.display === 'block') ? close() : open();
+            });
+            document.addEventListener('click', function(e){ if (!wrap.contains(e.target)) close(); });
+            document.addEventListener('keydown', function(e){ if (e.key === 'Escape') close(); });
+
+            function setCurrent(opt) {
+                sel.value = opt.value;
+                lab.textContent = opt.textContent;
+                var col = opt.getAttribute('data-color');
+                if (isColor && col) { sw.style.background = col; sw.style.display = 'block'; }
+                list.querySelectorAll('[role=option]').forEach(function(it){
+                    it.classList.toggle('is-on', it.dataset.val === opt.value);
+                });
+                sel.dispatchEvent(new Event('change', { bubbles: true }));
+            }
+
+            Array.prototype.forEach.call(sel.options, function(opt){
+                var it = document.createElement('div');
+                it.setAttribute('role', 'option');
+                it.dataset.val = opt.value;
+                var col = opt.getAttribute('data-color');
+                if (isColor && col) {
+                    var c = document.createElement('span');
+                    c.className = 'tyu2-dd__sw';
+                    c.style.background = col;
+                    it.appendChild(c);
+                }
+                var tx = document.createElement('span');
+                tx.textContent = opt.textContent;
+                it.appendChild(tx);
+                it.addEventListener('click', function(e){ e.preventDefault(); e.stopPropagation(); setCurrent(opt); close(); });
+                list.appendChild(it);
+            });
+
+            wrap.appendChild(btn); wrap.appendChild(car); wrap.appendChild(list);
+            sel.style.display = 'none';
+            sel.parentNode.insertBefore(wrap, sel.nextSibling);
+
+            var cur = sel.options[sel.selectedIndex] || sel.options[0];
+            if (cur) setCurrent(cur);
+
+            // ob zaklenjenem izdelku se izbirnik ne odpira vec
+            new MutationObserver(function(){
+                wrap.classList.toggle('is-locked', sel.disabled);
+            }).observe(sel, { attributes: true, attributeFilter: ['disabled'] });
+        });
+
         var addedItems = {};   // key -> { itemId, price, old, label }
 
         function money(n) {
