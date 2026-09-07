@@ -468,9 +468,13 @@ body.woocommerce-order-received .woocommerce {
 .tyu1-qty__lab { font-size:14px; font-weight:700; color:#111; }
 .tyu1-qty__hint { font-size:12.5px; font-weight:600; color:#1a8f3c; }
 .tyu1-qty { display:flex; gap:8px; margin-bottom:14px; }
-.tyu1-qty__btn { flex:1; text-align:center; padding:10px 0; border:2px solid #ddd; border-radius:5px;
-  font-weight:700; font-size:14px; cursor:pointer; background:#fff; color:#000; }
-.tyu1-qty__btn.is-active { border-color:#f5811f; background:#f5811f14; }
+.tyu1-qty__btn { flex:1; display:flex; align-items:center; justify-content:center; gap:6px;
+  padding:10px 0; border:2px solid #ddd; border-radius:5px;
+  font-weight:700; font-size:14px; cursor:pointer; background:#fff; color:#666; }
+.tyu1-qty__btn.is-active { border-color:#f5811f; background:#f5811f14; color:#000; }
+.tyu1-qty__tick { display:none; width:18px; height:18px; border-radius:50%; background:#f5811f; color:#fff;
+  font-size:11px; font-weight:800; align-items:center; justify-content:center; }
+.tyu1-qty__btn.is-active .tyu1-qty__tick { display:flex; }
 .tyu1-qty__btn input { display:none; }
 .tyu1-card { display:flex; gap:14px; align-items:flex-start; }
 .tyu1-card__img { flex:0 0 132px; width:132px; height:132px; border-radius:8px; overflow:hidden; background:#f4f4f4; }
@@ -724,7 +728,7 @@ body.woocommerce-order-received .woocommerce {
                         <?php $qty_keys = array_keys($upsell_qty_prices); foreach ($qty_keys as $i => $q) : ?>
                         <label class="tyu1-qty__btn<?php echo $i === 0 ? ' is-active' : ''; ?>">
                             <input type="radio" name="ty_qty" value="<?php echo $q; ?>"<?php echo $i === 0 ? ' checked' : ''; ?>>
-                            <?php echo $q; ?>x kos
+                            <span class="tyu1-qty__tick">✓</span><?php echo $q; ?>x kos
                         </label>
                         <?php endforeach; ?>
                     </div>
