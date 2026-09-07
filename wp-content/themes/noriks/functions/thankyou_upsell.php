@@ -264,8 +264,8 @@ function noriks_remove_upsell() {
     $item = $order->get_item( $item_id );
     if ( ! $item ) wp_send_json_error( 'Item not found' );
 
-    // Only allow removing upsell items
-    if ( $item->get_meta( '_noriks_upsell' ) !== 'thank you upsell' ) {
+    // Odstraniti je mogoce samo postavke, ki so prisle iz upsella (katerikoli korak)
+    if ( ! $item->get_meta( '_noriks_upsell' ) ) {
         wp_send_json_error( 'Samo upsell izdelke je mogoče odstraniti' );
     }
 
@@ -351,6 +351,51 @@ function noriks_handle_add_upsell() {
     }
 
     $quantity = max( 1, absint( $_POST['quantity'] ?? 3 ) );
+
+    // ─── Korak 2: cena za celotno kolicino pride iz konfiguracije mreze ───
+    $fixed_total = isset( $_POST['fixed_total'] ) ? (float) $_POST['fixed_total'] : 0;
+    if ( $fixed_total > 0 ) {
+        $upsell_price = $fixed_total / $quantity;
+
+        $item_id = $order->add_product( $product, $quantity, array(
+            'subtotal' => $fixed_total,
+            'total'    => $fixed_total,
+        ));
+        if ( ! $item_id ) wp_send_json_error( 'Napaka pri dodajanju' );
+
+        $item = $order->get_item( $item_id );
+        $item->add_meta_data( '_noriks_upsell', sanitize_text_field( $_POST['upsell_type'] ?? 'post_purchase_step2' ), true );
+
+        // izbrana barva in velikost se zapiseta kot vidna metapodatka na postavki
+        $sel_color = sanitize_text_field( $_POST['upsell_color'] ?? '' );
+        $sel_size  = sanitize_text_field( $_POST['upsell_size'] ?? '' );
+        if ( $sel_color ) { $item->add_meta_data( 'Barva', $sel_color, true ); }
+        if ( $sel_size )  { $item->add_meta_data( 'Velikost', $sel_size, true ); }
+
+        $label = sanitize_text_field( $_POST['upsell_label'] ?? '' );
+        if ( $label ) { $item->add_meta_data( '_noriks_upsell_label', $label, true ); }
+        $item->save();
+
+        $order->calculate_totals();
+        $order->save();
+
+        $order->add_order_note( sprintf(
+            'Thank you upsell (korak 2): %s%s — %d kos, skupaj %s',
+            $product->get_name(),
+            $label ? ' [' . $label . ']' : '',
+            $quantity,
+            wc_price( $fixed_total )
+        ) );
+
+        wp_send_json_success( array(
+            'message'      => 'Dodano',
+            'item_id'      => $item_id,
+            'product_name' => $product->get_name(),
+            'upsell_price' => $upsell_price,
+            'total'        => $order->get_formatted_order_total(),
+        ) );
+    }
+
     // Prices depend on product type (bokserice vs majice)
     $bokserice_prices = array( 1 => 4.99, 3 => 14.97, 5 => 24.95 );
     $majice_prices    = array( 1 => 12.99, 3 => 29.99, 6 => 39.99 );
@@ -394,6 +439,7 @@ function noriks_handle_add_upsell() {
 
     wp_send_json_success( array(
         'message'      => 'Dodano',
+        'item_id'      => $item_id,
         'product_name' => $product->get_name(),
         'upsell_price' => $upsell_price,
         'total'        => $order->get_formatted_order_total(),

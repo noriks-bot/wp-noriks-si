@@ -233,40 +233,82 @@ if ( $order ) {
     }
 }
 
-// ─── Grid products (6 products for step 2) ───
-$grid_product_ids = array();
-$ordered_ids = array();
-if ( $order ) {
-    foreach ( $order->get_items() as $item ) {
-        $ordered_ids[] = $item->get_product_id();
-    }
-}
-
-// Get products for grid — exclude already-ordered
-$grid_args = array(
-    'status'  => 'publish',
-    'limit'   => 6,
-    'exclude' => array_merge( $ordered_ids, array( $upsell_product_id ) ),
-    'orderby' => 'popularity',
-    'type'    => array( 'simple', 'variable' ),
+// ─── Korak 2: fiksna ponudba izdelkov ────────────────────────────────
+// Ena sama tabela — tu se ureja, kaj se ponuja, v kakšni količini in po kakšni ceni.
+//   sku   … izdelek se poišče po SKU (deluje enako na devsi in na produkciji)
+//   qty   … koliko kosov se doda v naročilo
+//   label … naslov na kartici
+//   cat   … oznaka nad naslovom
+//   price … končna cena upsella za celotno količino; null = 50 % akcijske cene × qty
+$ty_grid_config = array(
+    array( 'sku' => 'NORIKS-BOXERS-ORTO', 'qty' => 3,  'cat' => 'BOKSERICE', 'label' => '3x Bokserice',  'price' => null ),
+    array( 'sku' => 'NORIKS-BOXERS-ORTO', 'qty' => 6,  'cat' => 'BOKSERICE', 'label' => '6x Bokserice',  'price' => null ),
+    array( 'sku' => 'NORIKS-BOXERS-ORTO', 'qty' => 10, 'cat' => 'BOKSERICE', 'label' => '10x Bokserice', 'price' => null ),
+    array( 'sku' => 'NORIKS-SHIRTS-ORTO', 'qty' => 3,  'cat' => 'MAJICE',    'label' => '3x Majice',     'price' => null ),
+    array( 'sku' => 'NORIKS-SHIRTS-ORTO', 'qty' => 6,  'cat' => 'MAJICE',    'label' => '6x Majice',     'price' => null ),
+    array( 'sku' => 'NORIKS-SHIRTS-ORTO', 'qty' => 10, 'cat' => 'MAJICE',    'label' => '10x Majice',    'price' => null ),
+    array( 'sku' => 'NORIKS-KOMZIPS',     'qty' => 1,  'cat' => 'NOGAVICE',  'label' => 'Kompresijske nogavice z zadrgo', 'price' => null ),
+    array( 'sku' => 'NORIKS-KOMPSFIT',    'qty' => 1,  'cat' => 'MAJICA',    'label' => 'NORIKS FIT kompresijska majica', 'price' => null ),
 );
 
-// Try boksarice/majice categories first
-$grid_products = array();
-foreach ( array( 'boksarice', 'boxerice', 'majice', 'majica' ) as $cat_slug ) {
-    $cat = get_term_by( 'slug', $cat_slug, 'product_cat' );
-    if ( $cat ) {
-        $grid_args['category'] = array( $cat_slug );
-        $grid_products = wc_get_products( $grid_args );
-        if ( count( $grid_products ) >= 6 ) break;
+/**
+ * Iz konfiguracije zgradi kartice za mrežo.
+ * Vsaka kartica dobi: izdelek, ceno pred/po, sliko in izbirnike (barva/velikost).
+ */
+$grid_cards = array();
+foreach ( $ty_grid_config as $gi => $cfg ) {
+    $gp_id = wc_get_product_id_by_sku( $cfg['sku'] );
+    if ( ! $gp_id ) { continue; }
+    $gp = wc_get_product( $gp_id );
+    if ( ! $gp || ! $gp->is_purchasable() && ! $gp->is_type('variable') ) { continue; }
+
+    $qty = max( 1, (int) $cfg['qty'] );
+
+    // enotna akcijska cena izdelka
+    $unit = (float) $gp->get_price();
+    if ( ! $unit && $gp->is_type('variable') ) { $unit = (float) $gp->get_variation_price( 'min', true ); }
+    if ( ! $unit ) { $unit = (float) $gp->get_regular_price(); }
+    if ( ! $unit ) { continue; }
+
+    $old_total = $unit * $qty;
+    $new_total = is_null( $cfg['price'] ) ? round( $old_total * 0.5, 2 ) : (float) $cfg['price'];
+
+    // izbirniki barve in velikosti iz atributov izdelka
+    $colors = array(); $sizes = array(); $variations = array();
+    foreach ( $gp->get_attributes() as $attr ) {
+        $aname = strtolower( $attr->get_name() );
+        $opts  = $attr->is_taxonomy()
+            ? wp_list_pluck( wc_get_product_terms( $gp_id, $attr->get_name(), array( 'fields' => 'all' ) ), 'name' )
+            : (array) $attr->get_options();
+        if ( strpos( $aname, 'barv' ) !== false || strpos( $aname, 'color' ) !== false ) { $colors = $opts; }
+        elseif ( strpos( $aname, 'veliko' ) !== false || strpos( $aname, 'size' ) !== false ) { $sizes = $opts; }
     }
+    if ( $gp->is_type('variable') ) {
+        foreach ( $gp->get_available_variations() as $gv ) {
+            $lbl = '';
+            foreach ( $gv['attributes'] as $gval ) { $lbl = trim( $lbl . ' ' . $gval ); }
+            $variations[] = array( 'id' => $gv['variation_id'], 'label' => $lbl );
+        }
+    }
+
+    $img_id = $gp->get_image_id();
+    $grid_cards[] = array(
+        'key'        => 'g' . $gi,
+        'product_id' => $gp_id,
+        'qty'        => $qty,
+        'cat'        => $cfg['cat'],
+        'label'      => $cfg['label'],
+        'img'        => $img_id ? wp_get_attachment_url( $img_id ) : wc_placeholder_img_src(),
+        'old'        => $old_total,
+        'new'        => $new_total,
+        'unit_new'   => $new_total / $qty,
+        'colors'     => $colors,
+        'sizes'      => $sizes,
+        'variations' => $variations,
+        'link'       => get_permalink( $gp_id ),
+    );
 }
-// Fallback: any products
-if ( count( $grid_products ) < 6 ) {
-    unset( $grid_args['category'] );
-    $grid_products = wc_get_products( $grid_args );
-}
-$grid_products = array_slice( $grid_products, 0, 6 );
+$grid_products = $grid_cards; // zdruzljivost z obstojecim pogojem nize
 ?>
 
 <!-- vendor upsell CSS removed — using inline styles only -->
@@ -361,8 +403,127 @@ body.woocommerce-order-received .woocommerce {
     .buy-btn.added { background:#2E7D32; }
     .buy-btn:disabled { background:#999; cursor:not-allowed; }
     .ty-upsell-status:empty { display:none; }
-    .g-select-btn.selected { background:#2E7D32 !important; color:#fff !important; }
-    .g-select-btn { height:40px; display:flex !important; align-items:center; justify-content:center; gap:4px; }
+
+.tyu3-banner { background:#1a9c3c; color:#fff; text-align:center; font-size:16px; font-weight:700;
+  padding:14px 16px; border-radius:8px; margin-bottom:14px; }
+
+/* ══════════════════════════════════════════════════════════════
+   KORAK 1 — ponudba enega izdelka s 50 % popusta
+   ══════════════════════════════════════════════════════════════ */
+.tyu1 { background:#fff; border-radius:10px; overflow:hidden; box-shadow:0 2px 14px rgba(0,0,0,.08); }
+.tyu1-bar { background:#fdecec; color:#111; text-align:center; padding:11px 14px; font-size:15px; line-height:1.3; }
+.tyu1-bar__hurry { color:#e02020; font-weight:800; }
+.tyu1-bar__txt { font-weight:600; }
+.tyu1-bar__time { display:inline-block; background:#f5811f; color:#fff; font-weight:800; font-size:14px;
+  padding:2px 8px; border-radius:4px; margin-left:6px; font-variant-numeric:tabular-nums; }
+.tyu1-head { background:#fdecec; padding:0 16px 16px; text-align:center; }
+.tyu1-title { margin:0; font-size:23px; line-height:1.3; font-weight:800; color:#111; }
+.tyu1-stripe { height:9px; background:repeating-linear-gradient(-45deg,#e02020 0 10px,#fff 10px 20px); }
+.tyu1-trust { padding:14px 16px 4px; text-align:center; }
+.tyu1-trust__row { font-size:14px; font-weight:600; color:#1a8f3c; margin-bottom:6px; }
+.tyu1-trust__row:nth-child(2) { color:#e02020; }
+.tyu1-trust__ico { margin-right:5px; }
+.tyu1-body { padding:10px 16px 18px; }
+.tyu1-qty { display:flex; gap:8px; margin-bottom:14px; }
+.tyu1-qty__btn { flex:1; text-align:center; padding:10px 0; border:2px solid #ddd; border-radius:5px;
+  font-weight:700; font-size:14px; cursor:pointer; background:#fff; color:#000; }
+.tyu1-qty__btn.is-active { border-color:#f5811f; background:#f5811f14; }
+.tyu1-qty__btn input { display:none; }
+.tyu1-card { display:flex; gap:14px; align-items:flex-start; }
+.tyu1-card__img { flex:0 0 132px; width:132px; height:132px; border-radius:8px; overflow:hidden; background:#f4f4f4; }
+.tyu1-card__img img { width:100%; height:100%; object-fit:cover; display:block; }
+.tyu1-card__info { flex:1; min-width:0; }
+.tyu1-card__name { font-size:15px; font-weight:700; color:#111; line-height:1.35; margin-bottom:8px; }
+.tyu1-card__prices { display:flex; align-items:center; gap:8px; flex-wrap:wrap; margin-bottom:10px; }
+.tyu1-card__old { font-size:14px; color:#9a9a9a; text-decoration:line-through; }
+.tyu1-card__new { font-size:21px; font-weight:800; color:#e02020; }
+.tyu1-card__badge { background:#1668dc; color:#fff; font-size:12px; font-weight:800; padding:3px 7px; border-radius:4px; }
+.tyu1-card__select select { width:100%; height:40px; border:1px solid #cfcfcf; border-radius:5px;
+  padding:0 10px; font-size:14px; background:#fff; color:#111; }
+.tyu1-card__stock { display:inline-block; margin-top:9px; background:#fdecec; color:#e02020;
+  font-size:12.5px; font-weight:700; padding:4px 9px; border-radius:4px; }
+.tyu1-actions { display:flex; gap:10px; margin-top:16px; }
+.tyu1-btn { display:flex; align-items:center; justify-content:center; height:52px; border-radius:6px;
+  font-weight:700; font-size:15px; cursor:pointer; text-decoration:none; }
+.tyu1-btn--pass { flex:0 0 34%; background:#fdecec; color:#e02020; }
+.tyu1-btn--buy { flex:1; background:#111; color:#fff; gap:8px; }
+.tyu1-btn--buy.added { background:#1a8f3c; }
+
+/* ══════════════════════════════════════════════════════════════
+   KORAK 2 — ponudba izdelkov, ki jih kupec doda k naročilu
+   ══════════════════════════════════════════════════════════════ */
+.tyu2 { background:#f2f2f2; border-radius:10px; overflow:hidden; }
+.tyu2-bar { background:#1a9c3c; color:#fff; text-align:center; font-size:14.5px; font-weight:700; padding:11px 14px; }
+.tyu2-bar__time { display:inline-block; background:#1668dc; color:#fff; padding:2px 9px; border-radius:4px;
+  margin-left:8px; font-variant-numeric:tabular-nums; }
+.tyu2-head { position:relative; background:linear-gradient(180deg,#1c1c1c 0%,#000 100%); padding:22px 20px 26px; }
+.tyu2-head__inner { display:flex; align-items:center; justify-content:space-between; gap:16px; }
+.tyu2-head__kicker { color:#fff; font-size:15px; font-weight:700; margin-bottom:5px; }
+.tyu2-head__title { color:#f2c14b; font-size:26px; font-weight:800; line-height:1.2; }
+.tyu2-head__note { color:#cfcfcf; font-size:13px; font-style:italic; margin-top:7px; }
+.tyu2-head__badge { flex:none; width:96px; height:96px; border-radius:12px; background:#f5811f; color:#fff;
+  display:flex; flex-direction:column; align-items:center; justify-content:center; transform:rotate(-6deg);
+  box-shadow:0 8px 20px rgba(0,0,0,.35); }
+.tyu2-head__badge span { font-size:26px; font-weight:800; line-height:1; }
+.tyu2-head__badge small { font-size:11px; font-weight:800; letter-spacing:.08em; margin-top:2px; }
+.tyu2-head__arrow { position:absolute; left:50%; bottom:-13px; transform:translateX(-50%);
+  border-left:15px solid transparent; border-right:15px solid transparent; border-top:14px solid #000; }
+.tyu2-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:22px; padding:34px 20px 24px; background:#f2f2f2; }
+.tyu2-card { background:transparent; }
+.tyu2-card__imgwrap { position:relative; border-radius:6px; overflow:hidden; background:#fff; }
+.tyu2-card__img { width:100%; aspect-ratio:1/1; object-fit:cover; display:block; transition:filter .2s ease; }
+.tyu2-card__done { position:absolute; inset:0; display:none; flex-direction:column; align-items:center;
+  justify-content:center; gap:8px; background:rgba(255,255,255,.86); color:#1a9c3c;
+  font-size:13.5px; font-weight:700; text-align:center; line-height:1.35; }
+.tyu2-card__check { width:46px; height:46px; border-radius:50%; background:#1a9c3c; color:#fff;
+  display:flex; align-items:center; justify-content:center; font-size:24px; }
+.tyu2-card.is-added .tyu2-card__imgwrap { box-shadow:0 0 0 2px #1a9c3c; border-radius:6px; }
+.tyu2-card.is-added .tyu2-card__done { display:flex; }
+.tyu2-card__name { font-size:14.5px; font-weight:600; color:#111; line-height:1.35; margin:12px 0 8px; min-height:40px; }
+.tyu2-card__prices { display:flex; align-items:baseline; gap:8px; margin-bottom:12px; }
+.tyu2-card__new { font-size:21px; font-weight:800; color:#e02020; }
+.tyu2-card__old { font-size:13.5px; color:#9a9a9a; text-decoration:line-through; }
+.tyu2-field { display:flex; align-items:center; gap:8px; margin-bottom:8px; }
+.tyu2-field__lab { flex:none; font-size:13px; color:#444; }
+.tyu2-select { flex:1; min-width:0; height:40px; border:1px solid #f5811f; border-radius:5px;
+  padding:0 8px; font-size:13.5px; background:#fff; color:#111; }
+.tyu2-btn { display:flex; align-items:center; justify-content:center; gap:6px; width:100%; height:44px;
+  border:0; border-radius:5px; font-size:14px; font-weight:700; cursor:pointer; text-decoration:none; margin-top:8px; }
+.tyu2-btn--add { background:#111; color:#fff; }
+.tyu2-btn--remove { background:#9b9b9b; color:#fff; }
+.tyu2-btn--more { background:#ebebeb; color:#333; font-weight:600; }
+.tyu2-card.is-added .tyu2-btn--more { display:none; }
+.tyu2-btn__plus { font-size:17px; font-weight:800; }
+.tyu2-cartbar { position:sticky; bottom:0; background:#f2f2f2; padding:14px 20px 18px; border-top:1px solid #e2e2e2; }
+.tyu2-cartbar__inner { display:flex; align-items:center; justify-content:center; gap:22px; flex-wrap:wrap; }
+.tyu2-cartbar__left { display:flex; align-items:center; gap:12px; }
+.tyu2-cartbar__ico { position:relative; font-size:24px; }
+.tyu2-cartbar__count { position:absolute; top:-4px; right:-8px; min-width:18px; height:18px; border-radius:50%;
+  background:#e02020; color:#fff; font-size:11px; font-weight:800; display:flex; align-items:center; justify-content:center; }
+.tyu2-cartbar__sums { display:flex; flex-direction:column; line-height:1.35; }
+.tyu2-cartbar__save { font-size:13px; color:#e02020; font-weight:600; }
+.tyu2-cartbar__total { font-size:17px; font-weight:800; color:#111; }
+.tyu2-cartbar__cta { background:#1a9c3c; color:#fff; border:0; border-radius:6px; padding:16px 44px;
+  font-size:17px; font-weight:700; cursor:pointer; box-shadow:0 4px 12px rgba(26,156,60,.3); }
+.tyu2-cartbar__note { text-align:center; font-size:12px; font-style:italic; color:#777; margin-top:8px; }
+
+@media (max-width:900px){
+  .tyu2-grid { grid-template-columns:repeat(2,1fr); gap:16px; padding:26px 14px 18px; }
+  .tyu2-head { padding:18px 14px 22px; }
+  .tyu2-head__title { font-size:20px; }
+  .tyu2-head__badge { width:76px; height:76px; }
+  .tyu2-head__badge span { font-size:21px; }
+}
+@media (max-width:560px){
+  .tyu1-title { font-size:19px; }
+  .tyu1-card__img { flex-basis:104px; width:104px; height:104px; }
+  .tyu1-btn--pass { flex-basis:38%; }
+  .tyu2-grid { grid-template-columns:1fr 1fr; gap:14px; }
+  .tyu2-card__name { font-size:13.5px; min-height:36px; }
+  .tyu2-card__new { font-size:18px; }
+  .tyu2-cartbar__inner { flex-direction:column; gap:12px; }
+  .tyu2-cartbar__cta { width:100%; padding:15px 20px; }
+}
     /* Blur everything except upsell when visible */
     .ty-container.upsell-active .ty-success,
     .ty-container.grid-active .ty-success { margin-bottom:0 !important; }
@@ -376,132 +537,9 @@ body.woocommerce-order-received .woocommerce {
 /* ═══════════════════════════════════════════════
    STEP 2: 6-PRODUCT GRID (inline, not overlay)
    ═══════════════════════════════════════════════ */
-.ty-grid-section {
-    margin-bottom: 15px; overflow: hidden;
-    max-height: 0;
-    transition: max-height 0.4s ease;
-}
-.ty-grid-section.show { max-height: 2000px; }
+.ty-grid-section { margin-bottom: 15px; display: none; }
+.ty-grid-section.show { display: block; }
 
-.ty-grid-popup {
-    background: #fff;
-    width: 100%;
-    overflow: visible;
-    border-radius: 4px !important;
-    box-sizing: border-box;
-}
-
-.ty-grid-header {
-    padding: 10px;
-    text-align: center;
-    background: #f39c1217;
-    border: 2px solid #f39c12;
-    border-radius: 4px;
-    margin-bottom: 15px;
-}
-.ty-grid-header h3 {
-    color: #000 !important; font-size: 15px;
-    font-weight: 400; margin: 0 0 6px 0; padding: 0;
-}
-.ty-grid-header h2 {
-    color: #000 !important; font-size: 20px;
-    font-weight: 700; margin: 0; padding-top: 10px; line-height: 1.3;
-}
-.ty-grid-trust {
-    text-align: center; padding: 6px 20px 12px;
-    font-size: 13px; color: #47b426;
-    background: #fff;
-}
-
-.ty-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 10px;
-    padding: 10px 15px 15px;
-    background: #fff;
-}
-.ty-grid-item {
-    background: #f5f5f5; text-align: center;
-    padding: 0; border: none;
-    border-radius: 4px !important;
-    color: #333;
-    transition: background 0.2s;
-    overflow: hidden;
-}
-.ty-grid-item:hover { background: #efefef; }
-.ty-grid-item img {
-    width: 100%;
-    height: auto;
-    aspect-ratio: 1 / 1;
-    object-fit: cover;
-    object-position: center;
-    display: block;
-    border-radius: 0;
-    min-height: 80px;
-    background: #eee;
-}
-.ty-grid-item .g-name,
-.ty-grid-item .g-price-old,
-.ty-grid-item .g-price-new,
-.ty-grid-item select,
-.ty-grid-item .g-add-btn {
-    padding-left: 8px; padding-right: 8px;
-}
-.ty-grid-item .g-category {
-    font-size: 10px; font-weight: 700; color: #999;
-    text-transform: uppercase; letter-spacing: 0.5px;
-    margin-top: 8px; padding-left: 8px; padding-right: 8px;
-}
-.ty-grid-item .g-name { margin-top: 2px; }
-.ty-grid-item .g-name {
-    font-family: 'Roboto', sans-serif;
-    font-size: 12px; color: #222; margin-bottom: 5px;
-    line-height: 1.3; min-height: 32px; font-weight: 500;
-}
-.ty-grid-item .g-price-old {
-    text-decoration: line-through; color: #999; font-size: 12px;
-}
-.ty-grid-item .g-price-new {
-    font-family: 'Roboto', sans-serif;
-    color: #c00; font-size: 16px; font-weight: 700;
-}
-.ty-grid-item select {
-    width: 100%; padding: 6px; font-size: 12px;
-    border: 1px solid #ccc; border-radius: 1px !important;
-    margin-top: 6px;
-    background: #fff; color: #333; outline: none;
-    font-weight: 600; transition: all 0.3s ease;
-}
-.ty-grid-item select:focus,
-.ty-grid-item select:hover { border-color: #000; }
-.ty-grid-item .g-add-btn {
-    display: block; width: 100%; margin-top: 8px;
-    padding: 10px; background: #04ac00; color: #fff;
-    border: none; border-radius: 4px !important;
-    font-family: 'Roboto', sans-serif;
-    font-size: 13px; font-weight: 600;
-    cursor: pointer; transition: background 0.2s;
-    text-transform: uppercase;
-    letter-spacing: 0.3px;
-}
-.ty-grid-item .g-add-btn:hover { background: #039a00; }
-.ty-grid-item .g-add-btn.added {
-    background: #2E7D32; pointer-events: none;
-}
-.ty-grid-item .g-add-btn:disabled { opacity: 0.5; cursor: not-allowed; }
-
-.ty-grid-close {
-    display: block;
-    width: calc(100% - 30px); margin: 0 15px 15px;
-    padding: 14px;
-    background: #fff; color: #47b426;
-    border: 1px solid #47b426; border-radius: 4px !important;
-    font-family: 'Roboto', sans-serif;
-    font-size: 16px; font-weight: 600;
-    cursor: pointer; text-align: center;
-    transition: background 0.2s;
-}
-.ty-grid-close:hover { background: #f5f5f5; }
 
 /* ═══ Collapsible sections ═══ */
 .ty-section {
@@ -583,6 +621,9 @@ body.woocommerce-order-received .woocommerce {
 
 <div class="ty-container">
 
+        <!-- potrditev po zakljucku ponudbe -->
+        <div class="tyu3-banner" id="ty-added-banner" style="display:none;">✔ Dodan izdelek posebne ponudbe!</div>
+
     <?php do_action( 'woocommerce_before_thankyou', $order->get_id() ); ?>
 
     <?php if ( $order->has_status( 'failed' ) ) : ?>
@@ -610,173 +651,195 @@ body.woocommerce-order-received .woocommerce {
              style="position:static !important;display:block !important;width:100% !important;max-width:520px !important;height:auto !important;top:auto !important;left:auto !important;transform:none !important;opacity:1 !important;visibility:visible !important;z-index:auto !important;backdrop-filter:none !important;margin:0 !important;padding:0 !important;"
              data-order-id="<?php echo $order->get_id(); ?>"
              data-nonce="<?php echo wp_create_nonce('noriks_upsell_' . $order->get_id()); ?>">
-            <div class="ty_upsell_one_wrapper__popup-content">
+            <div class="ty_upsell_one_wrapper__popup-content tyu1">
 
-                <div class="tyuo_timer" style="position:relative;">
-                    <div class="timer_wrapper">
-                        <div class="special_offer_txt">Zadnja priložnost – ponudba poteče čez</div>
-                        <div class="time" id="ty-timer">04:40</div>
-                    </div>
-                    <div class="title"><?php echo esc_html($upsell_title_text); ?></div>
+                <!-- rdeca traka z odstevalnikom -->
+                <div class="tyu1-bar">
+                    <span class="tyu1-bar__hurry">Pohitite!</span>
+                    <span class="tyu1-bar__txt">Posebna ponudba poteče čez</span>
+                    <span class="tyu1-bar__time" id="ty-timer">05:00</span>
                 </div>
 
-                <div class="tyuo_middle_section">
-                    <div class="sub_title">
-                        <span class="sub_title__icon"><svg xmlns="http://www.w3.org/2000/svg" width="15" height="11.293" viewBox="0 0 15 11.293"><path d="M50.915,62.211,46.07,57.366a.44.44,0,0,1,0-.623L47.208,55.6a.44.44,0,0,1,.623,0l3.084,3.084a.441.441,0,0,0,.623,0l7.512-7.513a.44.44,0,0,1,.623,0l1.138,1.138a.44.44,0,0,1,0,.623l-9.273,9.274a.441.441,0,0,1-.623,0" transform="translate(-12.941 319.806)" fill="#47b426"></path></svg></span>
-                        Brez dodatne dostave – vse v enem paketu
-                    </div>
-                    <div class="clue_text">
-                        <span class="clue_text__icon"><svg xmlns="http://www.w3.org/2000/svg" width="15" height="14.333" viewBox="0 0 15 14.333"><path d="M6.885.383,5.1,4a.686.686,0,0,1-.517.375l-3.994.58a.686.686,0,0,0-.38,1.17L3.1,8.945a.686.686,0,0,1,.2.607L2.614,13.53a.686.686,0,0,0,1,.723l3.572-1.878a.686.686,0,0,1,.639,0l3.572,1.878a.686.686,0,0,0,1-.723l-.682-3.978a.686.686,0,0,1,.2-.607l2.89-2.817a.686.686,0,0,0-.38-1.17l-3.994-.58A.686.686,0,0,1,9.9,4L8.116.383a.686.686,0,0,0-1.23,0" fill="#47b426"></path></svg></span>
-                        Dopolni kombinacijo in prihrani
-                    </div>
+                <div class="tyu1-head">
+                    <h2 class="tyu1-title">Dodajte še en izdelek s<br>50% dodatnega popusta!</h2>
+                </div>
+                <div class="tyu1-stripe"></div>
+
+                <div class="tyu1-trust">
+                    <div class="tyu1-trust__row"><span class="tyu1-trust__ico">🚚</span> Poslali ga bomo v istem paketu</div>
+                    <div class="tyu1-trust__row"><span class="tyu1-trust__ico">🎁</span> Dobro pomislite, komu bi lahko izdelek podarili</div>
                 </div>
 
-                <div class="tyuo_product_section">
-                    <!-- Qty picker FIRST — above product image -->
-                    <div class="ty-qty-picker" style="display:flex;gap:8px;padding:0 0 10px;justify-content:center;">
-                        <?php $qty_keys = array_keys($upsell_qty_prices); foreach ($qty_keys as $i => $q) :
-                            $is_first = ($i === 0);
-                            $border = $is_first ? '#f39c12' : '#ddd';
-                            $bg = $is_first ? '#f39c1217' : '#fff';
-                            $cls = $is_first ? ' active' : '';
-                            $chk = $is_first ? ' checked' : '';
-                        ?>
-                        <label class="ty-qty-btn<?php echo $cls; ?>" style="flex:1;text-align:center;padding:10px 0;border:2px solid <?php echo $border; ?>;border-radius:4px;font-weight:700;font-size:14px;cursor:pointer;background:<?php echo $bg; ?>;color:#000;">
-                            <input type="radio" name="ty_qty" value="<?php echo $q; ?>"<?php echo $chk; ?> style="display:none;"> <?php echo $q; ?>x kom
+                <div class="tyu1-body">
+
+                    <!-- izbira kolicine -->
+                    <div class="tyu1-qty">
+                        <?php $qty_keys = array_keys($upsell_qty_prices); foreach ($qty_keys as $i => $q) : ?>
+                        <label class="tyu1-qty__btn<?php echo $i === 0 ? ' is-active' : ''; ?>">
+                            <input type="radio" name="ty_qty" value="<?php echo $q; ?>"<?php echo $i === 0 ? ' checked' : ''; ?>>
+                            <?php echo $q; ?>x kos
                         </label>
                         <?php endforeach; ?>
                     </div>
 
-                    <div class="product_data">
-                        <div class="img">
+                    <div class="tyu1-card">
+                        <div class="tyu1-card__img">
                             <img id="ty-upsell-img" alt="<?php echo esc_attr($upsell_name); ?>" src="<?php echo esc_url($upsell_qty_images[$default_qty]); ?>">
                         </div>
-                        <div class="right_section_wrapper">
-                            <div class="product_name" id="ty-upsell-name"><?php echo esc_html($upsell_qty_names[$default_qty]); ?></div>
-                            <div class="product_regular_price" id="ty-upsell-regular"><?php echo number_format($upsell_qty_regular[$default_qty], 2, ',', '.'); ?>€</div>
-                            <div class="product_new_sale_price" id="ty-upsell-price"><?php echo number_format($upsell_qty_prices[$default_qty], 2, ',', '.'); ?>€</div>
+                        <div class="tyu1-card__info">
+                            <div class="tyu1-card__name" id="ty-upsell-name"><?php echo esc_html($upsell_qty_names[$default_qty]); ?></div>
+                            <div class="tyu1-card__prices">
+                                <span class="tyu1-card__old" id="ty-upsell-regular"><?php echo number_format($upsell_qty_regular[$default_qty], 2, ',', '.'); ?>€</span>
+                                <span class="tyu1-card__new" id="ty-upsell-price"><?php echo number_format($upsell_qty_prices[$default_qty], 2, ',', '.'); ?>€</span>
+                                <span class="tyu1-card__badge">-50%</span>
+                            </div>
+                            <div class="tyu1-card__select">
+                                <select class="variation-select" id="ty-variation-select">
+                                    <?php if ( $upsell_variations ) : ?>
+                                        <?php foreach ( $upsell_variations as $v ) : ?>
+                                        <option value="<?php echo $v['id']; ?>" <?php selected( strtolower($v['size']), strtolower($customer_size) ); ?>>Črna, <?php echo esc_html( $v['size'] ); ?></option>
+                                        <?php endforeach; ?>
+                                    <?php else : ?>
+                                        <option value="">Črna, S</option>
+                                        <option value="">Črna, M</option>
+                                        <option value="">Črna, L</option>
+                                        <option value="">Črna, XL</option>
+                                        <option value="">Črna, XXL</option>
+                                    <?php endif; ?>
+                                </select>
+                            </div>
+                            <div class="tyu1-card__stock">🔥 Zadnji 3 kosi</div>
                         </div>
                     </div>
 
                     <script>
                     (function(){
-                        var prices = <?php echo json_encode(array_map(function($p){ return number_format($p,2,',','.') . '€'; }, $upsell_qty_prices)); ?>;
-                        var names = <?php echo json_encode($upsell_qty_names); ?>;
-                        var images = <?php echo json_encode($upsell_qty_images); ?>;
+                        var prices   = <?php echo json_encode(array_map(function($p){ return number_format($p,2,',','.') . '€'; }, $upsell_qty_prices)); ?>;
+                        var names    = <?php echo json_encode($upsell_qty_names); ?>;
+                        var images   = <?php echo json_encode($upsell_qty_images); ?>;
                         var regulars = <?php echo json_encode(array_map(function($p){ return number_format($p,2,',','.') . '€'; }, $upsell_qty_regular)); ?>;
-                        document.querySelectorAll('.ty-qty-btn').forEach(function(btn){
+                        document.querySelectorAll('.tyu1-qty__btn').forEach(function(btn){
                             btn.addEventListener('click', function(){
-                                document.querySelectorAll('.ty-qty-btn').forEach(function(b){
-                                    b.style.borderColor='#ddd'; b.style.background='#fff'; b.classList.remove('active');
-                                });
-                                btn.style.borderColor='#f39c12'; btn.style.background='#f39c1217'; btn.classList.add('active');
+                                document.querySelectorAll('.tyu1-qty__btn').forEach(function(b){ b.classList.remove('is-active'); });
+                                btn.classList.add('is-active');
                                 var q = btn.querySelector('input').value;
-                                document.getElementById('ty-upsell-price').textContent = prices[q] || prices['3'] || '';
-                                document.getElementById('ty-upsell-name').textContent = names[q] || names['3'] || '';
-                                document.getElementById('ty-upsell-img').src = images[q] || images['3'] || '';
-                                document.getElementById('ty-upsell-regular').textContent = regulars[q] || regulars['3'] || '';
+                                document.getElementById('ty-upsell-price').textContent   = prices[q]   || '';
+                                document.getElementById('ty-upsell-name').textContent    = names[q]    || '';
+                                document.getElementById('ty-upsell-img').src             = images[q]   || '';
+                                document.getElementById('ty-upsell-regular').textContent = regulars[q] || '';
                             });
                         });
                     })();
                     </script>
 
-                    <div class="wrapper_selectbox">
-                        <select class="variation-select" id="ty-variation-select">
-                            <?php if ( $upsell_variations ) : ?>
-                                <?php foreach ( $upsell_variations as $v ) : ?>
-                                <option value="<?php echo $v['id']; ?>" <?php selected( strtolower($v['size']), strtolower($customer_size) ); ?>>
-                                    Črna, <?php echo esc_html( $v['size'] ); ?>
-                                </option>
-                                <?php endforeach; ?>
-                            <?php else : ?>
-                                <option value="">Črna, S</option>
-                                <option value="">Črna, M</option>
-                                <option value="">Črna, L</option>
-                                <option value="">Črna, XL</option>
-                                <option value="">Črna, XXL</option>
-                            <?php endif; ?>
-                        </select>
-                    </div>
-
                     <div class="ty-upsell-status" id="ty-upsell-status"></div>
 
-                    <div class="buttons-section">
-                        <a class="pass-btn" id="ty-btn-skip">Ne želim</a>
-                        <div class="buy-btn" id="ty-btn-add" data-product-id="<?php echo esc_attr( $upsell_product_id ); ?>">DODAJ V NAROČILO</div>
+                    <div class="tyu1-actions">
+                        <a class="tyu1-btn tyu1-btn--pass" id="ty-btn-skip">Ne želim</a>
+                        <div class="tyu1-btn tyu1-btn--buy" id="ty-btn-add" data-product-id="<?php echo esc_attr( $upsell_product_id ); ?>">Dodaj k naročilu <span>→</span></div>
                     </div>
                 </div>
 
             </div>
         </div>
 
-        <!-- ═══ STEP 2: 6-PRODUCT GRID OVERLAY ═══ -->
-        <?php if ( ! empty( $grid_products ) ) : ?>
-        <div class="ty-grid-section" id="ty-grid-section" style="display:none !important;">
-            <div class="ty-grid-popup">
-                <div class="ty-grid-header" style="cursor:pointer;flex-direction:column;position:relative;">
-                    <span class="ty-upsell-close" id="ty-step2-close" style="position:absolute;top:10px;right:12px;font-size:20px;color:#000;cursor:pointer;width:24px;height:24px;display:flex;align-items:center;justify-content:center;font-weight:300;">✕</span>
-                    <div style="display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:8px;">
-                        <div style="font-size:15px;font-weight:400;color:#000;">Posebna ponudba poteče čez</div>
-                        <div class="time" id="ty-timer-2" style="display:inline-block;background:#e22b26;color:#fff;padding:2px 10px;border-radius:4px;font-size:14px;font-weight:700;font-variant-numeric:tabular-nums;">05:00</div>
+        <!-- ═══ KORAK 2: PONUDBA IZDELKOV ═══ -->
+        <?php if ( ! empty( $grid_cards ) ) : ?>
+        <div class="ty-grid-section tyu2" id="ty-grid-section" style="display:none;">
+
+            <!-- zelena traka z odstevalnikom -->
+            <div class="tyu2-bar">
+                Pohitite, posebna ponudba poteče čez
+                <span class="tyu2-bar__time" id="ty-timer-2">05:00</span>
+            </div>
+
+            <!-- crna glava -->
+            <div class="tyu2-head">
+                <div class="tyu2-head__inner">
+                    <div class="tyu2-head__txt">
+                        <div class="tyu2-head__kicker">Ker praznimo skladišče ponujamo:</div>
+                        <div class="tyu2-head__title">50% popust na vse najbolj prodajane izdelke</div>
+                        <div class="tyu2-head__note">*Brez dodatnih stroškov pošiljanja!</div>
                     </div>
-                    <div style="font-size:20px;font-weight:700;color:#000;line-height:1.3;text-align:center;padding-top:10px;">Dodajte katerikoli izdelek s 50% popustom</div>
+                    <div class="tyu2-head__badge"><span>50%</span><small>POPUST</small></div>
                 </div>
-                <div class="ty-section-body open" id="ty-grid-body">
-                <div class="ty-section-body-inner" style="padding:0;">
-                <div class="ty-grid-trust">
-                    ✔ Vse pošljemo v istem paketu
-                </div>
-                <div class="ty-grid">
-                    <?php foreach ( $grid_products as $gp ) :
-                        // Use active/sale price (get_price returns sale price if on sale)
-                        $gp_price = (float) $gp->get_price();
-                        if ( ! $gp_price && $gp->is_type('variable') ) {
-                            $gp_price = (float) $gp->get_variation_price('min', true);
-                        }
-                        if ( ! $gp_price ) {
-                            $gp_price = (float) $gp->get_regular_price();
-                        }
-                        $gp_sale = round( $gp_price * 0.5, 2 );
-                        $gp_img_id    = $gp->get_image_id();
-                        $gp_img_url   = $gp_img_id ? wp_get_attachment_url( $gp_img_id ) : wc_placeholder_img_src();
-                        $gp_is_var    = $gp->is_type('variable');
-                        $gp_vars      = array();
-                        if ( $gp_is_var ) {
-                            foreach ( $gp->get_available_variations() as $gv ) {
-                                $gv_label = '';
-                                foreach ( $gv['attributes'] as $gk => $gval ) { $gv_label = $gval; }
-                                $gp_vars[] = array( 'id' => $gv['variation_id'], 'label' => $gv_label );
-                            }
-                        }
-                    ?>
-                    <div class="ty-grid-item">
-                        <img src="<?php echo esc_url( $gp_img_url ); ?>" alt="<?php echo esc_attr( $gp->get_name() ); ?>">
-                        <div class="g-category">BOKSARICE</div>
-                        <div class="g-name"><?php echo esc_html( $gp->get_name() ); ?></div>
-                        <div class="g-price-old"><?php echo number_format( $gp_price, 2, ',', '.' ); ?>€</div>
-                        <div class="g-price-new"><?php echo number_format( $gp_sale, 2, ',', '.' ); ?>€</div>
-                        <?php if ( $gp_vars ) : ?>
-                        <select class="g-variation" data-product-id="<?php echo $gp->get_id(); ?>">
-                            <?php foreach ( $gp_vars as $gv ) : ?>
-                            <option value="<?php echo $gv['id']; ?>"><?php echo esc_html( $gv['label'] ); ?></option>
+                <span class="tyu2-head__arrow"></span>
+            </div>
+
+            <!-- mreza izdelkov -->
+            <div class="tyu2-grid">
+                <?php foreach ( $grid_cards as $c ) : ?>
+                <div class="tyu2-card" data-key="<?php echo esc_attr( $c['key'] ); ?>">
+                    <div class="tyu2-card__imgwrap">
+                        <img class="tyu2-card__img" src="<?php echo esc_url( $c['img'] ); ?>" alt="<?php echo esc_attr( $c['label'] ); ?>" loading="lazy">
+                        <div class="tyu2-card__done"><span class="tyu2-card__check">✓</span>Izdelek dodan<br>v košarico</div>
+                    </div>
+                    <div class="tyu2-card__name"><?php echo esc_html( $c['label'] ); ?></div>
+                    <div class="tyu2-card__prices">
+                        <span class="tyu2-card__new"><?php echo number_format( $c['new'], 2, ',', '.' ); ?>€</span>
+                        <span class="tyu2-card__old"><?php echo number_format( $c['old'], 2, ',', '.' ); ?>€</span>
+                    </div>
+
+                    <?php if ( $c['colors'] ) : ?>
+                    <div class="tyu2-field">
+                        <span class="tyu2-field__lab">Barva:</span>
+                        <select class="tyu2-select tyu2-color">
+                            <?php foreach ( $c['colors'] as $col ) : ?>
+                            <option value="<?php echo esc_attr( $col ); ?>"><?php echo esc_html( $col ); ?></option>
                             <?php endforeach; ?>
                         </select>
-                        <?php endif; ?>
-                        <button class="g-add-btn g-select-btn"
-                                data-product-id="<?php echo $gp->get_id(); ?>"
-                                data-sale-price="<?php echo $gp_sale; ?>">
-                            IZBERI
-                        </button>
                     </div>
-                    <?php endforeach; ?>
+                    <?php endif; ?>
+
+                    <?php if ( $c['sizes'] ) : ?>
+                    <div class="tyu2-field">
+                        <span class="tyu2-field__lab">Velikost:</span>
+                        <select class="tyu2-select tyu2-size">
+                            <?php foreach ( $c['sizes'] as $sz ) : ?>
+                            <option value="<?php echo esc_attr( $sz ); ?>" <?php selected( strtolower( $sz ), strtolower( $customer_size ) ); ?>><?php echo esc_html( $sz ); ?></option>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
+                    <?php endif; ?>
+
+                    <?php if ( $c['variations'] ) : ?>
+                    <select class="tyu2-select tyu2-variation" style="display:none;">
+                        <?php foreach ( $c['variations'] as $gv ) : ?>
+                        <option value="<?php echo $gv['id']; ?>"><?php echo esc_html( $gv['label'] ); ?></option>
+                        <?php endforeach; ?>
+                    </select>
+                    <?php endif; ?>
+
+                    <button class="tyu2-btn tyu2-btn--add"
+                            data-product-id="<?php echo esc_attr( $c['product_id'] ); ?>"
+                            data-qty="<?php echo esc_attr( $c['qty'] ); ?>"
+                            data-price="<?php echo esc_attr( $c['new'] ); ?>"
+                            data-label="<?php echo esc_attr( $c['label'] ); ?>">
+                        <span class="tyu2-btn__plus">+</span> Dodajte k naročilu
+                    </button>
+                    <button class="tyu2-btn tyu2-btn--remove" style="display:none;">
+                        <span class="tyu2-btn__bin">🗑</span> Odstranite
+                    </button>
+                    <a class="tyu2-btn tyu2-btn--more" href="<?php echo esc_url( $c['link'] ); ?>" target="_blank" rel="noopener">Več o izdelku</a>
                 </div>
-                <div class="buttons-section">
-                    <a class="pass-btn" id="ty-grid-close">Ne želim</a>
-                    <div class="buy-btn" id="ty-grid-add-all">DODAJ V NAROČILO</div>
-                </div>
-                </div><!-- /ty-section-body-inner -->
-                </div><!-- /ty-section-body -->
+                <?php endforeach; ?>
             </div>
+
+            <!-- lepljiva vrstica -->
+            <div class="tyu2-cartbar" id="ty-cartbar">
+                <div class="tyu2-cartbar__inner">
+                    <div class="tyu2-cartbar__left">
+                        <span class="tyu2-cartbar__ico">🛒<span class="tyu2-cartbar__count" id="ty-cart-count">0</span></span>
+                        <span class="tyu2-cartbar__sums">
+                            <span class="tyu2-cartbar__save">Prihranek: <b id="ty-cart-save">0,00€</b></span>
+                            <span class="tyu2-cartbar__total">Skupaj: <b id="ty-cart-total">0,00€</b></span>
+                        </span>
+                    </div>
+                    <button class="tyu2-cartbar__cta" id="ty-grid-finish">Zaključite nakup</button>
+                </div>
+                <div class="tyu2-cartbar__note">* Brez dodatnih stroškov pošiljanja!</div>
+            </div>
+
         </div>
         <?php endif; ?>
         <?php endif; /* COD only */ ?>
@@ -974,46 +1037,30 @@ body.woocommerce-order-received .woocommerce {
             .catch(function(){});
     }
 
-    // ─── Step 1: X close → skip to step 2 ───
-    var step1Close = document.getElementById('ty-step1-close');
-    if (step1Close) {
-        step1Close.addEventListener('click', function(e) {
-            e.stopPropagation();
-            closeAll();
-        });
-    }
-    // ─── Step 2: X close → dismiss all ───
-    var step2Close = document.getElementById('ty-step2-close');
-    if (step2Close) {
-        step2Close.addEventListener('click', function(e) {
-            e.stopPropagation();
-            closeAll();
-        });
-    }
-
-    // ─── Step 1: "Ne želim" → show grid ───
+    // ─── Korak 1: "Ne želim" → pokaži ponudbo izdelkov (korak 2) ───
     var skipBtn = document.getElementById('ty-btn-skip');
     if (skipBtn) {
         skipBtn.addEventListener('click', function() {
-            closeAll();
+            if (overlay) { showGrid(); } else { closeAll(); }
         });
     }
 
-    // ─── Step 1: "DODAJ" → add to order, then show grid ───
+    // ─── Korak 1: "Dodaj k naročilu" → doda izdelek, nato korak 2 ───
     var addBtn = document.getElementById('ty-btn-add');
     if (addBtn) {
         addBtn.addEventListener('click', function() {
-            if (addBtn.disabled) return;
-            addBtn.disabled = true;
-            addBtn.textContent = 'Dodajam...';
+            if (addBtn.dataset.busy === '1') return;
+            addBtn.dataset.busy = '1';
+            addBtn.textContent = 'Dodajam …';
 
-            var select = document.getElementById('ty-variation-select');
+            var select   = document.getElementById('ty-variation-select');
             var qtyRadio = document.querySelector('input[name="ty_qty"]:checked');
-            var qty = qtyRadio ? parseInt(qtyRadio.value) : 1; // default 1 kos
+            var qty      = qtyRadio ? parseInt(qtyRadio.value, 10) : 1;
+
             var fd = new FormData();
             fd.append('action', 'noriks_add_upsell');
             fd.append('order_id', orderId);
-            fd.append('product_id', <?php echo $upsell_product_id; ?>);
+            fd.append('product_id', <?php echo (int) $upsell_product_id; ?>);
             fd.append('variation_id', select ? select.value : '');
             fd.append('sale_price', '<?php echo $upsell_sale_price; ?>');
             fd.append('quantity', qty);
@@ -1022,96 +1069,152 @@ body.woocommerce-order-received .woocommerce {
 
             fetch(ajaxUrl, { method: 'POST', body: fd })
                 .then(function(r) { return r.json(); })
-                .then(function(d) {
-                    addBtn.textContent = '✓ DODANO';
+                .then(function() {
+                    addBtn.textContent = '✓ Dodano';
                     addBtn.classList.add('added');
-                    // Remember in localStorage
-                    var ak = 'ty_added_' + orderId;
-                    var al = JSON.parse(localStorage.getItem(ak) || '{}');
-                    if (typeof al !== 'object' || Array.isArray(al)) al = {};
-                    var pid1 = String(<?php echo $upsell_product_id; ?>);
-                    var selVal = document.getElementById('ty-variation-select');
-                    al[pid1] = selVal ? selVal.value : '';
-                    localStorage.setItem(ak, JSON.stringify(al));
-                    // Disable dropdown
-                    if (selVal) selVal.disabled = true;
+                    if (select) select.disabled = true;
                     refreshOrderItems();
-                    // Show grid after short delay
-                    setTimeout(function() {
-                        closeAll();
-                    }, 800);
+                    setTimeout(function() { if (overlay) { showGrid(); } else { closeAll(); } }, 700);
                 })
                 .catch(function() {
-                    addBtn.disabled = false;
-                    addBtn.textContent = 'DODAJ V NAROČILO';
+                    addBtn.dataset.busy = '0';
+                    addBtn.innerHTML = 'Dodaj k naročilu <span>→</span>';
                 });
         });
     }
 
-    // ─── Step 2: Grid select/deselect + batch add ───
+    // ─── Korak 2: vsak izdelek se doda ali odstrani takoj ───
     if (overlay) {
-        // Toggle select on grid items
-        overlay.querySelectorAll('.g-select-btn').forEach(function(btn) {
-            btn.addEventListener('click', function() {
-                var el = this;
-                if (el.classList.contains('selected')) {
-                    el.classList.remove('selected');
-                    el.textContent = 'IZBERI';
-                    el.style.background = '#000';
-                } else {
-                    el.classList.add('selected');
-                    el.innerHTML = '✔ IZBRANO <span style="font-size:10px;opacity:0.7;margin-left:4px;">odstrani</span>';
-                    el.style.background = '#2E7D32';
-                }
+        var addedItems = {};   // key -> { itemId, price, old, label }
+
+        function money(n) {
+            return n.toFixed(2).replace('.', ',') + '€';
+        }
+
+        function updateCartBar() {
+            var count = 0, total = 0, save = 0;
+            Object.keys(addedItems).forEach(function(k) {
+                count += 1;
+                total += addedItems[k].price;
+                save  += (addedItems[k].old - addedItems[k].price);
             });
-        });
+            var elC = document.getElementById('ty-cart-count');
+            var elT = document.getElementById('ty-cart-total');
+            var elS = document.getElementById('ty-cart-save');
+            if (elC) elC.textContent = count;
+            if (elT) elT.textContent = money(total);
+            if (elS) elS.textContent = money(save);
+        }
 
-        // "Ne želim" — close all, show summary without upsells
-        document.getElementById('ty-grid-close').addEventListener('click', closeAll);
+        overlay.querySelectorAll('.tyu2-card').forEach(function(card) {
+            var key      = card.getAttribute('data-key');
+            var addBtnG  = card.querySelector('.tyu2-btn--add');
+            var remBtnG  = card.querySelector('.tyu2-btn--remove');
+            var oldPrice = parseFloat((card.querySelector('.tyu2-card__old') || {}).textContent
+                             ? card.querySelector('.tyu2-card__old').textContent.replace(/[^0-9,]/g,'').replace(',','.') : '0') || 0;
 
-        // "DODAJ K NARUDŽBI" — add all selected items, then close
-        var gridAddAll = document.getElementById('ty-grid-add-all');
-        if (gridAddAll) {
-            gridAddAll.addEventListener('click', function() {
-                var selected = overlay.querySelectorAll('.g-select-btn.selected');
-                if (selected.length === 0) {
-                    closeAll();
-                    return;
-                }
-                gridAddAll.textContent = 'Dodajam...';
-                gridAddAll.style.pointerEvents = 'none';
+            if (!addBtnG) return;
 
-                var promises = [];
-                selected.forEach(function(btn) {
-                    var productId = btn.getAttribute('data-product-id');
-                    var salePrice = btn.getAttribute('data-sale-price');
-                    var varSelect = btn.parentElement.querySelector('.g-variation');
+            addBtnG.addEventListener('click', function() {
+                if (addBtnG.dataset.busy === '1') return;
+                addBtnG.dataset.busy = '1';
+                addBtnG.textContent = 'Dodajam …';
+
+                var colorSel = card.querySelector('.tyu2-color');
+                var sizeSel  = card.querySelector('.tyu2-size');
+                var varSel   = card.querySelector('.tyu2-variation');
+
+                var fd = new FormData();
+                fd.append('action', 'noriks_add_upsell');
+                fd.append('order_id', orderId);
+                fd.append('product_id', addBtnG.getAttribute('data-product-id'));
+                fd.append('variation_id', varSel ? varSel.value : '');
+                fd.append('quantity', addBtnG.getAttribute('data-qty'));
+                fd.append('fixed_total', addBtnG.getAttribute('data-price'));
+                fd.append('upsell_label', addBtnG.getAttribute('data-label'));
+                if (colorSel) fd.append('upsell_color', colorSel.value);
+                if (sizeSel)  fd.append('upsell_size', sizeSel.value);
+                fd.append('upsell_type', 'post_purchase_step2');
+                fd.append('nonce', nonce);
+
+                fetch(ajaxUrl, { method: 'POST', body: fd })
+                    .then(function(r) { return r.json(); })
+                    .then(function(d) {
+                        addBtnG.dataset.busy = '0';
+                        if (!d || !d.success) {
+                            addBtnG.innerHTML = '<span class="tyu2-btn__plus">+</span> Dodajte k naročilu';
+                            if (d && d.data) { alert(d.data); }
+                            return;
+                        }
+                        addedItems[key] = {
+                            itemId: d.data.item_id,
+                            price:  parseFloat(addBtnG.getAttribute('data-price')) || 0,
+                            old:    oldPrice
+                        };
+                        card.classList.add('is-added');
+                        addBtnG.style.display = 'none';
+                        if (remBtnG) remBtnG.style.display = 'flex';
+                        card.querySelectorAll('.tyu2-select').forEach(function(sel){ sel.disabled = true; });
+                        updateCartBar();
+                        refreshOrderItems();
+                    })
+                    .catch(function() {
+                        addBtnG.dataset.busy = '0';
+                        addBtnG.innerHTML = '<span class="tyu2-btn__plus">+</span> Dodajte k naročilu';
+                    });
+            });
+
+            if (remBtnG) {
+                remBtnG.addEventListener('click', function() {
+                    var entry = addedItems[key];
+                    if (!entry) return;
+                    if (remBtnG.dataset.busy === '1') return;
+                    remBtnG.dataset.busy = '1';
+                    remBtnG.textContent = 'Odstranjujem …';
 
                     var fd = new FormData();
-                    fd.append('action', 'noriks_add_upsell');
+                    fd.append('action', 'noriks_remove_upsell');
                     fd.append('order_id', orderId);
-                    fd.append('product_id', productId);
-                    fd.append('variation_id', varSelect ? varSelect.value : '');
-                    fd.append('sale_price', salePrice);
-                    fd.append('upsell_type', 'post_purchase_step2');
-                    fd.append('nonce', nonce);
+                    fd.append('item_id', entry.itemId);
 
-                    promises.push(
-                        fetch(ajaxUrl, { method: 'POST', body: fd })
-                            .then(function(r) { return r.json(); })
-                    );
+                    fetch(ajaxUrl, { method: 'POST', body: fd })
+                        .then(function(r) { return r.json(); })
+                        .then(function(d) {
+                            remBtnG.dataset.busy = '0';
+                            remBtnG.innerHTML = '<span class="tyu2-btn__bin">🗑</span> Odstranite';
+                            if (!d || !d.success) { if (d && d.data) alert(d.data); return; }
+                            delete addedItems[key];
+                            card.classList.remove('is-added');
+                            remBtnG.style.display = 'none';
+                            addBtnG.style.display = 'flex';
+                            addBtnG.innerHTML = '<span class="tyu2-btn__plus">+</span> Dodajte k naročilu';
+                            card.querySelectorAll('.tyu2-select').forEach(function(sel){ sel.disabled = false; });
+                            updateCartBar();
+                            refreshOrderItems();
+                        })
+                        .catch(function() {
+                            remBtnG.dataset.busy = '0';
+                            remBtnG.innerHTML = '<span class="tyu2-btn__bin">🗑</span> Odstranite';
+                        });
                 });
+            }
+        });
 
-                Promise.all(promises).then(function(results) {
-                    console.log('Upsell results:', results);
-                    refreshOrderItems();
-                    closeAll();
-                }).catch(function(err) {
-                    console.error('Upsell error:', err);
-                    closeAll();
-                });
+        // "Zaključite nakup" — zapre ponudbo in sprosti naročilo
+        var finishBtn = document.getElementById('ty-grid-finish');
+        if (finishBtn) {
+            finishBtn.addEventListener('click', function() {
+                finishBtn.disabled = true;
+                finishBtn.textContent = 'Zaključujem …';
+                closeAll();
+                var banner = document.getElementById('ty-added-banner');
+                if (Object.keys(addedItems).length && banner) { banner.style.display = 'block'; }
+                var items = document.getElementById('ty-order-items-section');
+                if (items) items.scrollIntoView({ behavior: 'smooth', block: 'start' });
             });
         }
+
+        updateCartBar();
     }
 
     // Restore step 1 button from localStorage
