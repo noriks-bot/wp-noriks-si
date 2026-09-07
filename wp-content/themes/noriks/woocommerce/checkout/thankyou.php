@@ -667,7 +667,7 @@ body.woocommerce-order-received .woocommerce {
 
                 <div class="tyu1-trust">
                     <div class="tyu1-trust__row"><span class="tyu1-trust__ico">🚚</span> Poslali ga bomo v istem paketu</div>
-                    <div class="tyu1-trust__row"><span class="tyu1-trust__ico">🎁</span> Dobro pomislite, komu bi lahko izdelek podarili</div>
+                    <div class="tyu1-trust__row"><span class="tyu1-trust__ico">🎁</span> Odličen za darilo — ali pa ga obdržite zase</div>
                 </div>
 
                 <div class="tyu1-body">
@@ -708,7 +708,7 @@ body.woocommerce-order-received .woocommerce {
                                     <?php endif; ?>
                                 </select>
                             </div>
-                            <div class="tyu1-card__stock">🔥 Zadnji 3 kosi</div>
+                            <div class="tyu1-card__stock">🔥 Velja samo ob tem naročilu</div>
                         </div>
                     </div>
 
