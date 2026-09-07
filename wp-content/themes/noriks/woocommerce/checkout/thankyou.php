@@ -753,7 +753,7 @@ body.woocommerce-order-received .woocommerce {
 
         <!-- ═══ KORAK 2: PONUDBA IZDELKOV ═══ -->
         <?php if ( ! empty( $grid_cards ) ) : ?>
-        <div class="ty-grid-section tyu2" id="ty-grid-section" style="display:none;">
+        <div class="ty-grid-section tyu2" id="ty-grid-section">
 
             <!-- zelena traka z odstevalnikom -->
             <div class="tyu2-bar">
@@ -997,6 +997,7 @@ body.woocommerce-order-received .woocommerce {
     }
 
     function showGrid() {
+        if (!overlay || !overlay.querySelector('.tyu2-card')) { closeAll(); return; }
         wrap.style.display = 'none';
         localStorage.setItem(stepKey, '2');
         if (overlay) overlay.classList.add('show');
