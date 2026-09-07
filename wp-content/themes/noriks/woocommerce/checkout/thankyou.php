@@ -248,7 +248,8 @@ $ty_grid_config = array(
     array( 'sku' => 'NORIKS-SHIRTS-ORTO', 'qty' => 6,  'cat' => 'MAJICE',    'label' => '6x Majice',     'price' => null ),
     array( 'sku' => 'NORIKS-SHIRTS-ORTO', 'qty' => 10, 'cat' => 'MAJICE',    'label' => '10x Majice',    'price' => null ),
     array( 'sku' => 'NORIKS-KOMZIPS',     'qty' => 1,  'cat' => 'NOGAVICE',  'label' => 'Kompresijske nogavice z zadrgo', 'price' => null ),
-    array( 'sku' => 'NORIKS-KOMPSFIT',    'qty' => 1,  'cat' => 'MAJICA',    'label' => 'NORIKS FIT kompresijska majica', 'price' => null ),
+    array( 'sku' => 'NORIKS-KOMPSFIT',    'qty' => 1,  'cat' => 'MAJICA',    'label' => '1x KOMPSFIT majica',  'price' => null ),
+    array( 'sku' => 'NORIKS-KOMPSFIT',    'qty' => 3,  'cat' => 'MAJICA',    'label' => '3x KOMPSFIT majica',  'price' => null ),
 );
 
 /**
@@ -518,24 +519,28 @@ body.woocommerce-order-received .woocommerce {
 .tyu2-head__arrow { position:absolute; left:50%; bottom:-13px; transform:translateX(-50%);
   border-left:15px solid transparent; border-right:15px solid transparent; border-top:14px solid #000; }
 .tyu2-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:28px; padding:40px 28px 28px; background:#f2f2f2; }
-.tyu2-card { background:transparent; }
+.tyu2-card { background:transparent; display:flex; flex-direction:column; }
+.tyu2-card__fields { margin-bottom:2px; }
+.tyu2-card__btns { margin-top:auto; }
 .tyu2-card__imgwrap { position:relative; border-radius:6px; overflow:hidden; background:#fff; }
 .tyu2-card__img { width:100%; aspect-ratio:1/1; object-fit:cover; display:block; transition:filter .2s ease; }
 .tyu2-card__done { position:absolute; inset:0; display:none; flex-direction:column; align-items:center;
-  justify-content:center; gap:8px; background:rgba(255,255,255,.86); color:#1a9c3c;
-  font-size:13.5px; font-weight:700; text-align:center; line-height:1.35; }
-.tyu2-card__check { width:46px; height:46px; border-radius:50%; background:#1a9c3c; color:#fff;
-  display:flex; align-items:center; justify-content:center; font-size:24px; }
-.tyu2-card.is-added .tyu2-card__imgwrap { box-shadow:0 0 0 2px #1a9c3c; border-radius:6px; }
+  justify-content:center; gap:12px; background:rgba(233,247,236,.92); color:#1a9c3c;
+  font-size:15px; font-weight:700; text-align:center; line-height:1.35; }
+.tyu2-card__check { width:62px; height:62px; border-radius:50%; background:#3fbb52; color:#fff;
+  display:flex; align-items:center; justify-content:center; font-size:32px;
+  box-shadow:0 4px 14px rgba(63,187,82,.35); }
+.tyu2-card.is-added .tyu2-card__imgwrap { box-shadow:0 0 0 2px #3fbb52; border-radius:8px; }
+.tyu2-card.is-added .tyu2-card__img { filter:grayscale(.15) opacity(.35); }
 .tyu2-card.is-added .tyu2-card__done { display:flex; }
 .tyu2-card__name { font-size:15.5px; font-weight:600; color:#111; line-height:1.35; margin:14px 0 10px; min-height:44px; }
 .tyu2-card__prices { display:flex; align-items:baseline; gap:8px; margin-bottom:12px; }
 .tyu2-card__new { font-size:23px; font-weight:800; color:#e02020; }
 .tyu2-card__old { font-size:14px; color:#9a9a9a; text-decoration:line-through; }
-.tyu2-field { display:flex; align-items:center; gap:8px; margin-bottom:8px; }
-.tyu2-field__lab { flex:none; font-size:13px; color:#444; }
-.tyu2-select { flex:1; min-width:0; height:40px; border:1px solid #f5811f; border-radius:5px;
-  padding:0 8px; font-size:13.5px; background:#fff; color:#111; }
+.tyu2-field { display:grid; grid-template-columns:62px 1fr; align-items:center; gap:8px; margin-bottom:8px; }
+.tyu2-field__lab { font-size:13px; color:#444; }
+.tyu2-select { width:100%; min-width:0; height:42px; border:1px solid #f5811f; border-radius:5px;
+  padding:0 10px; font-size:13.5px; background:#fff; color:#111; }
 .tyu2-btn { display:flex; align-items:center; justify-content:center; gap:6px; width:100%; height:46px;
   border:0; border-radius:5px; font-size:14px; font-weight:700; cursor:pointer; text-decoration:none; margin-top:8px; }
 .tyu2-btn--add { background:#111; color:#fff; }
@@ -579,13 +584,14 @@ body.woocommerce-order-received .woocommerce {
     /* Blur everything except upsell when visible */
     .ty-container.upsell-active .ty-success,
     .ty-container.grid-active .ty-success { margin-bottom:0 !important; }
-    .ty-container.upsell-active > *:not(.ty_upsell_one_wrapper):not(#ty-grid-section),
-    .ty-container.grid-active > *:not(#ty-grid-section):not(.ty_upsell_one_wrapper) {
+    .ty-container.upsell-active > *:not(.ty_upsell_one_wrapper):not(#ty-grid-section) {
         filter: blur(3px);
         opacity: 0.5;
         pointer-events: none;
         user-select: none;
     }
+    /* korak 2 je samostojna stran — pod gumbom "Zakljucite nakup" se stran konca */
+    .ty-container.grid-active > *:not(#ty-grid-section) { display: none !important; }
 /* ═══════════════════════════════════════════════
    STEP 2: 6-PRODUCT GRID (inline, not overlay)
    ═══════════════════════════════════════════════ */
@@ -866,6 +872,7 @@ body.woocommerce-order-received .woocommerce {
                     </select>
                     <?php endif; ?>
 
+                    <div class="tyu2-card__btns">
                     <button class="tyu2-btn tyu2-btn--add"
                             data-product-id="<?php echo esc_attr( $c['product_id'] ); ?>"
                             data-qty="<?php echo esc_attr( $c['qty'] ); ?>"
@@ -877,6 +884,7 @@ body.woocommerce-order-received .woocommerce {
                         <span class="tyu2-btn__bin">🗑</span> Odstranite
                     </button>
                     <a class="tyu2-btn tyu2-btn--more" href="<?php echo esc_url( $c['link'] ); ?>" target="_blank" rel="noopener">Več o izdelku</a>
+                    </div>
                 </div>
                 <?php endforeach; ?>
             </div>
