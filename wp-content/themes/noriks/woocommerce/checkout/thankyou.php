@@ -381,6 +381,8 @@ body.woocommerce-order-received .woocommerce {
 
 /* ═══ Container ═══ */
 .ty-container { max-width: 520px; margin: 30px auto; padding: 0 4px; }
+/* korak 2 potrebuje siroko postavitev — mreza gre cez celo sirino strani */
+.ty-container.grid-active { max-width: 1440px; padding: 0 16px; }
 
 /* ═══ Success ═══ */
 .ty-success {
@@ -503,10 +505,10 @@ body.woocommerce-order-received .woocommerce {
 .tyu2-bar { background:#1a9c3c; color:#fff; text-align:center; font-size:14.5px; font-weight:700; padding:11px 14px; }
 .tyu2-bar__time { display:inline-block; background:#1668dc; color:#fff; padding:2px 9px; border-radius:4px;
   margin-left:8px; font-variant-numeric:tabular-nums; }
-.tyu2-head { position:relative; background:linear-gradient(180deg,#1c1c1c 0%,#000 100%); padding:22px 20px 26px; }
+.tyu2-head { position:relative; background:linear-gradient(180deg,#1c1c1c 0%,#000 100%); padding:26px 32px 30px; }
 .tyu2-head__inner { display:flex; align-items:center; justify-content:space-between; gap:16px; }
 .tyu2-head__kicker { color:#fff; font-size:15px; font-weight:700; margin-bottom:5px; }
-.tyu2-head__title { color:#f2c14b; font-size:26px; font-weight:800; line-height:1.2; }
+.tyu2-head__title { color:#f2c14b; font-size:30px; font-weight:800; line-height:1.2; }
 .tyu2-head__note { color:#cfcfcf; font-size:13px; font-style:italic; margin-top:7px; }
 .tyu2-head__badge { flex:none; width:96px; height:96px; border-radius:12px; background:#f5811f; color:#fff;
   display:flex; flex-direction:column; align-items:center; justify-content:center; transform:rotate(-6deg);
@@ -515,7 +517,7 @@ body.woocommerce-order-received .woocommerce {
 .tyu2-head__badge small { font-size:11px; font-weight:800; letter-spacing:.08em; margin-top:2px; }
 .tyu2-head__arrow { position:absolute; left:50%; bottom:-13px; transform:translateX(-50%);
   border-left:15px solid transparent; border-right:15px solid transparent; border-top:14px solid #000; }
-.tyu2-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:22px; padding:34px 20px 24px; background:#f2f2f2; }
+.tyu2-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:28px; padding:40px 28px 28px; background:#f2f2f2; }
 .tyu2-card { background:transparent; }
 .tyu2-card__imgwrap { position:relative; border-radius:6px; overflow:hidden; background:#fff; }
 .tyu2-card__img { width:100%; aspect-ratio:1/1; object-fit:cover; display:block; transition:filter .2s ease; }
@@ -526,15 +528,15 @@ body.woocommerce-order-received .woocommerce {
   display:flex; align-items:center; justify-content:center; font-size:24px; }
 .tyu2-card.is-added .tyu2-card__imgwrap { box-shadow:0 0 0 2px #1a9c3c; border-radius:6px; }
 .tyu2-card.is-added .tyu2-card__done { display:flex; }
-.tyu2-card__name { font-size:14.5px; font-weight:600; color:#111; line-height:1.35; margin:12px 0 8px; min-height:40px; }
+.tyu2-card__name { font-size:15.5px; font-weight:600; color:#111; line-height:1.35; margin:14px 0 10px; min-height:44px; }
 .tyu2-card__prices { display:flex; align-items:baseline; gap:8px; margin-bottom:12px; }
-.tyu2-card__new { font-size:21px; font-weight:800; color:#e02020; }
-.tyu2-card__old { font-size:13.5px; color:#9a9a9a; text-decoration:line-through; }
+.tyu2-card__new { font-size:23px; font-weight:800; color:#e02020; }
+.tyu2-card__old { font-size:14px; color:#9a9a9a; text-decoration:line-through; }
 .tyu2-field { display:flex; align-items:center; gap:8px; margin-bottom:8px; }
 .tyu2-field__lab { flex:none; font-size:13px; color:#444; }
 .tyu2-select { flex:1; min-width:0; height:40px; border:1px solid #f5811f; border-radius:5px;
   padding:0 8px; font-size:13.5px; background:#fff; color:#111; }
-.tyu2-btn { display:flex; align-items:center; justify-content:center; gap:6px; width:100%; height:44px;
+.tyu2-btn { display:flex; align-items:center; justify-content:center; gap:6px; width:100%; height:46px;
   border:0; border-radius:5px; font-size:14px; font-weight:700; cursor:pointer; text-decoration:none; margin-top:8px; }
 .tyu2-btn--add { background:#111; color:#fff; }
 .tyu2-btn--remove { background:#9b9b9b; color:#fff; }
@@ -554,6 +556,9 @@ body.woocommerce-order-received .woocommerce {
   font-size:17px; font-weight:700; cursor:pointer; box-shadow:0 4px 12px rgba(26,156,60,.3); }
 .tyu2-cartbar__note { text-align:center; font-size:12px; font-style:italic; color:#777; margin-top:8px; }
 
+@media (max-width:1180px){
+  .tyu2-grid { grid-template-columns:repeat(3,1fr); gap:22px; padding:32px 20px 22px; }
+}
 @media (max-width:900px){
   .tyu2-grid { grid-template-columns:repeat(2,1fr); gap:16px; padding:26px 14px 18px; }
   .tyu2-head { padding:18px 14px 22px; }
