@@ -308,6 +308,45 @@ foreach ( $ty_grid_config as $gi => $cfg ) {
         'link'       => get_permalink( $gp_id ),
     );
 }
+// Varovalka: ce kaksnega SKU na tem trgu ni, mrezo dopolnimo z najbolj prodajanimi
+// izdelki iz istih kategorij, da korak 2 nikoli ne ostane prazen.
+if ( count( $grid_cards ) < 4 ) {
+    $have_ids = wp_list_pluck( $grid_cards, 'product_id' );
+    $ordered  = array();
+    if ( $order ) {
+        foreach ( $order->get_items() as $oi ) { $ordered[] = $oi->get_product_id(); }
+    }
+    $fill = wc_get_products( array(
+        'status'   => 'publish',
+        'limit'    => 8 - count( $grid_cards ),
+        'exclude'  => array_merge( $have_ids, $ordered, array( $upsell_product_id ) ),
+        'orderby'  => 'popularity',
+        'type'     => array( 'simple', 'variable' ),
+    ) );
+    foreach ( $fill as $fi => $fp ) {
+        $unit = (float) $fp->get_price();
+        if ( ! $unit && $fp->is_type('variable') ) { $unit = (float) $fp->get_variation_price( 'min', true ); }
+        if ( ! $unit ) { $unit = (float) $fp->get_regular_price(); }
+        if ( ! $unit ) { continue; }
+        $fimg = $fp->get_image_id();
+        $grid_cards[] = array(
+            'key'        => 'f' . $fi,
+            'product_id' => $fp->get_id(),
+            'qty'        => 1,
+            'cat'        => '',
+            'label'      => $fp->get_name(),
+            'img'        => $fimg ? wp_get_attachment_url( $fimg ) : wc_placeholder_img_src(),
+            'old'        => $unit,
+            'new'        => round( $unit * 0.5, 2 ),
+            'unit_new'   => round( $unit * 0.5, 2 ),
+            'colors'     => array(),
+            'sizes'      => array(),
+            'variations' => array(),
+            'link'       => get_permalink( $fp->get_id() ),
+        );
+    }
+}
+
 $grid_products = $grid_cards; // zdruzljivost z obstojecim pogojem nize
 ?>
 
