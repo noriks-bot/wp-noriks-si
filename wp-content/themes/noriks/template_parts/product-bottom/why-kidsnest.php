@@ -15,7 +15,7 @@ $kn = get_template_directory_uri() . '/img/kidsnest/';
 <!-- ============ 1) Trust marquee (modri trak, vrti se) ============ -->
 <div class="kn-marquee" aria-hidden="true">
   <div class="kn-marquee-track">
-    <?php $kn_ticker = array('PRIPOROČILO PEDIATROV','OEKO-TEX® SPOMINSKA PENA','3-CONSKA STRUKTURA','90 NOČI PREIZKUŠANJA','HIPOALERGENO','PRALNA PREVLEKA');
+    <?php $kn_ticker = array('PRIPOROČILO PEDIATROV','OEKO-TEX® SPOMINSKA PENA','3-CONSKA STRUKTURA','90 NOČI PREIZKUŠANJA','HIPOALERGENO','ZRAČNA PLETENINA');
     for ( $r = 0; $r < 2; $r++ ) { foreach ( $kn_ticker as $t ) { echo '<span class="kn-tick">'.esc_html($t).'</span><span class="kn-dot">•</span>'; } } ?>
   </div>
 </div>
@@ -96,7 +96,7 @@ $kn = get_template_directory_uri() . '/img/kidsnest/';
     <div class="kn-copy">
       <h2 class="kn-h2 kn-h2-blue">Kakovost, ki se občuti — noč za nočjo.</h2>
       <p>Gosta, zračna pletenina in skrbno oblikovana površina nista tu zaradi videza — <strong>vsaka cona ima svojo vlogo</strong>. Sredina nežno sprejme glavo, robovi podpirajo vrat, struktura pa ohrani obliko tudi po mesecih vsakodnevne uporabe.</p>
-      <p>Prevleka se sname in opere v pralnem stroju, pena je <strong>hipoalergena in odporna na pršice</strong> — zato vzglavnik ostane svež, čist in pripravljen na vsako noč. Brez udrtin, brez sploščenja, brez kompromisov.</p>
+      <p>Pletenina je zračna, pena pa je <strong>hipoalergena in odporna na pršice</strong> — zato vzglavnik ostane svež, čist in pripravljen na vsako noč. Brez udrtin, brez sploščenja, brez kompromisov.</p>
       <p><strong>Vzglavnik, ki tudi po enem letu izgleda — in podpira — kot prvi dan.</strong></p>
     </div>
   </div>
