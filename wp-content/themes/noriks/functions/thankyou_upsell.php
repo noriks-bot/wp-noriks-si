@@ -352,48 +352,15 @@ function noriks_handle_add_upsell() {
 
     $quantity = max( 1, absint( $_POST['quantity'] ?? 3 ) );
 
-    // ─── Korak 2: cena za celotno kolicino pride iz konfiguracije mreze ───
-    $fixed_total = isset( $_POST['fixed_total'] ) ? (float) $_POST['fixed_total'] : 0;
-    if ( $fixed_total > 0 ) {
-        $upsell_price = $fixed_total / $quantity;
-
-        $item_id = $order->add_product( $product, $quantity, array(
-            'subtotal' => $fixed_total,
-            'total'    => $fixed_total,
-        ));
-        if ( ! $item_id ) wp_send_json_error( 'Napaka pri dodajanju' );
-
-        $item = $order->get_item( $item_id );
-        $item->add_meta_data( '_noriks_upsell', sanitize_text_field( $_POST['upsell_type'] ?? 'post_purchase_step2' ), true );
-
-        // izbrana barva in velikost se zapiseta kot vidna metapodatka na postavki
-        $sel_color = sanitize_text_field( $_POST['upsell_color'] ?? '' );
-        $sel_size  = sanitize_text_field( $_POST['upsell_size'] ?? '' );
-        if ( $sel_color ) { $item->add_meta_data( 'Barva', $sel_color, true ); }
-        if ( $sel_size )  { $item->add_meta_data( 'Velikost', $sel_size, true ); }
-
-        $label = sanitize_text_field( $_POST['upsell_label'] ?? '' );
-        if ( $label ) { $item->add_meta_data( '_noriks_upsell_label', $label, true ); }
-        $item->save();
-
-        $order->calculate_totals();
-        $order->save();
-
-        $order->add_order_note( sprintf(
-            'Thank you upsell (korak 2): %s%s — %d kos, skupaj %s',
-            $product->get_name(),
-            $label ? ' [' . $label . ']' : '',
-            $quantity,
-            wc_price( $fixed_total )
-        ) );
-
-        wp_send_json_success( array(
-            'message'      => 'Dodano',
-            'item_id'      => $item_id,
-            'product_name' => $product->get_name(),
-            'upsell_price' => $upsell_price,
-            'total'        => $order->get_formatted_order_total(),
-        ) );
+    // Korak 1 dovoli samo izdelka iz ponudbe koraka 1 (majica 250 / sive boksarice 2829)
+    // in samo kolicine iz cenika — sicer bi se z rocno zahtevo dal dodati poljuben
+    // izdelek ali poljubna kolicina po ceni enega kosa. Korak 2 ima svoj handler.
+    $allowed_step1 = array( 250, 2829 );
+    if ( ! in_array( $product_id, $allowed_step1, true ) ) {
+        wp_send_json_error( 'Ta izdelek ni v ponudbi' );
+    }
+    if ( $variation_id && (int) wp_get_post_parent_id( $variation_id ) !== $product_id ) {
+        wp_send_json_error( 'Neveljavna različica' );
     }
 
     // Prices depend on product type (bokserice vs majice)
@@ -408,7 +375,10 @@ function noriks_handle_add_upsell() {
     $cat_str = is_array( $cats ) ? strtolower( implode( ' ', $cats ) ) : '';
     $is_majice = ( strpos($cat_str, 'majic') !== false || strpos($name, 'majic') !== false );
     $qty_prices = $is_majice ? $majice_prices : $bokserice_prices;
-    $total_price = isset( $qty_prices[$quantity] ) ? $qty_prices[$quantity] : $active_price;
+    if ( ! isset( $qty_prices[ $quantity ] ) ) {
+        wp_send_json_error( 'Neveljavna količina' );
+    }
+    $total_price = $qty_prices[ $quantity ];
     $upsell_price = $total_price / $quantity;
 
     // Add to order
@@ -444,4 +414,125 @@ function noriks_handle_add_upsell() {
         'upsell_price' => $upsell_price,
         'total'        => $order->get_formatted_order_total(),
     ));
+}
+
+
+// ─── 7. AJAX: korak 2 — dodaj ponudbo iz mreze ──────────────────────────
+//
+// Brskalnik poslje samo kljuc ponudbe ter izbrano barvo in velikost.
+// Izdelek, kolicina in cena se preberejo iz ponudbe na strezniku
+// (noriks_ty2_find_card), zato jih ni mogoce podtakniti.
+//
+// Metapodatki postavke so v ISTI obliki kot pri nakupu orto ponudbe na produktni
+// strani (gck_order_item_meta), da jih skladisce in Metakocka bereta enako:
+//   1, 2, … N          "Barva - Velikost" za vsak kos (brez atributov: ime izdelka)
+//   _bundle_pairs      N
+//   _offer_id          "N__ty2"
+// in dodatno kot ostali upselli (product_page_upsell):
+//   _noriks_upsell         post_purchase_step2
+//   _noriks_upsell_pieces  N
+//   _noriks_upsell_sku     SKU izdelka
+//   _noriks_upsell_label   naslov kartice
+//   _noriks_upsell_offer   kljuc ponudbe (za podvojitve in porocila)
+
+add_action( 'wp_ajax_noriks_add_upsell_step2', 'noriks_handle_add_upsell_step2' );
+add_action( 'wp_ajax_nopriv_noriks_add_upsell_step2', 'noriks_handle_add_upsell_step2' );
+
+function noriks_handle_add_upsell_step2() {
+    $order_id  = absint( $_POST['order_id'] ?? 0 );
+    $offer_key = sanitize_key( wp_unslash( $_POST['offer_key'] ?? '' ) );
+    $nonce     = $_POST['nonce'] ?? '';
+
+    if ( ! wp_verify_nonce( $nonce, 'noriks_upsell_' . $order_id ) ) {
+        wp_send_json_error( 'Neveljavna zahteva' );
+    }
+    $order = wc_get_order( $order_id );
+    if ( ! $order ) { wp_send_json_error( 'Naročilo ni bilo najdeno' ); }
+    if ( $order->get_payment_method() !== 'cod' ) {
+        wp_send_json_error( 'Upsell je na voljo samo pri plačilu po povzetju' );
+    }
+    if ( $order->get_status() !== 'primary-hold' ) {
+        wp_send_json_error( 'Čas za dodajanje je potekel' );
+    }
+    $created = $order->get_date_created();
+    if ( $created && ( time() - $created->getTimestamp() ) > 330 ) {
+        wp_send_json_error( 'Čas za dodajanje je potekel' );
+    }
+    if ( ! function_exists( 'noriks_ty2_find_card' ) ) {
+        wp_send_json_error( 'Ponudba ni na voljo' );
+    }
+
+    $card = noriks_ty2_find_card( $offer_key, $order );
+    if ( ! $card ) { wp_send_json_error( 'Ponudba ni več na voljo' ); }
+
+    // ista ponudba samo enkrat
+    foreach ( $order->get_items() as $it ) {
+        if ( $it->get_meta( '_noriks_upsell_offer' ) === $offer_key ) {
+            wp_send_json_error( 'To ponudbo ste že dodali' );
+        }
+    }
+
+    $product = wc_get_product( $card['product_id'] );
+    if ( ! $product ) { wp_send_json_error( 'Izdelek ni najden' ); }
+
+    // izbrana barva in velikost morata biti med moznostmi izdelka
+    $color = sanitize_text_field( wp_unslash( $_POST['upsell_color'] ?? '' ) );
+    $size  = sanitize_text_field( wp_unslash( $_POST['upsell_size'] ?? '' ) );
+    if ( $card['colors'] && ! in_array( $color, $card['colors'], true ) ) { wp_send_json_error( 'Izberite barvo' ); }
+    if ( $card['sizes'] && ! in_array( $size, $card['sizes'], true ) )   { wp_send_json_error( 'Izberite velikost' ); }
+    if ( ! $card['colors'] ) { $color = ''; }
+    if ( ! $card['sizes'] )  { $size = ''; }
+
+    // variabilen izdelek: v naročilo gre prava variacija, ne prva po vrsti
+    $line_product = $product;
+    if ( $product->is_type( 'variable' ) ) {
+        $vid = noriks_ty2_match_variation( $product, $color, $size );
+        if ( ! $vid ) { wp_send_json_error( 'Te kombinacije ni na zalogi' ); }
+        $line_product = wc_get_product( $vid );
+    }
+
+    $pieces = (int) $card['qty'];
+    $total  = (float) $card['new'];
+    $piece_label = implode( ' - ', array_filter( array( $color, $size ) ) );
+    if ( $piece_label === '' ) { $piece_label = $product->get_name(); }
+
+    // kolicina postavke je 1, cena je paketna — enako kot orto ponudba s produktne strani
+    $item_id = $order->add_product( $line_product, 1, array(
+        'subtotal' => $total,
+        'total'    => $total,
+    ) );
+    if ( ! $item_id ) { wp_send_json_error( 'Napaka pri dodajanju' ); }
+
+    $item = $order->get_item( $item_id );
+    for ( $i = 1; $i <= $pieces; $i++ ) {
+        $item->add_meta_data( (string) $i, $piece_label, true );
+    }
+    $item->add_meta_data( '_bundle_pairs', $pieces, true );
+    $item->add_meta_data( '_offer_id', $pieces . '__ty2', true );
+    $item->add_meta_data( '_noriks_upsell', 'post_purchase_step2', true );
+    $item->add_meta_data( '_noriks_upsell_pieces', $pieces, true );
+    $item->add_meta_data( '_noriks_upsell_sku', $card['sku'], true );
+    $item->add_meta_data( '_noriks_upsell_label', $card['label'], true );
+    $item->add_meta_data( '_noriks_upsell_offer', $offer_key, true );
+    $item->save();
+
+    $order->calculate_totals();
+    $order->save();
+
+    $order->add_order_note( sprintf(
+        'Thank you upsell (korak 2): %s [%s] — %d kos, %s, skupaj %s',
+        $product->get_name(),
+        $card['label'],
+        $pieces,
+        $piece_label,
+        wc_price( $total )
+    ) );
+
+    wp_send_json_success( array(
+        'message'      => 'Dodano',
+        'item_id'      => $item_id,
+        'product_name' => $product->get_name(),
+        'price'        => $total,
+        'total'        => $order->get_formatted_order_total(),
+    ) );
 }

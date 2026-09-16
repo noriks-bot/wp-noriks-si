@@ -233,120 +233,12 @@ if ( $order ) {
     }
 }
 
-// ─── Korak 2: fiksna ponudba izdelkov ────────────────────────────────
-// Ena sama tabela — tu se ureja, kaj se ponuja, v kakšni količini in po kakšni ceni.
-//   sku   … izdelek se poišče po SKU (deluje enako na devsi in na produkciji)
-//   qty   … koliko kosov se doda v naročilo
-//   label … naslov na kartici
-//   cat   … oznaka nad naslovom
-//   price … končna cena upsella za celotno količino; null = 50 % akcijske cene × qty
-$ty_grid_config = array(
-    array( 'sku' => 'NORIKS-BOXERS-ORTO', 'qty' => 3,  'cat' => 'BOKSERICE', 'label' => '3x Bokserice',  'price' => null ),
-    array( 'sku' => 'NORIKS-BOXERS-ORTO', 'qty' => 6,  'cat' => 'BOKSERICE', 'label' => '6x Bokserice',  'price' => null ),
-    array( 'sku' => 'NORIKS-BOXERS-ORTO', 'qty' => 10, 'cat' => 'BOKSERICE', 'label' => '10x Bokserice', 'price' => null ),
-    array( 'sku' => 'NORIKS-SHIRTS-ORTO', 'qty' => 3,  'cat' => 'MAJICE',    'label' => '3x Majice',     'price' => null ),
-    array( 'sku' => 'NORIKS-SHIRTS-ORTO', 'qty' => 6,  'cat' => 'MAJICE',    'label' => '6x Majice',     'price' => null ),
-    array( 'sku' => 'NORIKS-SHIRTS-ORTO', 'qty' => 10, 'cat' => 'MAJICE',    'label' => '10x Majice',    'price' => null ),
-    array( 'sku' => 'NORIKS-KOMZIPS',     'qty' => 1,  'cat' => 'NOGAVICE',  'label' => 'Kompresijske nogavice z zadrgo', 'price' => null ),
-    array( 'sku' => 'NORIKS-KOMPSFIT',    'qty' => 1,  'cat' => 'MAJICA',    'label' => '1x KOMPSFIT majica',  'price' => null ),
-    array( 'sku' => 'NORIKS-KOMPSFIT',    'qty' => 3,  'cat' => 'MAJICA',    'label' => '3x KOMPSFIT majica',  'price' => null ),
-);
-
-/**
- * Iz konfiguracije zgradi kartice za mrežo.
- * Vsaka kartica dobi: izdelek, ceno pred/po, sliko in izbirnike (barva/velikost).
- */
-$grid_cards = array();
-foreach ( $ty_grid_config as $gi => $cfg ) {
-    $gp_id = wc_get_product_id_by_sku( $cfg['sku'] );
-    if ( ! $gp_id ) { continue; }
-    $gp = wc_get_product( $gp_id );
-    if ( ! $gp || ! $gp->is_purchasable() && ! $gp->is_type('variable') ) { continue; }
-
-    $qty = max( 1, (int) $cfg['qty'] );
-
-    // enotna akcijska cena izdelka
-    $unit = (float) $gp->get_price();
-    if ( ! $unit && $gp->is_type('variable') ) { $unit = (float) $gp->get_variation_price( 'min', true ); }
-    if ( ! $unit ) { $unit = (float) $gp->get_regular_price(); }
-    if ( ! $unit ) { continue; }
-
-    $old_total = $unit * $qty;
-    $new_total = is_null( $cfg['price'] ) ? round( $old_total * 0.5, 2 ) : (float) $cfg['price'];
-
-    // izbirniki barve in velikosti iz atributov izdelka
-    $colors = array(); $sizes = array(); $variations = array();
-    foreach ( $gp->get_attributes() as $attr ) {
-        $aname = strtolower( $attr->get_name() );
-        $opts  = $attr->is_taxonomy()
-            ? wp_list_pluck( wc_get_product_terms( $gp_id, $attr->get_name(), array( 'fields' => 'all' ) ), 'name' )
-            : (array) $attr->get_options();
-        if ( strpos( $aname, 'barv' ) !== false || strpos( $aname, 'color' ) !== false ) { $colors = $opts; }
-        elseif ( strpos( $aname, 'veliko' ) !== false || strpos( $aname, 'size' ) !== false ) { $sizes = $opts; }
-    }
-    if ( $gp->is_type('variable') ) {
-        foreach ( $gp->get_available_variations() as $gv ) {
-            $lbl = '';
-            foreach ( $gv['attributes'] as $gval ) { $lbl = trim( $lbl . ' ' . $gval ); }
-            $variations[] = array( 'id' => $gv['variation_id'], 'label' => $lbl );
-        }
-    }
-
-    $img_id = $gp->get_image_id();
-    $grid_cards[] = array(
-        'key'        => 'g' . $gi,
-        'product_id' => $gp_id,
-        'qty'        => $qty,
-        'cat'        => $cfg['cat'],
-        'label'      => $cfg['label'],
-        'img'        => $img_id ? wp_get_attachment_url( $img_id ) : wc_placeholder_img_src(),
-        'old'        => $old_total,
-        'new'        => $new_total,
-        'unit_new'   => $new_total / $qty,
-        'colors'     => $colors,
-        'sizes'      => $sizes,
-        'variations' => $variations,
-        'link'       => get_permalink( $gp_id ),
-    );
-}
-// Varovalka: ce kaksnega SKU na tem trgu ni, mrezo dopolnimo z najbolj prodajanimi
-// izdelki iz istih kategorij, da korak 2 nikoli ne ostane prazen.
-if ( count( $grid_cards ) < 4 ) {
-    $have_ids = wp_list_pluck( $grid_cards, 'product_id' );
-    $ordered  = array();
-    if ( $order ) {
-        foreach ( $order->get_items() as $oi ) { $ordered[] = $oi->get_product_id(); }
-    }
-    $fill = wc_get_products( array(
-        'status'   => 'publish',
-        'limit'    => 8 - count( $grid_cards ),
-        'exclude'  => array_merge( $have_ids, $ordered, array( $upsell_product_id ) ),
-        'orderby'  => 'popularity',
-        'type'     => array( 'simple', 'variable' ),
-    ) );
-    foreach ( $fill as $fi => $fp ) {
-        $unit = (float) $fp->get_price();
-        if ( ! $unit && $fp->is_type('variable') ) { $unit = (float) $fp->get_variation_price( 'min', true ); }
-        if ( ! $unit ) { $unit = (float) $fp->get_regular_price(); }
-        if ( ! $unit ) { continue; }
-        $fimg = $fp->get_image_id();
-        $grid_cards[] = array(
-            'key'        => 'f' . $fi,
-            'product_id' => $fp->get_id(),
-            'qty'        => 1,
-            'cat'        => '',
-            'label'      => $fp->get_name(),
-            'img'        => $fimg ? wp_get_attachment_url( $fimg ) : wc_placeholder_img_src(),
-            'old'        => $unit,
-            'new'        => round( $unit * 0.5, 2 ),
-            'unit_new'   => round( $unit * 0.5, 2 ),
-            'colors'     => array(),
-            'sizes'      => array(),
-            'variations' => array(),
-            'link'       => get_permalink( $fp->get_id() ),
-        );
-    }
-}
+// ─── Korak 2: ponudba izdelkov ───────────────────────────────────────
+// Ponudbe se urejajo v adminu: WooCommerce → Ponudbe po nakupu (functions/thankyou_offers.php).
+// Kartice in cene se racunajo na strezniku; ob dodajanju strežnik ceno izracuna znova po kljucu kartice.
+$grid_cards = function_exists( 'noriks_ty2_build_cards' )
+    ? noriks_ty2_build_cards( $order, isset( $upsell_product_id ) ? $upsell_product_id : 0 )
+    : array();
 
 $grid_products = $grid_cards; // zdruzljivost z obstojecim pogojem nize
 ?>
@@ -520,6 +412,9 @@ body.woocommerce-order-received .woocommerce {
   border-left:15px solid transparent; border-right:15px solid transparent; border-top:14px solid #000; }
 .tyu2-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:22px; padding:40px 28px 28px; background:#fff; }
 .tyu2-card { background:#f4f4f4; border-radius:10px; padding:14px 14px 16px; display:flex; flex-direction:column; }
+/* elementi mreze se smejo skrciti pod sirino vsebine — sicer izbirniki na mobilcu
+   potisnejo kartico cez rob zaslona (min-width:auto pri grid/flex elementih) */
+.tyu2-card, .tyu2-field > *, .tyu2-dd, .tyu2-dd__btn { min-width:0; }
 .tyu2-card__fields { margin-bottom:2px; }
 .tyu2-card__btns { margin-top:auto; }
 .tyu2-card__imgwrap { position:relative; border-radius:8px; overflow:hidden; background:#fff; }
@@ -557,7 +452,8 @@ body.woocommerce-order-received .woocommerce {
 .tyu2-dd__list [role=option] { display:flex; align-items:center; gap:10px; padding:8px 12px 8px 10px;
   border-radius:4px; cursor:pointer; font-size:15px; font-weight:600; color:#333; line-height:1.25; white-space:nowrap; }
 .tyu2-dd__list [role=option]:hover { background:#f6f6f6; }
-.tyu2-dd__list [role=option].is-on { background:#fdecec; }
+.tyu2-dd__list [role=option] { font-weight:500; }
+.tyu2-dd__list [role=option].is-on { background:#fff1e9; font-weight:700; }
 .tyu2-dd__list::-webkit-scrollbar { width:8px; }
 .tyu2-dd__list::-webkit-scrollbar-thumb { background:#d8d8d8; border-radius:8px; }
 .tyu2-dd.is-locked { opacity:.55; pointer-events:none; }
@@ -584,10 +480,17 @@ body.woocommerce-order-received .woocommerce {
 .tyu2-cartbar__note { text-align:center; font-size:12px; font-style:italic; color:#777; margin-top:8px; }
 
 @media (max-width:1180px){
-  .tyu2-grid { grid-template-columns:repeat(3,1fr); gap:22px; padding:32px 20px 22px; }
+  .tyu2-grid { grid-template-columns:repeat(3,1fr); gap:22px; padding:32px 20px 130px; }
+
+  /* mobilec IN tablica: vrstica z zakljuckom je vedno pripeta na dno zaslona */
+  .tyu2-cartbar { position:fixed; left:0; right:0; bottom:0; z-index:9999;
+    background:#fff; border-top:1px solid #e2e2e2; box-shadow:0 -4px 16px rgba(0,0,0,.12);
+    padding:12px 20px calc(12px + env(safe-area-inset-bottom)); }
+  .tyu2-cartbar__inner { max-width:760px; margin:0 auto; justify-content:space-between; flex-wrap:nowrap; }
+  .tyu2-cartbar__note { margin-top:6px; }
 }
 @media (max-width:900px){
-  .tyu2-grid { grid-template-columns:repeat(2,1fr); gap:16px; padding:26px 14px 18px; }
+  .tyu2-grid { grid-template-columns:repeat(2,1fr); gap:16px; padding:26px 14px 130px; }
   .tyu2-head { padding:18px 14px 22px; }
   .tyu2-head__title { font-size:20px; }
   .tyu2-head__badge { width:76px; height:76px; }
@@ -617,10 +520,8 @@ body.woocommerce-order-received .woocommerce {
   .tyu2-dd__list [role=option] { font-size:13.5px; padding:7px 10px; }
   .tyu2-btn { height:42px; font-size:13px; }
 
-  /* vrstica z zakljuckom je pripeta na dno zaslona */
-  .tyu2-cartbar { position:fixed; left:0; right:0; bottom:0; z-index:9999;
-    background:#fff; border-top:1px solid #e2e2e2; box-shadow:0 -4px 16px rgba(0,0,0,.12);
-    padding:10px 14px calc(10px + env(safe-area-inset-bottom)); }
+  /* vrstica z zakljuckom je pripeta na dno (pravilo za <=1180px), tu samo bolj kompaktna */
+  .tyu2-cartbar { padding:10px 14px calc(10px + env(safe-area-inset-bottom)); }
   .tyu2-cartbar__inner { flex-direction:row; gap:12px; justify-content:space-between; flex-wrap:nowrap; }
   .tyu2-cartbar__left { gap:9px; }
   .tyu2-cartbar__save { font-size:12px; }
@@ -913,20 +814,10 @@ body.woocommerce-order-received .woocommerce {
                     </div>
                     <?php endif; ?>
 
-                    <?php if ( $c['variations'] ) : ?>
-                    <select class="tyu2-select tyu2-variation" style="display:none;">
-                        <?php foreach ( $c['variations'] as $gv ) : ?>
-                        <option value="<?php echo $gv['id']; ?>"><?php echo esc_html( $gv['label'] ); ?></option>
-                        <?php endforeach; ?>
-                    </select>
-                    <?php endif; ?>
-
                     <div class="tyu2-card__btns">
                     <button class="tyu2-btn tyu2-btn--add"
-                            data-product-id="<?php echo esc_attr( $c['product_id'] ); ?>"
-                            data-qty="<?php echo esc_attr( $c['qty'] ); ?>"
-                            data-price="<?php echo esc_attr( $c['new'] ); ?>"
-                            data-label="<?php echo esc_attr( $c['label'] ); ?>">
+                            data-offer="<?php echo esc_attr( $c['key'] ); ?>"
+                            data-price="<?php echo esc_attr( $c['new'] ); ?>">
                         <span class="tyu2-btn__plus">+</span> Dodajte k naročilu
                     </button>
                     <button class="tyu2-btn tyu2-btn--remove" style="display:none;">
@@ -1317,19 +1208,14 @@ body.woocommerce-order-received .woocommerce {
 
                 var colorSel = card.querySelector('.tyu2-color');
                 var sizeSel  = card.querySelector('.tyu2-size');
-                var varSel   = card.querySelector('.tyu2-variation');
 
+                // cena in izdelek se na strezniku preberejo iz ponudbe po kljucu — brskalnik ju ne posilja
                 var fd = new FormData();
-                fd.append('action', 'noriks_add_upsell');
+                fd.append('action', 'noriks_add_upsell_step2');
                 fd.append('order_id', orderId);
-                fd.append('product_id', addBtnG.getAttribute('data-product-id'));
-                fd.append('variation_id', varSel ? varSel.value : '');
-                fd.append('quantity', addBtnG.getAttribute('data-qty'));
-                fd.append('fixed_total', addBtnG.getAttribute('data-price'));
-                fd.append('upsell_label', addBtnG.getAttribute('data-label'));
+                fd.append('offer_key', addBtnG.getAttribute('data-offer'));
                 if (colorSel) fd.append('upsell_color', colorSel.value);
                 if (sizeSel)  fd.append('upsell_size', sizeSel.value);
-                fd.append('upsell_type', 'post_purchase_step2');
                 fd.append('nonce', nonce);
 
                 fetch(ajaxUrl, { method: 'POST', body: fd })
