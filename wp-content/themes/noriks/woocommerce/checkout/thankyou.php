@@ -461,10 +461,6 @@ body.woocommerce-order-received .woocommerce {
   border:0; border-radius:5px; font-size:14px; font-weight:700; cursor:pointer; text-decoration:none; margin-top:8px; }
 .tyu2-btn--add { background:#111; color:#fff; }
 .tyu2-btn--remove { background:#9b9b9b; color:#fff; }
-.tyu2-btn--more { background:#ebebeb; color:#333; font-weight:600; }
-/* ob dodanem izdelku gumb "Vec o izdelku" izgine, a obdrzi prostor,
-   da "Odstranite" ostane v isti vrstici kot gumbi sosednjih kartic */
-.tyu2-card.is-added .tyu2-btn--more { visibility:hidden; }
 .tyu2-btn__plus { font-size:17px; font-weight:800; }
 .tyu2-cartbar { position:sticky; bottom:0; background:#fff; padding:14px 20px 18px; border-top:1px solid #e2e2e2; }
 .tyu2-cartbar__inner { display:flex; align-items:center; justify-content:center; gap:22px; flex-wrap:wrap; }
@@ -823,7 +819,6 @@ body.woocommerce-order-received .woocommerce {
                     <button class="tyu2-btn tyu2-btn--remove" style="display:none;">
                         <span class="tyu2-btn__bin">🗑</span> Odstranite
                     </button>
-                    <a class="tyu2-btn tyu2-btn--more" href="<?php echo esc_url( $c['link'] ); ?>" target="_blank" rel="noopener">Več o izdelku</a>
                     </div>
                 </div>
                 <?php endforeach; ?>
