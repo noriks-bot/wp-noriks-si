@@ -4,6 +4,8 @@
  *
  * - Ponudbe se urejajo v adminu: WooCommerce → Ponudbe po nakupu
  *   (opcija noriks_ty2_offers). Dokler ni nic shranjeno, veljajo privzete spodaj.
+ * - Cena se vpise NA KOS; paket = cena na kos × kolicina. Brez vpisane cene velja
+ *   privzeta cena na kos po SKU (noriks_ty2_default_unit_prices), sicer 50 % akcijske cene.
  * - Kartice za stran IN cena ob dodajanju se racunata na strezniku iz iste
  *   funkcije (noriks_ty2_build_cards), zato brskalnik cene ne more podtakniti.
  */
@@ -11,6 +13,31 @@
 if ( ! defined( 'ABSPATH' ) ) { exit; }
 
 define( 'NORIKS_TY2_OPTION', 'noriks_ty2_offers' );
+
+/** Privzete cene na kos po SKU (veljajo, ce v adminu cena na kos ni vpisana). */
+function noriks_ty2_default_unit_prices() {
+    return array(
+        'NORIKS-BOXERS-ORTO' => 4.99,
+        'NORIKS-SHIRTS-ORTO' => 7.99,
+        'NORIKS-KOMPSFIT'    => 9.99,
+    );
+}
+
+/**
+ * Koncna cena paketa za vrstico ponudbe: cena na kos × kolicina.
+ * Vrne '' (= 50 % akcijske cene), ce ni ne vpisane ne privzete cene na kos.
+ */
+function noriks_ty2_row_price( $row ) {
+    $qty  = max( 1, (int) ( $row['qty'] ?? 1 ) );
+    $unit = isset( $row['unit'] ) && is_numeric( $row['unit'] ) ? (float) $row['unit'] : 0;
+    if ( $unit <= 0 ) {
+        // starejsi zapis: koncna cena za celoten paket
+        if ( isset( $row['price'] ) && is_numeric( $row['price'] ) && (float) $row['price'] > 0 ) { return (float) $row['price']; }
+        $map  = noriks_ty2_default_unit_prices();
+        $unit = $map[ strtoupper( $row['sku'] ?? '' ) ] ?? 0;
+    }
+    return $unit > 0 ? round( $unit * $qty, 2 ) : '';
+}
 
 /** Privzete ponudbe — enake, kot so bile prej trdo zapisane v thankyou.php. */
 function noriks_ty2_default_offers() {
@@ -28,6 +55,7 @@ function noriks_ty2_default_offers() {
     foreach ( $rows as $i => &$r ) {
         $r['uid']    = 'd' . $i;
         $r['active'] = 1;
+        $r['unit']   = '';
         $r['price']  = '';
     }
     return $rows;
@@ -112,7 +140,7 @@ function noriks_ty2_build_cards( $order = false, $exclude_id = 0 ) {
     foreach ( noriks_ty2_active_offers() as $row ) {
         $pid = wc_get_product_id_by_sku( $row['sku'] );
         if ( ! $pid ) { continue; }
-        $card = noriks_ty2_card( 'o' . $row['uid'], wc_get_product( $pid ), $row['qty'], $row['cat'] ?? '', $row['label'] ?? '', $row['price'] ?? '' );
+        $card = noriks_ty2_card( 'o' . $row['uid'], wc_get_product( $pid ), $row['qty'], $row['cat'] ?? '', $row['label'] ?? '', noriks_ty2_row_price( $row ) );
         if ( $card ) { $cards[] = $card; }
     }
 
@@ -192,7 +220,7 @@ add_action( 'admin_post_noriks_ty2_save', function () {
     foreach ( $in as $r ) {
         $sku = strtoupper( trim( sanitize_text_field( $r['sku'] ?? '' ) ) );
         if ( $sku === '' ) { continue; }
-        $price = trim( str_replace( ',', '.', sanitize_text_field( $r['price'] ?? '' ) ) );
+        $unit = trim( str_replace( ',', '.', sanitize_text_field( $r['unit'] ?? '' ) ) );
         $rows[] = array(
             'uid'    => preg_replace( '/[^a-z0-9]/i', '', $r['uid'] ?? '' ) ?: substr( md5( uniqid( '', true ) ), 0, 8 ),
             'active' => empty( $r['active'] ) ? 0 : 1,
@@ -200,7 +228,8 @@ add_action( 'admin_post_noriks_ty2_save', function () {
             'qty'    => max( 1, min( 50, absint( $r['qty'] ?? 1 ) ) ),
             'cat'    => sanitize_text_field( $r['cat'] ?? '' ),
             'label'  => sanitize_text_field( $r['label'] ?? '' ),
-            'price'  => ( $price !== '' && is_numeric( $price ) && (float) $price > 0 ) ? (string) round( (float) $price, 2 ) : '',
+            'unit'   => ( $unit !== '' && is_numeric( $unit ) && (float) $unit > 0 ) ? (string) round( (float) $unit, 2 ) : '',
+            'price'  => '',
         );
     }
     update_option( NORIKS_TY2_OPTION, $rows, false );
@@ -222,7 +251,7 @@ function noriks_ty2_admin_page() {
         <?php endif; ?>
 
         <p>Vrstni red v tabeli je vrstni red kartic na strani. Neaktivne vrstice ostanejo shranjene, a se ne prikažejo.
-           <strong>Cena</strong> je končna cena za celotno količino; prazno = 50&nbsp;% akcijske cene × količina.
+           <strong>Cena na kos</strong> se pomnoži s količino (npr. 4,99 × 3 = 14,97). Prazno = privzeta cena na kos (bokserice 4,99, majica 7,99, KOMPSFIT 9,99), za ostale izdelke 50&nbsp;% akcijske cene.
            <?php if ( ! $is_saved ) : ?><br><em>Trenutno veljajo privzete ponudbe iz kode — ob prvem shranjevanju postanejo urejljive tu.</em><?php endif; ?></p>
 
         <form method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>">
@@ -237,7 +266,7 @@ function noriks_ty2_admin_page() {
                     <th style="width:70px">Količina</th>
                     <th>Oznaka</th>
                     <th>Naslov kartice</th>
-                    <th style="width:110px">Cena (<?php echo esc_html( $cur ); ?>)</th>
+                    <th style="width:110px">Cena na kos (<?php echo esc_html( $cur ); ?>)</th>
                     <th>Izdelek / preverba</th>
                     <th style="width:40px"></th>
                 </tr></thead>
@@ -245,7 +274,9 @@ function noriks_ty2_admin_page() {
                 <?php foreach ( $rows as $i => $r ) :
                     $pid  = $r['sku'] ? wc_get_product_id_by_sku( $r['sku'] ) : 0;
                     $prod = $pid ? wc_get_product( $pid ) : null;
-                    $card = $prod ? noriks_ty2_card( 'x', $prod, $r['qty'], '', '', $r['price'] ?? '' ) : null;
+                    $card = $prod ? noriks_ty2_card( 'x', $prod, $r['qty'], '', '', noriks_ty2_row_price( $r ) ) : null;
+                    $dmap = noriks_ty2_default_unit_prices();
+                    $ph   = isset( $dmap[ $r['sku'] ] ) ? number_format( $dmap[ $r['sku'] ], 2, ',', '' ) : '50 %';
                 ?>
                     <tr>
                         <td><button type="button" class="button ty2-up" title="Gor">↑</button> <button type="button" class="button ty2-down" title="Dol">↓</button></td>
@@ -254,7 +285,7 @@ function noriks_ty2_admin_page() {
                         <td><input type="number" data-f="qty" min="1" max="50" value="<?php echo esc_attr( $r['qty'] ); ?>" style="width:100%"></td>
                         <td><input type="text" data-f="cat" value="<?php echo esc_attr( $r['cat'] ); ?>" style="width:100%"></td>
                         <td><input type="text" data-f="label" value="<?php echo esc_attr( $r['label'] ); ?>" style="width:100%"></td>
-                        <td><input type="text" data-f="price" value="<?php echo esc_attr( $r['price'] ?? '' ); ?>" placeholder="50 %" style="width:100%"></td>
+                        <td><input type="text" data-f="unit" value="<?php echo esc_attr( $r['unit'] ?? '' ); ?>" placeholder="<?php echo esc_attr( $ph ); ?>" style="width:100%"></td>
                         <td style="font-size:12px;line-height:1.4">
                             <?php if ( ! $prod ) : ?>
                                 <span style="color:#b32d2e">✗ SKU ne obstaja</span>
@@ -262,7 +293,7 @@ function noriks_ty2_admin_page() {
                                 <span style="color:#b32d2e">✗ <?php echo esc_html( $prod->get_name() ); ?> — ni objavljen ali nima cene</span>
                             <?php else : ?>
                                 <a href="<?php echo esc_url( get_edit_post_link( $pid ) ); ?>" target="_blank"><?php echo esc_html( $prod->get_name() ); ?></a><br>
-                                <span style="color:#666">redna <?php echo esc_html( number_format( $card['old'], 2, ',', '.' ) . ' ' . $cur ); ?> → ponudba <strong><?php echo esc_html( number_format( $card['new'], 2, ',', '.' ) . ' ' . $cur ); ?></strong></span>
+                                <span style="color:#666">redna <?php echo esc_html( number_format( $card['old'], 2, ',', '.' ) . ' ' . $cur ); ?> → ponudba <strong><?php echo esc_html( number_format( $card['new'], 2, ',', '.' ) . ' ' . $cur ); ?></strong> (<?php echo esc_html( number_format( $card['unit_new'], 2, ',', '.' ) ); ?> na kos)</span>
                             <?php endif; ?>
                         </td>
                         <td><button type="button" class="button-link-delete ty2-del" title="Izbriši">✕</button></td>
@@ -309,7 +340,7 @@ function noriks_ty2_admin_page() {
                 '<td><input type="number" data-f="qty" min="1" max="50" value="1" style="width:100%"></td>' +
                 '<td><input type="text" data-f="cat" style="width:100%"></td>' +
                 '<td><input type="text" data-f="label" style="width:100%"></td>' +
-                '<td><input type="text" data-f="price" placeholder="50 %" style="width:100%"></td>' +
+                '<td><input type="text" data-f="unit" placeholder="na kos" style="width:100%"></td>' +
                 '<td style="font-size:12px;color:#666">preverba po shranjevanju</td>' +
                 '<td><button type="button" class="button-link-delete ty2-del">✕</button></td>';
             tb.appendChild(tr);

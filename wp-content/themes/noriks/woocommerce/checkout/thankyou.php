@@ -474,9 +474,13 @@ body.woocommerce-order-received .woocommerce {
 .tyu2-cartbar__cta { background:#1a9c3c; color:#fff; border:0; border-radius:6px; padding:16px 44px;
   font-size:17px; font-weight:700; cursor:pointer; box-shadow:0 4px 12px rgba(26,156,60,.3); }
 .tyu2-cartbar__note { text-align:center; font-size:12px; font-style:italic; color:#777; margin-top:8px; }
+.tyu2-cartbar__skip { display:block; margin:6px auto 0; padding:4px 10px; background:none; border:0; cursor:pointer;
+  color:#666; font-size:13px; font-weight:600; text-decoration:underline; text-underline-offset:3px; }
+.tyu2-cartbar__skip:hover { color:#111; }
+.tyu2-cartbar__skip[hidden] { display:none !important; }
 
 @media (max-width:1180px){
-  .tyu2-grid { grid-template-columns:repeat(3,1fr); gap:22px; padding:32px 20px 130px; }
+  .tyu2-grid { grid-template-columns:repeat(3,1fr); gap:22px; padding:32px 20px 160px; }
 
   /* mobilec IN tablica: vrstica z zakljuckom je vedno pripeta na dno zaslona */
   .tyu2-cartbar { position:fixed; left:0; right:0; bottom:0; z-index:9999;
@@ -486,7 +490,7 @@ body.woocommerce-order-received .woocommerce {
   .tyu2-cartbar__note { margin-top:6px; }
 }
 @media (max-width:900px){
-  .tyu2-grid { grid-template-columns:repeat(2,1fr); gap:16px; padding:26px 14px 130px; }
+  .tyu2-grid { grid-template-columns:repeat(2,1fr); gap:16px; padding:26px 14px 160px; }
   .tyu2-head { padding:18px 14px 22px; }
   .tyu2-head__title { font-size:20px; }
   .tyu2-head__badge { width:76px; height:76px; }
@@ -502,7 +506,7 @@ body.woocommerce-order-received .woocommerce {
   .tyu2 { border-radius:0; background:#fff; }
   .tyu2-bar { border-radius:0; }
   .tyu2-head { padding:18px 16px 22px; }
-  .tyu2-grid { grid-template-columns:1fr 1fr; gap:12px; padding:24px 12px 96px; background:#fff; }
+  .tyu2-grid { grid-template-columns:1fr 1fr; gap:12px; padding:24px 12px 124px; background:#fff; }
   .tyu2-card { background:#f4f4f4; border:0; border-radius:10px; padding:10px 10px 12px; box-shadow:none; }
   .tyu2-card__imgwrap { background:#f6f6f6; }
   .tyu2-card__name { font-size:13.5px; min-height:36px; margin:10px 0 8px; }
@@ -524,6 +528,7 @@ body.woocommerce-order-received .woocommerce {
   .tyu2-cartbar__total { font-size:15px; }
   .tyu2-cartbar__cta { flex:1; max-width:56%; padding:14px 12px; font-size:15px; }
   .tyu2-cartbar__note { display:none; }
+  .tyu2-cartbar__skip { margin-top:4px; font-size:12.5px; }
 }
     /* Blur everything except upsell when visible */
     .ty-container.upsell-active .ty-success,
@@ -837,6 +842,7 @@ body.woocommerce-order-received .woocommerce {
                     <button class="tyu2-cartbar__cta" id="ty-grid-finish">Zaključite nakup</button>
                 </div>
                 <div class="tyu2-cartbar__note">* Brez dodatnih stroškov pošiljanja!</div>
+                <button type="button" class="tyu2-cartbar__skip" id="ty-grid-skip">Preskoči ponudbo</button>
             </div>
 
         </div>
@@ -1185,6 +1191,9 @@ body.woocommerce-order-received .woocommerce {
             if (elC) elC.textContent = count;
             if (elT) elT.textContent = money(total);
             if (elS) elS.textContent = money(save);
+            // "Preskoci ponudbo" ima smisel samo, dokler ni nic dodanega
+            var elSkip = document.getElementById('ty-grid-skip');
+            if (elSkip) elSkip.hidden = count > 0;
         }
 
         overlay.querySelectorAll('.tyu2-card').forEach(function(card) {
@@ -1285,6 +1294,18 @@ body.woocommerce-order-received .woocommerce {
                 closeAll();
                 var banner = document.getElementById('ty-added-banner');
                 if (Object.keys(addedItems).length && banner) { banner.style.display = 'block'; }
+                var items = document.getElementById('ty-order-items-section');
+                if (items) items.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            });
+        }
+
+        // "Preskoci ponudbo" — zapre ponudbo brez dodajanja in sprosti naročilo
+        var skipGridBtn = document.getElementById('ty-grid-skip');
+        if (skipGridBtn) {
+            skipGridBtn.addEventListener('click', function() {
+                skipGridBtn.disabled = true;
+                if (finishBtn) finishBtn.disabled = true;
+                closeAll();
                 var items = document.getElementById('ty-order-items-section');
                 if (items) items.scrollIntoView({ behavior: 'smooth', block: 'start' });
             });
