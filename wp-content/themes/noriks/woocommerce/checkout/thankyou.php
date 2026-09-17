@@ -241,6 +241,13 @@ $grid_cards = function_exists( 'noriks_ty2_build_cards' )
     : array();
 
 $grid_products = $grid_cards; // zdruzljivost z obstojecim pogojem nize
+
+// Najvecji popust med karticami (za glavo "Do X % popusta") — racuna se iz dejanskih cen
+$grid_max_pct = 0;
+foreach ( $grid_cards as $_gc ) {
+    if ( $_gc['old'] > 0 ) { $grid_max_pct = max( $grid_max_pct, (int) floor( ( 1 - $_gc['new'] / $_gc['old'] ) * 100 ) ); }
+}
+if ( $grid_max_pct <= 0 ) { $grid_max_pct = 50; }
 ?>
 
 <!-- vendor upsell CSS removed — using inline styles only -->
@@ -408,6 +415,7 @@ body.woocommerce-order-received .woocommerce {
   box-shadow:0 8px 20px rgba(0,0,0,.35); }
 .tyu2-head__badge span { font-size:26px; font-weight:800; line-height:1; }
 .tyu2-head__badge small { font-size:11px; font-weight:800; letter-spacing:.08em; margin-top:2px; }
+.tyu2-head__badge small.tyu2-head__badge-do { margin:0 0 2px; }
 .tyu2-head__arrow { position:absolute; left:50%; bottom:-13px; transform:translateX(-50%);
   border-left:15px solid transparent; border-right:15px solid transparent; border-top:14px solid #000; }
 .tyu2-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:22px; padding:40px 28px 28px; background:#fff; }
@@ -769,10 +777,10 @@ body.woocommerce-order-received .woocommerce {
                 <div class="tyu2-head__inner">
                     <div class="tyu2-head__txt">
                         <div class="tyu2-head__kicker">Ker praznimo skladišče ponujamo:</div>
-                        <div class="tyu2-head__title">50% popust na vse najbolj prodajane izdelke</div>
+                        <div class="tyu2-head__title">Do <?php echo (int) $grid_max_pct; ?>% popusta na najbolj prodajane izdelke</div>
                         <div class="tyu2-head__note">*Brez dodatnih stroškov pošiljanja!</div>
                     </div>
-                    <div class="tyu2-head__badge"><span>50%</span><small>POPUST</small></div>
+                    <div class="tyu2-head__badge"><small class="tyu2-head__badge-do">DO</small><span><?php echo (int) $grid_max_pct; ?>%</span><small>POPUSTA</small></div>
                 </div>
                 <span class="tyu2-head__arrow"></span>
             </div>
