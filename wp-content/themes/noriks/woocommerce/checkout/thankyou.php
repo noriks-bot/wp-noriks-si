@@ -418,7 +418,17 @@ body.woocommerce-order-received .woocommerce {
 .tyu2-head__badge small.tyu2-head__badge-do { margin:0 0 2px; }
 .tyu2-head__arrow { position:absolute; left:50%; bottom:-13px; transform:translateX(-50%);
   border-left:15px solid transparent; border-right:15px solid transparent; border-top:14px solid #000; }
-.tyu2-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:22px; padding:40px 28px 28px; background:#fff; }
+.tyu2-hero { padding-top:2px; }
+.tyu2-hero .tyu1-title { font-size:28px; }
+@media (max-width:560px){ .tyu2-hero .tyu1-title { font-size:20px; } }
+.tyu2-hero__kicker { font-size:15px; font-weight:700; color:#e02020; margin-bottom:4px; }
+.tyu2-hero__note { font-size:13px; font-style:italic; color:#555; margin-top:6px; }
+.tyu2-info { text-align:center; padding:16px 20px 0; }
+.tyu2-info__ok { display:inline-flex; align-items:center; gap:8px; font-size:15px; font-weight:700; color:#1a8f3c; }
+.tyu2-info__ico { display:inline-flex; align-items:center; justify-content:center; width:22px; height:22px; border-radius:50%;
+  background:#1a9c3c; color:#fff; font-size:13px; font-weight:800; }
+.tyu2-info__txt { margin:6px auto 0; max-width:620px; font-size:14px; line-height:1.5; color:#333; }
+.tyu2-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:22px; padding:26px 28px 28px; background:#fff; }
 .tyu2-card { background:#f4f4f4; border-radius:10px; padding:14px 14px 16px; display:flex; flex-direction:column; }
 /* elementi mreze se smejo skrciti pod sirino vsebine — sicer izbirniki na mobilcu
    potisnejo kartico cez rob zaslona (min-width:auto pri grid/flex elementih) */
@@ -509,6 +519,12 @@ body.woocommerce-order-received .woocommerce {
 }
 @media (max-width:560px){
   .tyu1-title { font-size:19px; }
+  .tyu2-hero__kicker { font-size:13.5px; }
+  .tyu2-hero__note { font-size:12px; }
+  .tyu2-info { padding:14px 16px 0; }
+  .tyu2-info__ok { font-size:14px; }
+  .tyu2-info__txt { font-size:13px; }
+  .tyu2-info__br { display:none; }
   .tyu1-card__img { flex-basis:104px; width:104px; height:104px; }
   .tyu1-btn--pass { flex-basis:38%; }
 
@@ -771,23 +787,23 @@ body.woocommerce-order-received .woocommerce {
         <?php if ( ! empty( $grid_cards ) ) : ?>
         <div class="ty-grid-section tyu2" id="ty-grid-section">
 
-            <!-- zelena traka z odstevalnikom -->
-            <div class="tyu2-bar">
-                Pohitite, posebna ponudba poteče čez
-                <span class="tyu2-bar__time" id="ty-timer-2">05:00</span>
+            <!-- traka z odstevalnikom — enak slog kot korak 1 -->
+            <div class="tyu1-bar">
+                <span class="tyu1-bar__hurry">Pohitite!</span>
+                <span class="tyu1-bar__txt">Posebna ponudba poteče čez</span>
+                <span class="tyu1-bar__time" id="ty-timer-2">05:00</span>
             </div>
 
-            <!-- crna glava -->
-            <div class="tyu2-head">
-                <div class="tyu2-head__inner">
-                    <div class="tyu2-head__txt">
-                        <div class="tyu2-head__kicker">Ker praznimo skladišče ponujamo:</div>
-                        <div class="tyu2-head__title">Do <?php echo (int) $grid_max_pct; ?>% popusta na najbolj prodajane izdelke</div>
-                        <div class="tyu2-head__note">*Brez dodatnih stroškov pošiljanja!</div>
-                    </div>
-                    <div class="tyu2-head__badge"><small class="tyu2-head__badge-do">DO</small><span><?php echo (int) $grid_max_pct; ?>%</span><small>POPUSTA</small></div>
-                </div>
-                <span class="tyu2-head__arrow"></span>
+            <div class="tyu1-head tyu2-hero">
+                <div class="tyu2-hero__kicker">Ker praznimo skladišče, ponujamo:</div>
+                <h2 class="tyu1-title">Do <?php echo (int) $grid_max_pct; ?>% popusta na<br>najbolj prodajane izdelke</h2>
+                <div class="tyu2-hero__note">*Brez dodatnih stroškov pošiljanja!</div>
+            </div>
+            <div class="tyu1-stripe"></div>
+
+            <div class="tyu2-info">
+                <div class="tyu2-info__ok"><span class="tyu2-info__ico">✓</span> Vaše naročilo je sprejeto in bo odpremljeno.</div>
+                <p class="tyu2-info__txt">Spodnje izdelke lahko dodate <strong>obstoječemu naročilu</strong> — poslali jih bomo <strong>v istem paketu</strong>. <br class="tyu2-info__br">Če ponudbe ne želite, jo lahko preprosto preskočite.</p>
             </div>
 
             <!-- mreza izdelkov -->
