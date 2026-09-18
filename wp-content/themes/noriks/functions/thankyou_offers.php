@@ -147,6 +147,45 @@ function noriks_ty2_pick_size( $sizes, $customer_size ) {
     return '';
 }
 
+/**
+ * Besedilo "Komplet vsebuje: …" iz barv kosov, npr. "5x črne bokserice"
+ * ali "2x črne, 2x sive, 1x zelene bokserice".
+ */
+function noriks_ty2_contents( $piece_colors, $sku, $fallback_name ) {
+    $sku = strtoupper( (string) $sku );
+    if ( strpos( $sku, 'KOMPSFIT' ) !== false )  { $noun = array( 'KOMPSFIT majica', 'KOMPSFIT majice' ); }
+    elseif ( strpos( $sku, 'BOX' ) !== false )   { $noun = array( 'bokserice', 'bokserice' ); }
+    elseif ( strpos( $sku, 'SHIRT' ) !== false ) { $noun = array( 'majica', 'majice' ); }
+    else { $noun = array( $fallback_name, $fallback_name ); }
+
+    // pridevnik barve: ednina (črna) / mnozina (črne)
+    $plural = array( 'črna' => 'črne', 'siva' => 'sive', 'bela' => 'bele', 'modra' => 'modre', 'zelena' => 'zelene',
+                     'rdeča' => 'rdeče', 'rjava' => 'rjave', 'temnomodra' => 'temnomodre', 'bež' => 'bež' );
+    $counts = array_count_values( array_filter( (array) $piece_colors, 'strlen' ) );
+    $total  = count( (array) $piece_colors );
+    if ( ! $counts ) { return $total . 'x ' . ( $total > 1 ? $noun[1] : $noun[0] ); }
+
+    // bokserice so vedno v mnozini (1x črne bokserice), majica v ednini (1x črna majica)
+    $always_plural = ( $noun[0] === $noun[1] );
+    $adj = function ( $col, $n ) use ( $plural, $always_plural ) {
+        $lc = mb_strtolower( $col );
+        return ( $n > 1 || $always_plural ) ? ( $plural[ $lc ] ?? $lc ) : $lc;
+    };
+    $join = function ( $list ) {
+        return count( $list ) > 1 ? implode( ', ', array_slice( $list, 0, -1 ) ) . ' in ' . end( $list ) : (string) reset( $list );
+    };
+
+    // vsaka barva po en kos: "po 1x črna, siva in bela majica"
+    if ( count( $counts ) > 1 && max( $counts ) === 1 && ! $always_plural ) {
+        $cols = array();
+        foreach ( array_keys( $counts ) as $col ) { $cols[] = $adj( $col, 1 ); }
+        return 'po 1x ' . $join( $cols ) . ' ' . $noun[0];
+    }
+    $parts = array();
+    foreach ( $counts as $col => $n ) { $parts[] = $n . 'x ' . $adj( $col, $n ); }
+    return $join( $parts ) . ' ' . ( $total > 1 ? $noun[1] : $noun[0] );
+}
+
 /** "Črna ×5" / "Črna, Modra, Siva …" za admin. */
 function noriks_ty2_colors_summary( $pc ) {
     $pc = array_filter( (array) $pc, 'strlen' );
@@ -218,6 +257,7 @@ function noriks_ty2_card( $key, $p, $qty, $cat, $label, $price, $color = 'mix', 
         'unit_new'   => round( $new / $qty, 2 ),
         'colors'       => $colors,        // vse barve izdelka (samo za informacijo)
         'piece_colors' => $piece_colors,  // barva vsakega kosa — doloci jo ponudba, ne kupec
+        'contents'     => noriks_ty2_contents( $piece_colors, $p->get_sku(), $p->get_name() ),
         'sizes'      => $sizes,
         'variable'   => $p->is_type( 'variable' ),
         'link'       => get_permalink( $p->get_id() ),

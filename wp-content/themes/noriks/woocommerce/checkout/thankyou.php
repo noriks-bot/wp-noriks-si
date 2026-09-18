@@ -437,6 +437,9 @@ body.woocommerce-order-received .woocommerce {
 .tyu2-card.is-added .tyu2-card__img { filter:grayscale(.15) opacity(.35); }
 .tyu2-card.is-added .tyu2-card__done { display:flex; }
 .tyu2-card__name { font-size:15.5px; font-weight:600; color:#111; line-height:1.35; margin:14px 0 10px; min-height:44px; }
+/* "Komplet vsebuje: …" pod naslovom — ko je, prevzame prostor, ki ga je drzal naslov */
+.tyu2-card__name:has(+ .tyu2-card__contents) { min-height:0; margin-bottom:4px; }
+.tyu2-card__contents { font-size:13px; color:#555; line-height:1.4; min-height:36px; margin:0 0 10px; }
 .tyu2-card__prices { display:flex; align-items:baseline; gap:8px; margin-bottom:12px; }
 .tyu2-card__new { font-size:23px; font-weight:800; color:#e02020; }
 .tyu2-card__old { font-size:14px; color:#9a9a9a; text-decoration:line-through; }
@@ -518,6 +521,8 @@ body.woocommerce-order-received .woocommerce {
   .tyu2-card { background:#f4f4f4; border:0; border-radius:10px; padding:10px 10px 12px; box-shadow:none; }
   .tyu2-card__imgwrap { background:#f6f6f6; }
   .tyu2-card__name { font-size:13.5px; min-height:36px; margin:10px 0 8px; }
+  .tyu2-card__name:has(+ .tyu2-card__contents) { min-height:0; margin-bottom:3px; }
+  .tyu2-card__contents { font-size:12px; min-height:34px; margin-bottom:8px; }
   .tyu2-card__new { font-size:18px; }
   .tyu2-card__old { font-size:12.5px; }
   .tyu2-field { grid-template-columns:54px 1fr; gap:6px; }
@@ -794,6 +799,9 @@ body.woocommerce-order-received .woocommerce {
                         <div class="tyu2-card__done"><span class="tyu2-card__check">✓</span>Izdelek dodan<br>v košarico</div>
                     </div>
                     <div class="tyu2-card__name"><?php echo esc_html( $c['label'] ); ?></div>
+                    <?php if ( ! empty( $c['contents'] ) ) : ?>
+                    <div class="tyu2-card__contents">Komplet vsebuje: <?php echo esc_html( $c['contents'] ); ?></div>
+                    <?php endif; ?>
                     <div class="tyu2-card__prices">
                         <span class="tyu2-card__new"><?php echo number_format( $c['new'], 2, ',', '.' ); ?>€</span>
                         <span class="tyu2-card__old"><?php echo number_format( $c['old'], 2, ',', '.' ); ?>€</span>
