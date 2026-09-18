@@ -300,6 +300,26 @@ add_action( 'admin_menu', function () {
     add_submenu_page( 'woocommerce', 'Ponudbe po nakupu', 'Ponudbe po nakupu', 'manage_woocommerce', 'noriks-ty2-offers', 'noriks_ty2_admin_page' );
 }, 60 );
 
+// izbirnik slik iz knjiznice medijev (samo na tej strani)
+add_action( 'admin_enqueue_scripts', function () {
+    if ( isset( $_GET['page'] ) && $_GET['page'] === 'noriks-ty2-offers' ) { wp_enqueue_media(); }
+} );
+
+/** Celica s sliko: predogled + gumba Izberi / Odstrani + polje (ID priponke, sku:…, ime datoteke ali URL). */
+function noriks_ty2_img_cell( $val ) {
+    $url = noriks_ty2_img_url( $val );
+    ob_start(); ?>
+    <div class="ty2-img">
+        <img class="ty2-img__prev" src="<?php echo esc_url( $url ); ?>" alt="" <?php echo $url ? '' : 'hidden'; ?>>
+        <div>
+            <button type="button" class="button button-small ty2-img__pick">Izberi sliko</button>
+            <button type="button" class="button-link ty2-img__clear" <?php echo $val ? '' : 'hidden'; ?>>Odstrani</button>
+            <input type="text" data-f="img" value="<?php echo esc_attr( $val ); ?>" placeholder="slika izdelka" class="ty2-img__val">
+        </div>
+    </div>
+    <?php return ob_get_clean();
+}
+
 function noriks_ty2_clean_color( $c ) {
     $c = trim( sanitize_text_field( (string) $c ) );
     return ( $c === '' || in_array( mb_strtolower( $c ), array( 'mix', 'mešano', 'mesano', 'mešane', 'mesane' ), true ) ) ? 'mix' : $c;
@@ -353,6 +373,12 @@ function noriks_ty2_admin_page() {
     $is_saved = is_array( get_option( NORIKS_TY2_OPTION, null ) );
     $cur      = get_woocommerce_currency_symbol();
     ?>
+    <style>
+        .noriks-ty2 .ty2-img { display:flex; gap:8px; align-items:flex-start; min-width:210px; }
+        .noriks-ty2 .ty2-img__prev { width:56px; height:56px; object-fit:cover; border-radius:4px; border:1px solid #ddd; cursor:pointer; background:#f6f6f6; flex:none; }
+        .noriks-ty2 .ty2-img__val { width:100%; margin-top:4px; font-size:11px; color:#666; }
+        .noriks-ty2 .ty2-img__clear { color:#b32d2e; margin-left:4px; }
+    </style>
     <div class="wrap noriks-ty2">
         <h1>Ponudbe po nakupu <small style="font-weight:400;color:#666">— thank you stran, korak 2</small></h1>
 
@@ -362,7 +388,8 @@ function noriks_ty2_admin_page() {
 
         <p>Vrstni red v tabeli je vrstni red kartic na strani. Neaktivne vrstice ostanejo shranjene, a se ne prikažejo.
            <strong>Barva</strong>: ena barva (npr. Črna) za vse kose, seznam barv po vrsti (npr. Črna, Siva, Bela) ali »mešano« = barve izdelka po vrsti. Kupec izbere samo velikost.
-           <strong>Slika</strong> (iz knjižnice medijev): <code>sku:SKU-IZDELKA</code> = glavna slika tega izdelka, ime datoteke (npr. <code>everyday-6X.jpg</code>), ID priponke ali poln URL; prazno = glavna slika izdelka ponudbe.<br>
+           <strong>Slika</strong>: klikni <em>Izberi sliko</em> in jo izberi ali naloži v knjižnico medijev. Prazno = glavna slika izdelka ponudbe.
+           (V polje pod gumbom lahko vpišeš tudi <code>sku:SKU-IZDELKA</code> = glavna slika tega izdelka ali ime datoteke iz knjižnice.)<br>
            <strong>Cena na kos</strong> se pomnoži s količino (npr. 4,99 × 3 = 14,97). Prazno = privzeta cena na kos (bokserice 4,99, majica 7,99, KOMPSFIT 9,99), za ostale izdelke 50&nbsp;% akcijske cene.
            <?php if ( ! $is_saved ) : ?><br><em>Trenutno veljajo privzete ponudbe iz kode — ob prvem shranjevanju postanejo urejljive tu.</em><?php endif; ?></p>
 
@@ -400,7 +427,7 @@ function noriks_ty2_admin_page() {
                         <td><input type="text" data-f="cat" value="<?php echo esc_attr( $r['cat'] ); ?>" style="width:100%"></td>
                         <td><input type="text" data-f="label" value="<?php echo esc_attr( $r['label'] ); ?>" style="width:100%"></td>
                         <td><input type="text" data-f="color" value="<?php echo esc_attr( ( $r['color'] ?? 'mix' ) === 'mix' ? 'mešano' : $r['color'] ); ?>" placeholder="mešano" style="width:100%"></td>
-                        <td><input type="text" data-f="img" value="<?php echo esc_attr( $r['img'] ?? '' ); ?>" placeholder="slika izdelka" style="width:100%"></td>
+                        <td><?php echo noriks_ty2_img_cell( $r['img'] ?? '' ); // phpcs:ignore ?></td>
                         <td><input type="text" data-f="unit" value="<?php echo esc_attr( $r['unit'] ?? '' ); ?>" placeholder="<?php echo esc_attr( $ph ); ?>" style="width:100%"></td>
                         <td style="font-size:12px;line-height:1.4">
                             <?php if ( ! $prod ) : ?>
@@ -442,6 +469,27 @@ function noriks_ty2_admin_page() {
                 });
             });
         }
+        var imgCellTpl = <?php echo wp_json_encode( noriks_ty2_img_cell( '' ) ); ?>;
+
+        // izbira slike iz knjiznice medijev — v polje gre ID priponke
+        tb.addEventListener('click', function(e){
+            var cell = e.target.closest('.ty2-img'); if (!cell) return;
+            var prev = cell.querySelector('.ty2-img__prev'), val = cell.querySelector('.ty2-img__val'), clr = cell.querySelector('.ty2-img__clear');
+            if (e.target.classList.contains('ty2-img__clear')) {
+                val.value = ''; prev.hidden = true; prev.removeAttribute('src'); clr.hidden = true; return;
+            }
+            if (!e.target.classList.contains('ty2-img__pick') && e.target !== prev) return;
+            if (!window.wp || !wp.media) { alert('Knjižnica medijev se ni naložila.'); return; }
+            var frame = wp.media({ title: 'Izberi sliko ponudbe', button: { text: 'Uporabi to sliko' }, library: { type: 'image' }, multiple: false });
+            frame.on('select', function(){
+                var a = frame.state().get('selection').first().toJSON();
+                val.value = a.id;
+                prev.src = (a.sizes && a.sizes.thumbnail) ? a.sizes.thumbnail.url : a.url;
+                prev.hidden = false; clr.hidden = false;
+            });
+            frame.open();
+        });
+
         tb.addEventListener('click', function(e){
             var tr = e.target.closest('tr'); if (!tr) return;
             if (e.target.classList.contains('ty2-up') && tr.previousElementSibling) tb.insertBefore(tr, tr.previousElementSibling);
@@ -459,7 +507,7 @@ function noriks_ty2_admin_page() {
                 '<td><input type="text" data-f="cat" style="width:100%"></td>' +
                 '<td><input type="text" data-f="label" style="width:100%"></td>' +
                 '<td><input type="text" data-f="color" placeholder="mešano" style="width:100%"></td>' +
-                '<td><input type="text" data-f="img" placeholder="slika izdelka" style="width:100%"></td>' +
+                '<td>' + imgCellTpl + '</td>' +
                 '<td><input type="text" data-f="unit" placeholder="na kos" style="width:100%"></td>' +
                 '<td style="font-size:12px;color:#666">preverba po shranjevanju</td>' +
                 '<td><button type="button" class="button-link-delete ty2-del">✕</button></td>';
