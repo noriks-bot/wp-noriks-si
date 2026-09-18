@@ -419,7 +419,10 @@ body.woocommerce-order-received .woocommerce {
 .tyu2-head__arrow { position:absolute; left:50%; bottom:-13px; transform:translateX(-50%);
   border-left:15px solid transparent; border-right:15px solid transparent; border-top:14px solid #000; }
 .tyu2-hero { padding-top:2px; }
-.tyu2-hero .tyu1-title { font-size:28px; }
+.tyu2-hero .tyu1-title { font-size:30px; }
+.tyu2-hero__br { display:none; } /* namizje: naslov v eni vrstici */
+.tyu2-info__br { display:none; }
+@media (max-width:900px){ .tyu2-hero__br { display:inline; } }
 @media (max-width:560px){ .tyu2-hero .tyu1-title { font-size:20px; } }
 .tyu2-hero__kicker { font-size:15px; font-weight:700; color:#e02020; margin-bottom:4px; }
 .tyu2-hero__note { font-size:13px; font-style:italic; color:#555; margin-top:6px; }
@@ -427,7 +430,7 @@ body.woocommerce-order-received .woocommerce {
 .tyu2-info__ok { display:inline-flex; align-items:center; gap:8px; font-size:15px; font-weight:700; color:#1a8f3c; }
 .tyu2-info__ico { display:inline-flex; align-items:center; justify-content:center; width:22px; height:22px; border-radius:50%;
   background:#1a9c3c; color:#fff; font-size:13px; font-weight:800; }
-.tyu2-info__txt { margin:6px auto 0; max-width:620px; font-size:14px; line-height:1.5; color:#333; }
+.tyu2-info__txt { margin:6px auto 0; max-width:980px; font-size:14px; line-height:1.5; color:#333; }
 .tyu2-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:22px; padding:26px 28px 28px; background:#fff; }
 .tyu2-card { background:#f4f4f4; border-radius:10px; padding:14px 14px 16px; display:flex; flex-direction:column; }
 /* elementi mreze se smejo skrciti pod sirino vsebine — sicer izbirniki na mobilcu
@@ -796,7 +799,7 @@ body.woocommerce-order-received .woocommerce {
 
             <div class="tyu1-head tyu2-hero">
                 <div class="tyu2-hero__kicker">Ker praznimo skladišče, ponujamo:</div>
-                <h2 class="tyu1-title">Do <?php echo (int) $grid_max_pct; ?>% popusta na<br>najbolj prodajane izdelke</h2>
+                <h2 class="tyu1-title">Do <?php echo (int) $grid_max_pct; ?>% popusta na <br class="tyu2-hero__br">najbolj prodajane izdelke</h2>
                 <div class="tyu2-hero__note">*Brez dodatnih stroškov pošiljanja!</div>
             </div>
             <div class="tyu1-stripe"></div>
