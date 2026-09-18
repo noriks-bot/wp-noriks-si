@@ -48,7 +48,6 @@ function noriks_ty2_default_offers() {
         array( 'sku' => 'NORIKS-SHIRTS-ORTO', 'qty' => 3,  'cat' => 'MAJICE',    'label' => '3x Majice' ),
         array( 'sku' => 'NORIKS-SHIRTS-ORTO', 'qty' => 6,  'cat' => 'MAJICE',    'label' => '6x Majice' ),
         array( 'sku' => 'NORIKS-SHIRTS-ORTO', 'qty' => 10, 'cat' => 'MAJICE',    'label' => '10x Majice' ),
-        array( 'sku' => 'NORIKS-KOMZIPS',     'qty' => 1,  'cat' => 'NOGAVICE',  'label' => 'Kompresijske nogavice z zadrgo' ),
         array( 'sku' => 'NORIKS-KOMPSFIT',    'qty' => 1,  'cat' => 'MAJICA',    'label' => '1x KOMPSFIT majica' ),
         array( 'sku' => 'NORIKS-KOMPSFIT',    'qty' => 3,  'cat' => 'MAJICA',    'label' => '3x KOMPSFIT majica' ),
     );
