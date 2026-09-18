@@ -799,25 +799,15 @@ body.woocommerce-order-received .woocommerce {
                         <span class="tyu2-card__old"><?php echo number_format( $c['old'], 2, ',', '.' ); ?>€</span>
                     </div>
 
-                    <?php if ( $c['colors'] ) : ?>
-                    <div class="tyu2-field">
-                        <span class="tyu2-field__lab">Barva:</span>
-                        <select class="tyu2-select tyu2-color" data-dd="color">
-                            <?php foreach ( $c['colors'] as $col ) :
-                                $hex = function_exists( 'gck_get_color_hex' ) ? gck_get_color_hex( $col ) : '';
-                            ?>
-                            <option value="<?php echo esc_attr( $col ); ?>" data-color="<?php echo esc_attr( $hex ); ?>"><?php echo esc_html( $col ); ?></option>
-                            <?php endforeach; ?>
-                        </select>
-                    </div>
-                    <?php endif; ?>
+                    <?php /* barva je dolocena v ponudbi — kupec izbere samo velikost */ ?>
 
                     <?php if ( $c['sizes'] ) : ?>
                     <div class="tyu2-field">
                         <span class="tyu2-field__lab">Velikost:</span>
                         <select class="tyu2-select tyu2-size" data-dd="size">
+                            <?php $c_pick = function_exists( 'noriks_ty2_pick_size' ) ? noriks_ty2_pick_size( $c['sizes'], $customer_size ) : $customer_size; ?>
                             <?php foreach ( $c['sizes'] as $sz ) : ?>
-                            <option value="<?php echo esc_attr( $sz ); ?>" <?php selected( strtolower( $sz ), strtolower( $customer_size ) ); ?>><?php echo esc_html( $sz ); ?></option>
+                            <option value="<?php echo esc_attr( $sz ); ?>" <?php selected( $sz, $c_pick ); ?>><?php echo esc_html( $sz ); ?></option>
                             <?php endforeach; ?>
                         </select>
                     </div>

@@ -6,13 +6,16 @@
  *   (opcija noriks_ty2_offers). Dokler ni nic shranjeno, veljajo privzete spodaj.
  * - Cena se vpise NA KOS; paket = cena na kos × kolicina. Brez vpisane cene velja
  *   privzeta cena na kos po SKU (noriks_ty2_default_unit_prices), sicer 50 % akcijske cene.
+ * - Barva je dolocena v ponudbi (kupec izbere samo velikost): ena barva (npr. "Črna")
+ *   za vse kose ali "mix" = mesane barve (barve izdelka po vrsti, kos za kosom).
  * - Kartice za stran IN cena ob dodajanju se racunata na strezniku iz iste
  *   funkcije (noriks_ty2_build_cards), zato brskalnik cene ne more podtakniti.
  */
 
 if ( ! defined( 'ABSPATH' ) ) { exit; }
 
-define( 'NORIKS_TY2_OPTION', 'noriks_ty2_offers' );
+// v2: 18. 9. 2026 ponudbe s fiksnimi barvami (stari zapis v noriks_ty2_offers se ne bere vec)
+define( 'NORIKS_TY2_OPTION', 'noriks_ty2_offers_v2' );
 
 /** Privzete cene na kos po SKU (veljajo, ce v adminu cena na kos ni vpisana). */
 function noriks_ty2_default_unit_prices() {
@@ -39,17 +42,18 @@ function noriks_ty2_row_price( $row ) {
     return $unit > 0 ? round( $unit * $qty, 2 ) : '';
 }
 
-/** Privzete ponudbe — enake, kot so bile prej trdo zapisane v thankyou.php. */
+/** Privzete ponudbe. img = datoteka v img/upsell/ ali poln URL; prazno = glavna slika izdelka. */
 function noriks_ty2_default_offers() {
     $rows = array(
-        array( 'sku' => 'NORIKS-BOXERS-ORTO', 'qty' => 3,  'cat' => 'BOKSERICE', 'label' => '3x Bokserice' ),
-        array( 'sku' => 'NORIKS-BOXERS-ORTO', 'qty' => 6,  'cat' => 'BOKSERICE', 'label' => '6x Bokserice' ),
-        array( 'sku' => 'NORIKS-BOXERS-ORTO', 'qty' => 10, 'cat' => 'BOKSERICE', 'label' => '10x Bokserice' ),
-        array( 'sku' => 'NORIKS-SHIRTS-ORTO', 'qty' => 3,  'cat' => 'MAJICE',    'label' => '3x Majice' ),
-        array( 'sku' => 'NORIKS-SHIRTS-ORTO', 'qty' => 6,  'cat' => 'MAJICE',    'label' => '6x Majice' ),
-        array( 'sku' => 'NORIKS-SHIRTS-ORTO', 'qty' => 10, 'cat' => 'MAJICE',    'label' => '10x Majice' ),
-        array( 'sku' => 'NORIKS-KOMPSFIT',    'qty' => 1,  'cat' => 'MAJICA',    'label' => '1x KOMPSFIT majica' ),
-        array( 'sku' => 'NORIKS-KOMPSFIT',    'qty' => 3,  'cat' => 'MAJICA',    'label' => '3x KOMPSFIT majica' ),
+        // slike so obstojece slike paketov iz knjiznice medijev; barve mesanih paketov so enake kot na sliki
+        array( 'sku' => 'NORIKS-BOXERS-ORTO', 'qty' => 5, 'color' => 'Črna', 'cat' => 'BOKSERICE', 'label' => '5x Črne bokserice', 'img' => 'sku:NORIKS-BOX-BLACK-5-PACK' ),
+        array( 'sku' => 'NORIKS-BOXERS-ORTO', 'qty' => 5, 'color' => 'Črna, Črna, Siva, Siva, Zelena', 'cat' => 'BOKSERICE', 'label' => '5x Bokserice mešane barve', 'img' => 'sku:NORIKS-BOX-BUNDLE-5-SECOND' ),
+        array( 'sku' => 'NORIKS-SHIRTS-ORTO', 'qty' => 3, 'color' => 'Črna', 'cat' => 'MAJICE', 'label' => '3x Črne majice', 'img' => 'sku:NORIKS-ALL-BLACK-3-PACK' ),
+        array( 'sku' => 'NORIKS-SHIRTS-ORTO', 'qty' => 6, 'color' => 'Črna', 'cat' => 'MAJICE', 'label' => '6x Črne majice', 'img' => 'sku:NORIKS-ALL-BLACK-6-PACK' ),
+        array( 'sku' => 'NORIKS-SHIRTS-ORTO', 'qty' => 3, 'color' => 'Črna, Siva, Temnomodra', 'cat' => 'MAJICE', 'label' => '3x Majice mešane barve', 'img' => 'everyday-6X.jpg' ),
+        array( 'sku' => 'NORIKS-SHIRTS-ORTO', 'qty' => 6, 'color' => 'Črna, Siva, Temnomodra, Zelena, Bež, Bela', 'cat' => 'MAJICE', 'label' => '6x Majice mešane barve', 'img' => 'everyday-6X.jpg' ),
+        array( 'sku' => 'NORIKS-KOMPSFIT',    'qty' => 1, 'color' => 'Črna', 'cat' => 'MAJICA',    'label' => '1x Črna KOMPSFIT majica',  'img' => '' ),
+        array( 'sku' => 'NORIKS-KOMPSFIT',    'qty' => 3, 'color' => 'Črna', 'cat' => 'MAJICA',    'label' => '3x Črne KOMPSFIT majice',  'img' => '' ),
     );
     foreach ( $rows as $i => &$r ) {
         $r['uid']    = 'd' . $i;
@@ -97,7 +101,95 @@ function noriks_ty2_attr_options( $p ) {
 }
 
 /** Ena kartica iz izdelka; null, ce izdelka ni ali nima cene. */
-function noriks_ty2_card( $key, $p, $qty, $cat, $label, $price ) {
+/**
+ * Barve po kosih. $color je:
+ *  - ena barva ("Črna")            → vsi kosi te barve
+ *  - seznam ("Črna, Siva, Modra")  → kosi po vrsti v teh barvah (seznam se ponavlja)
+ *  - "mix" ali prazno              → barve izdelka po vrsti
+ * Vrne null, ce katere barve na izdelku ni (ponudbe potem ne pokazemo).
+ */
+function noriks_ty2_piece_colors( $color, $available, $qty ) {
+    $qty = max( 1, (int) $qty );
+    if ( ! $available ) { return array_fill( 0, $qty, '' ); }
+    $color = trim( (string) $color );
+    if ( $color === '' || strtolower( $color ) === 'mix' ) {
+        $list = array_values( $available );
+    } else {
+        $list = array();
+        foreach ( array_filter( array_map( 'trim', explode( ',', $color ) ), 'strlen' ) as $want ) {
+            $hit = null;
+            // ujemanje brez velikih crk; zapisemo tako, kot je barva poimenovana na izdelku
+            foreach ( $available as $a ) {
+                if ( mb_strtolower( $a ) === mb_strtolower( $want ) ) { $hit = $a; break; }
+            }
+            if ( null === $hit ) { return null; }
+            $list[] = $hit;
+        }
+        if ( ! $list ) { return null; }
+    }
+    $out = array();
+    for ( $i = 0; $i < $qty; $i++ ) { $out[] = $list[ $i % count( $list ) ]; }
+    return $out;
+}
+
+/** Velikost iz narocila, prevedena na moznost izdelka (2XL = XXL, 3XL = XXXL …). */
+function noriks_ty2_pick_size( $sizes, $customer_size ) {
+    if ( ! $sizes ) { return ''; }
+    $norm = function ( $s ) {
+        $s = strtoupper( trim( (string) $s ) );
+        $map = array( 'XXL' => '2XL', 'XXXL' => '3XL', 'XXXXL' => '4XL', 'XXXXXL' => '5XL' );
+        return $map[ $s ] ?? $s;
+    };
+    $want = $norm( $customer_size );
+    if ( $want !== '' ) {
+        foreach ( $sizes as $sz ) { if ( $norm( $sz ) === $want ) { return $sz; } }
+    }
+    return '';
+}
+
+/** "Črna ×5" / "Črna, Modra, Siva …" za admin. */
+function noriks_ty2_colors_summary( $pc ) {
+    $pc = array_filter( (array) $pc, 'strlen' );
+    if ( ! $pc ) { return array( '—' ); }
+    $out = array();
+    foreach ( array_count_values( $pc ) as $c => $n ) { $out[] = $n > 1 ? $c . ' ×' . $n : $c; }
+    return $out;
+}
+
+/**
+ * URL slike ponudbe — vedno iz obstojece knjiznice medijev:
+ *  - "sku:NORIKS-BOX-BLACK-5-PACK" → glavna slika tega izdelka
+ *  - "everyday-6X.jpg"             → datoteka v knjiznici medijev (po imenu)
+ *  - 1234                          → ID priponke
+ *  - https://…                     → poln URL
+ */
+function noriks_ty2_img_url( $img ) {
+    static $cache = array();
+    $img = trim( (string) $img );
+    if ( $img === '' ) { return ''; }
+    if ( isset( $cache[ $img ] ) ) { return $cache[ $img ]; }
+    $url = '';
+    if ( preg_match( '#^https?://#i', $img ) ) {
+        $url = $img;
+    } elseif ( stripos( $img, 'sku:' ) === 0 ) {
+        $pid = wc_get_product_id_by_sku( trim( substr( $img, 4 ) ) );
+        $iid = $pid ? get_post_thumbnail_id( $pid ) : 0;
+        $url = $iid ? (string) wp_get_attachment_url( $iid ) : '';
+    } elseif ( ctype_digit( $img ) ) {
+        $url = (string) wp_get_attachment_url( (int) $img );
+    } else {
+        global $wpdb;
+        $name = basename( $img );
+        $aid  = (int) $wpdb->get_var( $wpdb->prepare(
+            "SELECT post_id FROM {$wpdb->postmeta} WHERE meta_key = '_wp_attached_file' AND ( meta_value = %s OR meta_value LIKE %s ) ORDER BY post_id DESC LIMIT 1",
+            $name, '%/' . $wpdb->esc_like( $name )
+        ) );
+        $url = $aid ? (string) wp_get_attachment_url( $aid ) : '';
+    }
+    return $cache[ $img ] = $url;
+}
+
+function noriks_ty2_card( $key, $p, $qty, $cat, $label, $price, $color = 'mix', $img = '' ) {
     if ( ! $p || 'publish' !== get_post_status( $p->get_id() ) ) { return null; }
     $qty  = max( 1, (int) $qty );
     $unit = noriks_ty2_unit_price( $p );
@@ -108,7 +200,10 @@ function noriks_ty2_card( $key, $p, $qty, $cat, $label, $price ) {
     if ( $new <= 0 ) { return null; }
 
     list( $colors, $sizes ) = noriks_ty2_attr_options( $p );
-    $img_id = $p->get_image_id();
+    $piece_colors = noriks_ty2_piece_colors( $color, $colors, $qty );
+    if ( null === $piece_colors ) { return null; }
+    $img_id  = $p->get_image_id();
+    $img_url = noriks_ty2_img_url( $img );
 
     return array(
         'key'        => $key,
@@ -117,11 +212,12 @@ function noriks_ty2_card( $key, $p, $qty, $cat, $label, $price ) {
         'qty'        => $qty,
         'cat'        => (string) $cat,
         'label'      => $label !== '' ? (string) $label : $p->get_name(),
-        'img'        => $img_id ? wp_get_attachment_url( $img_id ) : wc_placeholder_img_src(),
+        'img'        => $img_url ?: ( $img_id ? wp_get_attachment_url( $img_id ) : wc_placeholder_img_src() ),
         'old'        => $old,
         'new'        => $new,
         'unit_new'   => round( $new / $qty, 2 ),
-        'colors'     => $colors,
+        'colors'       => $colors,        // vse barve izdelka (samo za informacijo)
+        'piece_colors' => $piece_colors,  // barva vsakega kosa — doloci jo ponudba, ne kupec
         'sizes'      => $sizes,
         'variable'   => $p->is_type( 'variable' ),
         'link'       => get_permalink( $p->get_id() ),
@@ -139,7 +235,7 @@ function noriks_ty2_build_cards( $order = false, $exclude_id = 0 ) {
     foreach ( noriks_ty2_active_offers() as $row ) {
         $pid = wc_get_product_id_by_sku( $row['sku'] );
         if ( ! $pid ) { continue; }
-        $card = noriks_ty2_card( 'o' . $row['uid'], wc_get_product( $pid ), $row['qty'], $row['cat'] ?? '', $row['label'] ?? '', noriks_ty2_row_price( $row ) );
+        $card = noriks_ty2_card( 'o' . $row['uid'], wc_get_product( $pid ), $row['qty'], $row['cat'] ?? '', $row['label'] ?? '', noriks_ty2_row_price( $row ), $row['color'] ?? 'mix', $row['img'] ?? '' );
         if ( $card ) { $cards[] = $card; }
     }
 
@@ -204,6 +300,19 @@ add_action( 'admin_menu', function () {
     add_submenu_page( 'woocommerce', 'Ponudbe po nakupu', 'Ponudbe po nakupu', 'manage_woocommerce', 'noriks-ty2-offers', 'noriks_ty2_admin_page' );
 }, 60 );
 
+function noriks_ty2_clean_color( $c ) {
+    $c = trim( sanitize_text_field( (string) $c ) );
+    return ( $c === '' || in_array( mb_strtolower( $c ), array( 'mix', 'mešano', 'mesano', 'mešane', 'mesane' ), true ) ) ? 'mix' : $c;
+}
+function noriks_ty2_clean_img( $i ) {
+    $i = trim( (string) $i );
+    if ( $i === '' ) { return ''; }
+    if ( preg_match( '#^https?://#i', $i ) ) { return esc_url_raw( $i ); }
+    if ( stripos( $i, 'sku:' ) === 0 ) { return 'sku:' . strtoupper( sanitize_text_field( trim( substr( $i, 4 ) ) ) ); }
+    if ( ctype_digit( $i ) ) { return $i; }
+    return sanitize_file_name( basename( $i ) );
+}
+
 add_action( 'admin_post_noriks_ty2_save', function () {
     if ( ! current_user_can( 'manage_woocommerce' ) ) { wp_die( 'Ni dovoljenja.' ); }
     check_admin_referer( 'noriks_ty2_save' );
@@ -227,6 +336,8 @@ add_action( 'admin_post_noriks_ty2_save', function () {
             'qty'    => max( 1, min( 50, absint( $r['qty'] ?? 1 ) ) ),
             'cat'    => sanitize_text_field( $r['cat'] ?? '' ),
             'label'  => sanitize_text_field( $r['label'] ?? '' ),
+            'color'  => noriks_ty2_clean_color( $r['color'] ?? '' ),
+            'img'    => noriks_ty2_clean_img( $r['img'] ?? '' ),
             'unit'   => ( $unit !== '' && is_numeric( $unit ) && (float) $unit > 0 ) ? (string) round( (float) $unit, 2 ) : '',
             'price'  => '',
         );
@@ -250,6 +361,8 @@ function noriks_ty2_admin_page() {
         <?php endif; ?>
 
         <p>Vrstni red v tabeli je vrstni red kartic na strani. Neaktivne vrstice ostanejo shranjene, a se ne prikažejo.
+           <strong>Barva</strong>: ena barva (npr. Črna) za vse kose, seznam barv po vrsti (npr. Črna, Siva, Bela) ali »mešano« = barve izdelka po vrsti. Kupec izbere samo velikost.
+           <strong>Slika</strong> (iz knjižnice medijev): <code>sku:SKU-IZDELKA</code> = glavna slika tega izdelka, ime datoteke (npr. <code>everyday-6X.jpg</code>), ID priponke ali poln URL; prazno = glavna slika izdelka ponudbe.<br>
            <strong>Cena na kos</strong> se pomnoži s količino (npr. 4,99 × 3 = 14,97). Prazno = privzeta cena na kos (bokserice 4,99, majica 7,99, KOMPSFIT 9,99), za ostale izdelke 50&nbsp;% akcijske cene.
            <?php if ( ! $is_saved ) : ?><br><em>Trenutno veljajo privzete ponudbe iz kode — ob prvem shranjevanju postanejo urejljive tu.</em><?php endif; ?></p>
 
@@ -265,6 +378,8 @@ function noriks_ty2_admin_page() {
                     <th style="width:70px">Količina</th>
                     <th>Oznaka</th>
                     <th>Naslov kartice</th>
+                    <th style="width:110px">Barva</th>
+                    <th>Slika</th>
                     <th style="width:110px">Cena na kos (<?php echo esc_html( $cur ); ?>)</th>
                     <th>Izdelek / preverba</th>
                     <th style="width:40px"></th>
@@ -273,7 +388,7 @@ function noriks_ty2_admin_page() {
                 <?php foreach ( $rows as $i => $r ) :
                     $pid  = $r['sku'] ? wc_get_product_id_by_sku( $r['sku'] ) : 0;
                     $prod = $pid ? wc_get_product( $pid ) : null;
-                    $card = $prod ? noriks_ty2_card( 'x', $prod, $r['qty'], '', '', noriks_ty2_row_price( $r ) ) : null;
+                    $card = $prod ? noriks_ty2_card( 'x', $prod, $r['qty'], '', '', noriks_ty2_row_price( $r ), $r['color'] ?? 'mix', $r['img'] ?? '' ) : null;
                     $dmap = noriks_ty2_default_unit_prices();
                     $ph   = isset( $dmap[ $r['sku'] ] ) ? number_format( $dmap[ $r['sku'] ], 2, ',', '' ) : '50 %';
                 ?>
@@ -284,14 +399,18 @@ function noriks_ty2_admin_page() {
                         <td><input type="number" data-f="qty" min="1" max="50" value="<?php echo esc_attr( $r['qty'] ); ?>" style="width:100%"></td>
                         <td><input type="text" data-f="cat" value="<?php echo esc_attr( $r['cat'] ); ?>" style="width:100%"></td>
                         <td><input type="text" data-f="label" value="<?php echo esc_attr( $r['label'] ); ?>" style="width:100%"></td>
+                        <td><input type="text" data-f="color" value="<?php echo esc_attr( ( $r['color'] ?? 'mix' ) === 'mix' ? 'mešano' : $r['color'] ); ?>" placeholder="mešano" style="width:100%"></td>
+                        <td><input type="text" data-f="img" value="<?php echo esc_attr( $r['img'] ?? '' ); ?>" placeholder="slika izdelka" style="width:100%"></td>
                         <td><input type="text" data-f="unit" value="<?php echo esc_attr( $r['unit'] ?? '' ); ?>" placeholder="<?php echo esc_attr( $ph ); ?>" style="width:100%"></td>
                         <td style="font-size:12px;line-height:1.4">
                             <?php if ( ! $prod ) : ?>
                                 <span style="color:#b32d2e">✗ SKU ne obstaja</span>
                             <?php elseif ( ! $card ) : ?>
-                                <span style="color:#b32d2e">✗ <?php echo esc_html( $prod->get_name() ); ?> — ni objavljen ali nima cene</span>
+                                <span style="color:#b32d2e">✗ <?php echo esc_html( $prod->get_name() ); ?> — ni objavljen, nima cene ali nima barve »<?php echo esc_html( $r['color'] ?? '' ); ?>«</span>
                             <?php else : ?>
                                 <a href="<?php echo esc_url( get_edit_post_link( $pid ) ); ?>" target="_blank"><?php echo esc_html( $prod->get_name() ); ?></a><br>
+                                <?php if ( $card['img'] ) : ?><img src="<?php echo esc_url( $card['img'] ); ?>" alt="" style="width:44px;height:44px;object-fit:cover;float:left;margin:0 8px 0 0;border-radius:4px"><?php endif; ?>
+                                <span style="color:#666">kosi: <?php echo esc_html( implode( ', ', noriks_ty2_colors_summary( $card['piece_colors'] ) ) ); ?></span><br>
                                 <span style="color:#666">redna <?php echo esc_html( number_format( $card['old'], 2, ',', '.' ) . ' ' . $cur ); ?> → ponudba <strong><?php echo esc_html( number_format( $card['new'], 2, ',', '.' ) . ' ' . $cur ); ?></strong> (<?php echo esc_html( number_format( $card['unit_new'], 2, ',', '.' ) ); ?> na kos)</span>
                             <?php endif; ?>
                         </td>
@@ -339,6 +458,8 @@ function noriks_ty2_admin_page() {
                 '<td><input type="number" data-f="qty" min="1" max="50" value="1" style="width:100%"></td>' +
                 '<td><input type="text" data-f="cat" style="width:100%"></td>' +
                 '<td><input type="text" data-f="label" style="width:100%"></td>' +
+                '<td><input type="text" data-f="color" placeholder="mešano" style="width:100%"></td>' +
+                '<td><input type="text" data-f="img" placeholder="slika izdelka" style="width:100%"></td>' +
                 '<td><input type="text" data-f="unit" placeholder="na kos" style="width:100%"></td>' +
                 '<td style="font-size:12px;color:#666">preverba po shranjevanju</td>' +
                 '<td><button type="button" class="button-link-delete ty2-del">✕</button></td>';

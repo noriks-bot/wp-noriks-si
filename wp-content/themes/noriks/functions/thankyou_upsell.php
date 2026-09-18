@@ -475,13 +475,12 @@ function noriks_handle_add_upsell_step2() {
     $product = wc_get_product( $card['product_id'] );
     if ( ! $product ) { wp_send_json_error( 'Izdelek ni najden' ); }
 
-    // izbrana barva in velikost morata biti med moznostmi izdelka
-    $color = sanitize_text_field( wp_unslash( $_POST['upsell_color'] ?? '' ) );
-    $size  = sanitize_text_field( wp_unslash( $_POST['upsell_size'] ?? '' ) );
-    if ( $card['colors'] && ! in_array( $color, $card['colors'], true ) ) { wp_send_json_error( 'Izberite barvo' ); }
-    if ( $card['sizes'] && ! in_array( $size, $card['sizes'], true ) )   { wp_send_json_error( 'Izberite velikost' ); }
-    if ( ! $card['colors'] ) { $color = ''; }
-    if ( ! $card['sizes'] )  { $size = ''; }
+    // barve doloci ponudba (fiksna ali mesane), kupec izbere samo velikost
+    $size = sanitize_text_field( wp_unslash( $_POST['upsell_size'] ?? '' ) );
+    if ( $card['sizes'] && ! in_array( $size, $card['sizes'], true ) ) { wp_send_json_error( 'Izberite velikost' ); }
+    if ( ! $card['sizes'] ) { $size = ''; }
+    $piece_colors = array_values( (array) $card['piece_colors'] );
+    $color = $piece_colors[0] ?? '';
 
     // variabilen izdelek: v naročilo gre prava variacija, ne prva po vrsti
     $line_product = $product;
@@ -493,8 +492,12 @@ function noriks_handle_add_upsell_step2() {
 
     $pieces = (int) $card['qty'];
     $total  = (float) $card['new'];
-    $piece_label = implode( ' - ', array_filter( array( $color, $size ) ) );
-    if ( $piece_label === '' ) { $piece_label = $product->get_name(); }
+    $piece_labels = array();
+    for ( $i = 0; $i < $pieces; $i++ ) {
+        $pl = implode( ' - ', array_filter( array( $piece_colors[ $i ] ?? $color, $size ) ) );
+        $piece_labels[] = $pl !== '' ? $pl : $product->get_name();
+    }
+    $piece_label = implode( ', ', array_unique( $piece_labels ) );
 
     // kolicina postavke je 1, cena je paketna — enako kot orto ponudba s produktne strani
     $item_id = $order->add_product( $line_product, 1, array(
@@ -505,7 +508,7 @@ function noriks_handle_add_upsell_step2() {
 
     $item = $order->get_item( $item_id );
     for ( $i = 1; $i <= $pieces; $i++ ) {
-        $item->add_meta_data( (string) $i, $piece_label, true );
+        $item->add_meta_data( (string) $i, $piece_labels[ $i - 1 ], true );
     }
     $item->add_meta_data( '_bundle_pairs', $pieces, true );
     $item->add_meta_data( '_offer_id', $pieces . '__ty2', true );
