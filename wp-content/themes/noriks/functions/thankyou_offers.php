@@ -50,7 +50,7 @@ function noriks_ty2_default_offers() {
         array( 'sku' => 'NORIKS-BOXERS-ORTO', 'qty' => 5, 'color' => 'Črna, Črna, Siva, Siva, Zelena', 'cat' => 'BOKSERICE', 'label' => '5x Bokserice mešane barve', 'img' => 'sku:NORIKS-BOX-BUNDLE-5-SECOND' ),
         array( 'sku' => 'NORIKS-SHIRTS-ORTO', 'qty' => 3, 'color' => 'Črna', 'cat' => 'MAJICE', 'label' => '3x Črne majice', 'img' => 'sku:NORIKS-ALL-BLACK-3-PACK' ),
         array( 'sku' => 'NORIKS-SHIRTS-ORTO', 'qty' => 6, 'color' => 'Črna', 'cat' => 'MAJICE', 'label' => '6x Črne majice', 'img' => 'sku:NORIKS-ALL-BLACK-6-PACK' ),
-        array( 'sku' => 'NORIKS-SHIRTS-ORTO', 'qty' => 3, 'color' => 'Črna, Siva, Temnomodra', 'cat' => 'MAJICE', 'label' => '3x Majice mešane barve', 'img' => 'everyday-6X.jpg' ),
+        array( 'sku' => 'NORIKS-SHIRTS-ORTO', 'qty' => 3, 'color' => 'Črna, Siva, Bela', 'cat' => 'MAJICE', 'label' => '3x Majice mešane barve', 'img' => 'sku:NORIKS-MONOCHROME-3-PACK' ),
         array( 'sku' => 'NORIKS-SHIRTS-ORTO', 'qty' => 6, 'color' => 'Črna, Siva, Temnomodra, Zelena, Bež, Bela', 'cat' => 'MAJICE', 'label' => '6x Majice mešane barve', 'img' => 'everyday-6X.jpg' ),
         array( 'sku' => 'NORIKS-KOMPSFIT',    'qty' => 1, 'color' => 'Črna', 'cat' => 'MAJICA',    'label' => '1x Črna KOMPSFIT majica',  'img' => '' ),
         array( 'sku' => 'NORIKS-KOMPSFIT',    'qty' => 3, 'color' => 'Črna', 'cat' => 'MAJICA',    'label' => '3x Črne KOMPSFIT majice',  'img' => '' ),
