@@ -1197,9 +1197,6 @@ body.woocommerce-order-received .woocommerce {
             if (elC) elC.textContent = count;
             if (elT) elT.textContent = money(total);
             if (elS) elS.textContent = money(save);
-            // "Preskoci ponudbo" ima smisel samo, dokler ni nic dodanega
-            var elSkip = document.getElementById('ty-grid-skip');
-            if (elSkip) elSkip.hidden = count > 0;
         }
 
         overlay.querySelectorAll('.tyu2-card').forEach(function(card) {
