@@ -437,7 +437,9 @@ body.woocommerce-order-received .woocommerce {
    potisnejo kartico cez rob zaslona (min-width:auto pri grid/flex elementih) */
 .tyu2-card, .tyu2-field > *, .tyu2-dd, .tyu2-dd__btn { min-width:0; }
 .tyu2-card__fields { margin-bottom:2px; }
-.tyu2-card__btns { margin-top:auto; }
+/* cena, velikost in gumb so vedno poravnani na dno kartice — enak odmik ne glede na dolzino besedila zgoraj */
+.tyu2-card__prices { margin-top:auto; }
+.tyu2-card__btns { margin-top:4px; }
 .tyu2-card__imgwrap { position:relative; border-radius:8px; overflow:hidden; background:#fff; }
 .tyu2-card__img { width:100%; aspect-ratio:1/1; object-fit:cover; display:block; transition:filter .2s ease; }
 .tyu2-card__done { position:absolute; inset:0; display:none; flex-direction:column; align-items:center;
