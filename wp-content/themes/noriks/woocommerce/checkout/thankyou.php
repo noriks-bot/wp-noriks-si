@@ -995,6 +995,7 @@ body.woocommerce-order-received .woocommerce {
             var releaseFd = new FormData();
             releaseFd.append('action', 'noriks_release_primary_hold');
             releaseFd.append('order_id', orderId);
+            releaseFd.append('nonce', (document.getElementById('ty-upsell')||{dataset:{}}).dataset.nonce || '');
             fetch(ajaxUrl, { method: 'POST', body: releaseFd }).catch(function(){});
             return;
         }
@@ -1037,6 +1038,7 @@ body.woocommerce-order-received .woocommerce {
         var relFd = new FormData();
         relFd.append('action', 'noriks_release_primary_hold');
         relFd.append('order_id', orderId);
+        relFd.append('nonce', (document.getElementById('ty-upsell')||{dataset:{}}).dataset.nonce || '');
         fetch(ajaxUrl, { method: 'POST', body: relFd }).catch(function(){});
     }
 
@@ -1045,6 +1047,7 @@ body.woocommerce-order-received .woocommerce {
         var rfd = new FormData();
         rfd.append('action', 'noriks_refresh_order_items');
         rfd.append('order_id', orderId);
+        rfd.append('nonce', (document.getElementById('ty-upsell')||{dataset:{}}).dataset.nonce || '');
         fetch(ajaxUrl, { method: 'POST', body: rfd })
             .then(function(r) { return r.json(); })
             .then(function(d) {
@@ -1285,6 +1288,7 @@ body.woocommerce-order-received .woocommerce {
                     fd.append('action', 'noriks_remove_upsell');
                     fd.append('order_id', orderId);
                     fd.append('item_id', entry.itemId);
+                    fd.append('nonce', nonce);
 
                     fetch(ajaxUrl, { method: 'POST', body: fd })
                         .then(function(r) { return r.json(); })
@@ -1362,6 +1366,7 @@ body.woocommerce-order-received .woocommerce {
             var data = new URLSearchParams();
             data.append('action', 'noriks_release_primary_hold');
             data.append('order_id', orderId);
+            data.append('nonce', (document.getElementById('ty-upsell')||{dataset:{}}).dataset.nonce || '');
             navigator.sendBeacon(ajaxUrl, data);
         }
     });
@@ -1373,10 +1378,14 @@ function removeUpsellItem(btn) {
     btn.textContent = '…';
     var itemId = btn.getAttribute('data-item-id');
     var orderId = btn.getAttribute('data-order-id');
+    // funkcija je globalna (zunaj IIFE), zato nonce preberemo iz ovoja upsella
+    var wrapEl  = document.getElementById('ty-upsell');
+    var nonceEl = btn.getAttribute('data-nonce') || ( wrapEl ? wrapEl.dataset.nonce : '' );
     var fd = new FormData();
     fd.append('action', 'noriks_remove_upsell');
     fd.append('order_id', orderId);
     fd.append('item_id', itemId);
+    fd.append('nonce', nonceEl);
     fetch('<?php echo admin_url("admin-ajax.php"); ?>', { method: 'POST', body: fd })
         .then(function(r) { return r.json(); })
         .then(function(d) {

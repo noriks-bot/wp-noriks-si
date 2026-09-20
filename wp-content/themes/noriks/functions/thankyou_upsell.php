@@ -176,6 +176,9 @@ add_action( 'wp_ajax_nopriv_noriks_release_primary_hold', 'noriks_release_primar
 
 function noriks_release_primary_hold() {
     $order_id = absint( $_POST['order_id'] ?? 0 );
+    if ( ! $order_id || ! wp_verify_nonce( $_POST['nonce'] ?? '', 'noriks_upsell_' . $order_id ) ) {
+        wp_send_json_error( 'Neveljavna zahteva' );
+    }
     if ( ! $order_id ) wp_send_json_error( 'Missing order_id' );
 
     $order = wc_get_order( $order_id );
@@ -201,6 +204,9 @@ add_action( 'wp_ajax_nopriv_noriks_refresh_order_items', 'noriks_refresh_order_i
 
 function noriks_refresh_order_items() {
     $order_id = absint( $_POST['order_id'] ?? 0 );
+    if ( ! $order_id || ! wp_verify_nonce( $_POST['nonce'] ?? '', 'noriks_upsell_' . $order_id ) ) {
+        wp_send_json_error( 'Neveljavna zahteva' );
+    }
     if ( ! $order_id ) wp_send_json_error( 'Missing order_id' );
 
     $order = wc_get_order( $order_id );
@@ -257,6 +263,10 @@ function noriks_remove_upsell() {
     $order_id = absint( $_POST['order_id'] ?? 0 );
     $item_id  = absint( $_POST['item_id'] ?? 0 );
     if ( ! $order_id || ! $item_id ) wp_send_json_error( 'Missing data' );
+    // Brez veljavnega nonca ni mogoce odstranjevati postavk tujega narocila.
+    if ( ! wp_verify_nonce( $_POST['nonce'] ?? '', 'noriks_upsell_' . $order_id ) ) {
+        wp_send_json_error( 'Neveljavna zahteva' );
+    }
 
     $order = wc_get_order( $order_id );
     if ( ! $order ) wp_send_json_error( 'Order not found' );
