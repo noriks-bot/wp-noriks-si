@@ -94,8 +94,9 @@ function noriks_ty2_attr_options( $p ) {
         $opts  = $attr->is_taxonomy()
             ? wp_list_pluck( wc_get_product_terms( $p->get_id(), $attr->get_name(), array( 'fields' => 'all' ) ), 'name' )
             : (array) $attr->get_options();
-        if ( strpos( $aname, 'barv' ) !== false || strpos( $aname, 'color' ) !== false ) { $colors = $opts; }
-        elseif ( strpos( $aname, 'veliko' ) !== false || strpos( $aname, 'size' ) !== false ) { $sizes = $opts; }
+        // imena atributov se razlikujejo po trgih: Barva/Boja/Color, Velikost/Velicina/Size
+        if ( strpos( $aname, 'barv' ) !== false || strpos( $aname, 'boj' ) !== false || strpos( $aname, 'color' ) !== false ) { $colors = $opts; }
+        elseif ( strpos( $aname, 'veliko' ) !== false || strpos( $aname, 'veličin' ) !== false || strpos( $aname, 'velicin' ) !== false || strpos( $aname, 'size' ) !== false ) { $sizes = $opts; }
     }
     return array( $colors, $sizes );
 }
