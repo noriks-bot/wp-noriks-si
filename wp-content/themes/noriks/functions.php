@@ -1077,3 +1077,4 @@ function noriks_term_group( $group ) {
 }
 
 require_once get_template_directory() . '/functions/manuals-page.php';
+include(get_template_directory() . '/functions/black-friday.php'); // Black Friday pristajalna stran /black-friday/
