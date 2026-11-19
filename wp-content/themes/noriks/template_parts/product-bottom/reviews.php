@@ -1111,7 +1111,7 @@ $kompmajice_faq = array(
 $leakboxers_faq = array(
   array(
     'questioon' => 'Zakaj je NORIKS izbralo več kot 123.000 moških?',
-    'answer'    => 'NORIKS so najbolj vpojne pralne boksarice za moško uhajanje urina: zadržijo do 300 ml, so Oeko-Tex® certificirane in brez škodljivih snovi, pralne in za večkratno uporabo (okolju prijazna alternativa vložkom za enkratno uporabo), zasnovane za celodnevno udobje in samozavest. Kar 87 % kupcev po prvem nakupu naroči znova.'
+    'answer'    => 'NORIKS so najbolj vpojne pralne boksarice za moško uhajanje urina: zadržijo do 300 ml, so brez škodljivih snovi, pralne in za večkratno uporabo (okolju prijazna alternativa vložkom za enkratno uporabo), zasnovane za celodnevno udobje in samozavest. Kar 87 % kupcev po prvem nakupu naroči znova.'
   ),
   array(
     'questioon' => 'Koliko vpijejo?',
@@ -1140,7 +1140,7 @@ $jastuk_faq = array(
   array( 'questioon' => 'Kako NORIKS ErgoSit blaži bolečine pri sedenju?', 'answer' => 'ErgoSit ima izrez za trtico, ki odpravi neposreden pritisk na trtično kost in išiadični živec, anatomska oblika iz spominske pene visoke gostote pa enakomerno porazdeli težo po kolkih in stegnih. Tako se razbremenijo občutljive točke in podpira zdrava, vzravnana drža.' ),
   array( 'questioon' => 'Kje vse lahko uporabljam blazino?', 'answer' => 'Kjer koli sedite — v avtomobilu, na pisarniškem stolu, jedilnem stolu, invalidskem vozičku ali doma. Stabilna nedrseča baza jo drži na mestu, zato gre udobje z vami ves dan.' ),
   array( 'questioon' => 'Ali se pena sčasoma splošči?', 'answer' => 'Ne. ErgoSit uporablja spominsko peno visoke gostote, ki ohrani obliko in čvrstost tudi po dolgotrajni vsakodnevni uporabi — za razliko od poceni blazin, ki se hitro sploščijo.' ),
-  array( 'questioon' => 'Ali se prevleka lahko pere?', 'answer' => 'Da. Prevleka se sname in lahko pere v pralnem stroju, zato blazina ostane sveža in čista. Tkanina je zračna, hipoalergena in OEKO-TEX® certificirana.' ),
+  array( 'questioon' => 'Ali se prevleka lahko pere?', 'answer' => 'Da. Prevleka se sname in lahko pere v pralnem stroju, zato blazina ostane sveža in čista. Tkanina je zračna in hipoalergena.' ),
   array( 'questioon' => 'Ali ustreza mojemu stolu ali sedežu?', 'answer' => 'ErgoSit je univerzalne oblike in se prilega večini avtosedežev, pisarniških in kuhinjskih stolov ter invalidskih vozičkov. Velikosti ni — en model ustreza vsem.' ),
   array( 'questioon' => 'V kolikšnem času občutim razliko?', 'answer' => 'Večina uporabnikov občuti manj pritiska na trtico in udobnejše sedenje že od prvega dne. Za boljšo držo in manj bolečin v hrbtu se učinek dodatno stopnjuje z redno uporabo.' ),
   array( 'questioon' => 'Ali obstaja garancija vračila denarja?', 'answer' => 'Da, vsaki NORIKS ErgoSit je priložena 30-dnevna garancija udobja. Če ne občutite manj bolečin in več udobja, nas kontaktirajte in bomo uredili.' ),
@@ -1181,7 +1181,7 @@ $kneefix_faq = array(
 $kidsnest_faq = array(
   array( 'questioon' => 'Kako hitro bom videl(a), da dihanje skozi usta preneha?', 'answer' => 'Večina staršev opazi tišje dihanje in manj prebujanj z odprtimi usti v prvih 5–7 nočeh. Do 14. noči se pri večini otrok smrčanje umiri, ustnice pa ostanejo zaprte. Polno razliko — vidno boljši položaj in mirnejši spanec — starši najpogosteje opisujejo okoli 21. do 30. dneva. Uporabljajte ga vsako noč.' ),
   array( 'questioon' => 'Za katero starost je KidsNest namenjen?', 'answer' => 'KidsNest je na voljo v treh velikostih: 1–3, 3–9 in 9–14 let. Najpomembnejše okno je med 3. in 9. letom, ko se nebo in čeljust najintenzivneje razvijata — a vsaka starost ima svojo velikost in svojo korist.' ),
-  array( 'questioon' => 'Ali je varen? Kaj je v njem?', 'answer' => 'KidsNest je izdelan iz hipoalergene, OEKO-TEX® certificirane spominske pene — brez formaldehida, težkih kovin in BPA. Odporen je na pršice in zračen, prevleka pa se sname in opere v pralnem stroju.' ),
+  array( 'questioon' => 'Ali je varen? Kaj je v njem?', 'answer' => 'KidsNest je izdelan iz hipoalergene spominske pene — brez formaldehida, težkih kovin in BPA. Odporen je na pršice in zračen, prevleka pa se sname in opere v pralnem stroju.' ),
   array( 'questioon' => 'Ali ga bo moj otrok res uporabljal?', 'answer' => 'Da. Ergonomska oblika se občuti kot podpora, ne kot nekaj čudnega — večina otrok se navadi v 1–2 nočeh. Starši pogosto sporočajo, da otroci po prvem tednu nočejo spati brez njega. 3-conska struktura naravno sprejme glavo — ni "pravilnega načina", ni boja pred spanjem.' ),
   array( 'questioon' => 'Ali deluje, če moj otrok že diha skozi usta?', 'answer' => 'Da — prav za takšne otroke je zasnovan. 3-conska struktura pomaga preprečiti nagibanje glave nazaj, zaradi katerega se usta v spanju odprejo. Pri večini otrok se v 7–14 nočeh ustnice naravno zaprejo in dihanje skozi nos se povrne.' ),
   array( 'questioon' => 'Kaj pa, če mojemu otroku ne pomaga?', 'answer' => 'Naj otrok spi na KidsNestu 30 noči. Če ne vidite razlike — manj dihanja skozi usta, tišje noči, mirnejši spanec — nam pišite in vrnemo denar. Brez vprašanj in brez drobnega tiska.' ),

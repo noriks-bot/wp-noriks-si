@@ -15,7 +15,7 @@ $kn = get_template_directory_uri() . '/img/kidsnest/';
 <!-- ============ 1) Trust marquee (modri trak, vrti se) ============ -->
 <div class="kn-marquee" aria-hidden="true">
   <div class="kn-marquee-track">
-    <?php $kn_ticker = array('PRIPOROČILO PEDIATROV','OEKO-TEX® SPOMINSKA PENA','3-CONSKA STRUKTURA','90 NOČI PREIZKUŠANJA','HIPOALERGENO','ZRAČNA PLETENINA');
+    <?php $kn_ticker = array('PRIPOROČILO PEDIATROV','SPOMINSKA PENA','3-CONSKA STRUKTURA','90 NOČI PREIZKUŠANJA','HIPOALERGENO','ZRAČNA PLETENINA');
     for ( $r = 0; $r < 2; $r++ ) { foreach ( $kn_ticker as $t ) { echo '<span class="kn-tick">'.esc_html($t).'</span><span class="kn-dot">•</span>'; } } ?>
   </div>
 </div>

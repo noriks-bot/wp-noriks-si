@@ -479,7 +479,7 @@ $is_mixed_bundle = has_term( array( 'black-friday', 'majice-in-boksarice-paketi'
       <div class="accordion-content">
         <ul style="margin:8px 0 12px; padding-left:18px;">
           <li style="margin:0 0 8px;"><strong>Zunanja prevleka:</strong> Zračna pletenina, snemljiva in pralna v pralnem stroju, hipoalergena</li>
-          <li style="margin:0 0 8px;"><strong>Jedro:</strong> Adaptivna pena OrthoFlex™ | Netoksična, OEKO-TEX® certificirana | Zasnovana za razbremenitev pritiska + poravnavo drže</li>
+          <li style="margin:0 0 8px;"><strong>Jedro:</strong> Adaptivna pena OrthoFlex™ | Netoksična | Zasnovana za razbremenitev pritiska + poravnavo drže</li>
         </ul>
       </div>
     </div>
@@ -510,7 +510,7 @@ $is_mixed_bundle = has_term( array( 'black-friday', 'majice-in-boksarice-paketi'
 
          <?php if( function_exists('noriks_is_type') && noriks_is_type( 'kidsnest', $current_product_id ) ): ?>
 
-                NORIKS KidsNest je izdelan iz hipoalergene, OEKO-TEX® certificirane spominske pene — brez formaldehida, težkih kovin in BPA — z zračno pleteno prevleko.<br><br>Njegova 3-conska ergonomska struktura nežno sprejme glavo, podpira vrat in pomaga ohranjati hrbtenico v naravni poravnavi — tudi ko se otrok ponoči veliko obrača. Tako spodbuja dihanje skozi nos ter mirnejši, globlji spanec.<br><br>Na voljo v treh velikostih (1–3, 3–9 in 9–14 let) raste z vašim otrokom in nudi pravo višino podpore v vsaki fazi razvoja.
+                NORIKS KidsNest je izdelan iz hipoalergene spominske pene — brez formaldehida, težkih kovin in BPA — z zračno pleteno prevleko.<br><br>Njegova 3-conska ergonomska struktura nežno sprejme glavo, podpira vrat in pomaga ohranjati hrbtenico v naravni poravnavi — tudi ko se otrok ponoči veliko obrača. Tako spodbuja dihanje skozi nos ter mirnejši, globlji spanec.<br><br>Na voljo v treh velikostih (1–3, 3–9 in 9–14 let) raste z vašim otrokom in nudi pravo višino podpore v vsaki fazi razvoja.
 
          <?php elseif( function_exists('noriks_is_type') && noriks_is_type('controlpro', $current_product_id) ): ?>
 
