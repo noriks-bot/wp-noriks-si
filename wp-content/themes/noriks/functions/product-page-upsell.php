@@ -87,6 +87,9 @@ function noriks_pp_upsell_config() {
 
 /** Je li upsell uključen za dani proizvod (ACF prekidač). */
 function noriks_pp_upsell_enabled( $product_id = 0 ) {
+	// 21.11.2026: upsell 4x bokserice ukinjen na vseh trgih (drugod ga je zamenjal SlabProof,
+	// SI izdelka SlabProof nima) -> na SI izklopljen ne glede na stikalo v izdelku.
+	return false;
 	$product_id = $product_id ? (int) $product_id : (int) get_the_ID();
 	if ( ! $product_id || ! function_exists( 'get_field' ) ) {
 		return false;
